@@ -1,0 +1,108 @@
+<x-app-layout>
+    <x-slot name="header">
+        <h2 class="font-semibold text-xl text-gray-800 leading-tight">
+            {{ __('Auditoría') }}
+        </h2>
+    </x-slot>
+
+    <div class="py-12">
+        <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
+            <!-- Filtros -->
+            <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg mb-6">
+                <div class="p-6">
+                    <form method="GET" action="{{ route('admin.audit-logs.index') }}" class="grid grid-cols-1 md:grid-cols-5 gap-4">
+                        <div>
+                            <x-input-label for="event" value="Evento" />
+                            <select id="event" name="event" class="mt-1 block w-full border-gray-300 rounded-md">
+                                <option value="">Todos</option>
+                                @foreach($events as $event)
+                                    <option value="{{ $event }}" {{ request('event') == $event ? 'selected' : '' }}>
+                                        {{ $event }}
+                                    </option>
+                                @endforeach
+                            </select>
+                        </div>
+                        <div>
+                            <x-input-label for="actor_id" value="Actor" />
+                            <select id="actor_id" name="actor_id" class="mt-1 block w-full border-gray-300 rounded-md">
+                                <option value="">Todos</option>
+                                @foreach($actors as $actor)
+                                    <option value="{{ $actor->id }}" {{ request('actor_id') == $actor->id ? 'selected' : '' }}>
+                                        {{ $actor->name }}
+                                    </option>
+                                @endforeach
+                            </select>
+                        </div>
+                        <div>
+                            <x-input-label for="entity_type" value="Tipo Entidad" />
+                            <select id="entity_type" name="entity_type" class="mt-1 block w-full border-gray-300 rounded-md">
+                                <option value="">Todos</option>
+                                @foreach($entityTypes as $type)
+                                    <option value="{{ $type }}" {{ request('entity_type') == $type ? 'selected' : '' }}>
+                                        {{ $type }}
+                                    </option>
+                                @endforeach
+                            </select>
+                        </div>
+                        <div>
+                            <x-input-label for="date_from" value="Desde" />
+                            <x-text-input id="date_from" name="date_from" type="date" class="mt-1 block w-full" :value="request('date_from')" />
+                        </div>
+                        <div>
+                            <x-input-label for="date_to" value="Hasta" />
+                            <x-text-input id="date_to" name="date_to" type="date" class="mt-1 block w-full" :value="request('date_to')" />
+                        </div>
+                        <div class="md:col-span-5">
+                            <x-primary-button>Filtrar</x-primary-button>
+                            <a href="{{ route('admin.audit-logs.index') }}" class="text-gray-600 ml-2">Limpiar</a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            <!-- Listado -->
+            <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
+                <div class="p-6">
+                    <table class="min-w-full divide-y divide-gray-200">
+                        <thead>
+                            <tr>
+                                <th class="px-4 py-2 text-left">Fecha</th>
+                                <th class="px-4 py-2 text-left">Evento</th>
+                                <th class="px-4 py-2 text-left">Actor</th>
+                                <th class="px-4 py-2 text-left">Entidad</th>
+                                <th class="px-4 py-2 text-left">Payload</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach($auditLogs as $log)
+                                <tr>
+                                    <td class="px-4 py-2">{{ $log->created_at->format('d/m/Y H:i:s') }}</td>
+                                    <td class="px-4 py-2">{{ $log->event }}</td>
+                                    <td class="px-4 py-2">{{ $log->actor->name ?? '-' }}</td>
+                                    <td class="px-4 py-2">
+                                        @if($log->entity_type && $log->entity_id)
+                                            {{ $log->entity_type }} #{{ $log->entity_id }}
+                                        @else
+                                            -
+                                        @endif
+                                    </td>
+                                    <td class="px-4 py-2">
+                                        @if($log->payload)
+                                            <pre class="text-xs">{{ json_encode($log->payload, JSON_PRETTY_PRINT) }}</pre>
+                                        @else
+                                            -
+                                        @endif
+                                    </td>
+                                </tr>
+                            @endforeach
+                        </tbody>
+                    </table>
+
+                    <div class="mt-4">
+                        {{ $auditLogs->links() }}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</x-app-layout>
