@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\WorkReport;
+use App\Models\Client;
 use Illuminate\View\View;
 
 /**
@@ -42,6 +43,11 @@ class TechnicianDashboardController extends Controller
             ->with('client')
             ->orderBy('created_at', 'desc')
             ->limit(5)
+            ->get();
+
+        // BONUS: Si quieres mostrar clientes con bonos
+        $clientsWithBonuses = Client::whereHas('bonusIssues')
+            ->withCount('bonusIssues')
             ->get();
 
         return view('dashboard.technician', compact(

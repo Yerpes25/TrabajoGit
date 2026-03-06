@@ -5,8 +5,26 @@
         </h2>
     </x-slot>
 
+
     <div class="py-12">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
+            <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg mb-6">
+                <div class="p-6">
+                    <h3 class="text-lg font-semibold mb-4">Clientes con Bonos</h3>
+                    @if(isset($clientsWithBonuses) && $clientsWithBonuses->count() > 0)
+                    <div class="flex flex-wrap gap-4">
+                        @foreach($clientsWithBonuses as $client)
+                        <div class="bg-blue-500 text-white px-4 py-3 rounded shadow-sm min-w-[180px] flex flex-col">
+                            <span class="font-semibold text-base">{{ $client->name }}</span>
+                            <span class="text-sm text-blue-100 mt-1">Bonos: <span class="font-bold text-white">{{ $client->bonus_issues_count }}</span></span>
+                        </div>
+                        @endforeach
+                    </div>
+                    @else
+                    <p class="text-gray-500">No hay clientes con bonos.</p>
+                    @endif
+                </div>
+            </div>
             <!-- Resumen por estado -->
             <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
                 <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg p-6">
@@ -35,34 +53,34 @@
                         <a href="{{ route('technician.work-reports.index') }}" class="text-blue-500">Ver Todos</a>
                     </div>
                     @if($recentWorkReports->count() > 0)
-                        <div class="overflow-x-auto">
-                            <table class="min-w-full divide-y divide-gray-200">
-                                <thead>
-                                    <tr>
-                                        <th class="px-4 py-2 text-left text-xs font-medium text-gray-500">Cliente</th>
-                                        <th class="px-4 py-2 text-left text-xs font-medium text-gray-500">Título</th>
-                                        <th class="px-4 py-2 text-left text-xs font-medium text-gray-500">Estado</th>
-                                        <th class="px-4 py-2 text-left text-xs font-medium text-gray-500">Tiempo</th>
-                                        <th class="px-4 py-2 text-left text-xs font-medium text-gray-500">Acciones</th>
-                                    </tr>
-                                </thead>
-                                <tbody class="divide-y divide-gray-200">
-                                    @foreach($recentWorkReports as $report)
-                                        <tr>
-                                            <td class="px-4 py-2">{{ $report->client->name }}</td>
-                                            <td class="px-4 py-2">{{ $report->title ?? '-' }}</td>
-                                            <td class="px-4 py-2">{{ $report->status }}</td>
-                                            <td class="px-4 py-2">{{ gmdate('H:i:s', $report->total_seconds) }}</td>
-                                            <td class="px-4 py-2">
-                                                <a href="{{ route('technician.work-reports.show', $report) }}" class="text-blue-500">Ver</a>
-                                            </td>
-                                        </tr>
-                                    @endforeach
-                                </tbody>
-                            </table>
-                        </div>
+                    <div class="overflow-x-auto">
+                        <table class="min-w-full divide-y divide-gray-200">
+                            <thead>
+                                <tr>
+                                    <th class="px-4 py-2 text-left text-xs font-medium text-gray-500">Cliente</th>
+                                    <th class="px-4 py-2 text-left text-xs font-medium text-gray-500">Título</th>
+                                    <th class="px-4 py-2 text-left text-xs font-medium text-gray-500">Estado</th>
+                                    <th class="px-4 py-2 text-left text-xs font-medium text-gray-500">Tiempo</th>
+                                    <th class="px-4 py-2 text-left text-xs font-medium text-gray-500">Acciones</th>
+                                </tr>
+                            </thead>
+                            <tbody class="divide-y divide-gray-200">
+                                @foreach($recentWorkReports as $report)
+                                <tr>
+                                    <td class="px-4 py-2">{{ $report->client->name }}</td>
+                                    <td class="px-4 py-2">{{ $report->title ?? '-' }}</td>
+                                    <td class="px-4 py-2">{{ $report->status }}</td>
+                                    <td class="px-4 py-2">{{ gmdate('H:i:s', $report->total_seconds) }}</td>
+                                    <td class="px-4 py-2">
+                                        <a href="{{ route('technician.work-reports.show', $report) }}" class="text-blue-500">Ver</a>
+                                    </td>
+                                </tr>
+                                @endforeach
+                            </tbody>
+                        </table>
+                    </div>
                     @else
-                        <p class="text-gray-500">No hay partes recientes.</p>
+                    <p class="text-gray-500">No hay partes recientes.</p>
                     @endif
                 </div>
             </div>
