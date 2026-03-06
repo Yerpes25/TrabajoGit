@@ -55,7 +55,8 @@ class TechnicianDashboardController extends Controller
             'paused',
             'finished',
             'validated',
-            'recentWorkReports'
+            'recentWorkReports',
+            'clientsWithBonuses'
         ));
     }
 }

@@ -26,6 +26,7 @@ class AdminUserController extends Controller
     public function index(): View
     {
         $users = User::orderBy('created_at', 'desc')
+            ->whereNot('role','admin')
             ->paginate(15);
 
         return view('admin.users.index', compact('users'));

@@ -6,7 +6,9 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\Admin\StoreBonusRequest;
 use App\Http\Requests\Admin\UpdateBonusRequest;
 use App\Models\Bonus;
+use App\Models\BonusIssue;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Support\Facades\DB;
 use Illuminate\View\View;
 
 /**
@@ -24,7 +26,23 @@ class AdminBonusController extends Controller
      */
     public function index(): View
     {
-        $bonuses = Bonus::orderBy('created_at', 'desc')
+        $bonuses = BonusIssue::rightJoin('bonuses', 'bonuses.id', '=', 'bonus_issues.bonus_id')
+            ->select(
+                'bonuses.id',
+                'bonuses.name',
+                'bonuses.description',
+                'bonuses.seconds_total',
+                'bonuses.is_active',
+                DB::raw('COUNT(bonus_issues.id) as count')
+            )
+            ->groupBy(
+                'bonuses.id',
+                'bonuses.name',
+                'bonuses.description',
+                'bonuses.seconds_total',
+                'bonuses.is_active'
+            )
+            ->orderByRaw('MAX(bonus_issues.created_at) DESC')
             ->paginate(15);
 
         return view('admin.bonuses.index', compact('bonuses'));

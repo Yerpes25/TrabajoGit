@@ -8,23 +8,23 @@
     <div class="py-12">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
             @if(session('success'))
-                <div class="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded mb-4">
-                    {{ session('success') }}
-                </div>
+            <div class="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded mb-4">
+                {{ session('success') }}
+            </div>
             @endif
 
             @if(session('error'))
-                <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4">
-                    {{ session('error') }}
-                </div>
+            <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4">
+                {{ session('error') }}
+            </div>
             @endif
 
             <!-- Información del cliente -->
             <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg mb-6">
                 <div class="p-6">
                     <h3 class="text-lg font-semibold mb-4">Información del Cliente</h3>
-                    <p><strong>Nombre:</strong> {{ $client->name }}</p>
-                    <p><strong>Email:</strong> {{ $client->email ?? '-' }}</p>
+                    <p><strong>Nombre:</strong> {{ $name }}</p>
+                    <p><strong>Email:</strong> {{ $email }}</p>
                     <p><strong>Teléfono:</strong> {{ $client->phone ?? '-' }}</p>
                     <p><strong>Saldo actual:</strong> {{ number_format($balanceSeconds / 3600, 2) }} horas ({{ $balanceSeconds }} segundos)</p>
                 </div>
@@ -66,13 +66,13 @@
                         </thead>
                         <tbody>
                             @foreach($balanceMovements as $movement)
-                                <tr>
-                                    <td class="px-4 py-2">{{ $movement->created_at->format('d/m/Y H:i') }}</td>
-                                    <td class="px-4 py-2">{{ $movement->type }}</td>
-                                    <td class="px-4 py-2">{{ number_format(abs($movement->amount_seconds) / 3600, 2) }}h</td>
-                                    <td class="px-4 py-2">{{ $movement->reason }}</td>
-                                    <td class="px-4 py-2">{{ $movement->creator->name ?? '-' }}</td>
-                                </tr>
+                            <tr>
+                                <td class="px-4 py-2">{{ $movement->created_at->format('d/m/Y H:i') }}</td>
+                                <td class="px-4 py-2">{{ $movement->type }}</td>
+                                <td class="px-4 py-2">{{ number_format(abs($movement->amount_seconds) / 3600, 2) }}h</td>
+                                <td class="px-4 py-2">{{ $movement->reason }}</td>
+                                <td class="px-4 py-2">{{ $movement->creator->name ?? '-' }}</td>
+                            </tr>
                             @endforeach
                         </tbody>
                     </table>
@@ -93,7 +93,7 @@
                             <select id="bonus_id" name="bonus_id" class="mt-1 block w-full border-gray-300 rounded-md" required>
                                 <option value="">Seleccionar bono</option>
                                 @foreach($activeBonuses as $bonus)
-                                    <option value="{{ $bonus->id }}">{{ $bonus->name }} ({{ number_format($bonus->seconds_total / 3600, 2) }}h)</option>
+                                <option value="{{ $bonus->id }}">{{ $bonus->name }} ({{ number_format($bonus->seconds_total / 3600, 2) }}h)</option>
                                 @endforeach
                             </select>
                             <x-input-error :messages="$errors->get('bonus_id')" class="mt-2" />
@@ -113,33 +113,33 @@
                 <div class="p-6">
                     <h3 class="text-lg font-semibold mb-4">Bonos Emitidos</h3>
                     @if($bonusIssues->count() > 0)
-                        <table class="min-w-full divide-y divide-gray-200">
-                            <thead>
-                                <tr>
-                                    <th class="px-4 py-2 text-left">Bono</th>
-                                    <th class="px-4 py-2 text-left">Tiempo (horas)</th>
-                                    <th class="px-4 py-2 text-left">Nota</th>
-                                    <th class="px-4 py-2 text-left">Emitido por</th>
-                                    <th class="px-4 py-2 text-left">Fecha</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                @foreach($bonusIssues as $issue)
-                                    <tr>
-                                        <td class="px-4 py-2">{{ $issue->bonus->name }}</td>
-                                        <td class="px-4 py-2">{{ number_format($issue->seconds_total / 3600, 2) }}h</td>
-                                        <td class="px-4 py-2">{{ $issue->note ?? '-' }}</td>
-                                        <td class="px-4 py-2">{{ $issue->issuer->name ?? '-' }}</td>
-                                        <td class="px-4 py-2">{{ $issue->created_at->format('d/m/Y H:i') }}</td>
-                                    </tr>
-                                @endforeach
-                            </tbody>
-                        </table>
-                        <div class="mt-4">
-                            {{ $bonusIssues->links() }}
-                        </div>
+                    <table class="min-w-full divide-y divide-gray-200">
+                        <thead>
+                            <tr>
+                                <th class="px-4 py-2 text-left">Bono</th>
+                                <th class="px-4 py-2 text-left">Tiempo (horas)</th>
+                                <th class="px-4 py-2 text-left">Nota</th>
+                                <th class="px-4 py-2 text-left">Emitido por</th>
+                                <th class="px-4 py-2 text-left">Fecha</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach($bonusIssues as $issue)
+                            <tr>
+                                <td class="px-4 py-2">{{ $issue->bonus->name }}</td>
+                                <td class="px-4 py-2">{{ number_format($issue->seconds_total / 3600, 2) }}h</td>
+                                <td class="px-4 py-2">{{ $issue->note ?? '-' }}</td>
+                                <td class="px-4 py-2">{{ $issue->issuer->name ?? '-' }}</td>
+                                <td class="px-4 py-2">{{ $issue->created_at->format('d/m/Y H:i') }}</td>
+                            </tr>
+                            @endforeach
+                        </tbody>
+                    </table>
+                    <div class="mt-4">
+                        {{ $bonusIssues->links() }}
+                    </div>
                     @else
-                        <p>No hay bonos emitidos para este cliente.</p>
+                    <p>No hay bonos emitidos para este cliente.</p>
                     @endif
                 </div>
             </div>
@@ -161,16 +161,16 @@
                         </thead>
                         <tbody>
                             @foreach($workReports as $report)
-                                <tr>
-                                    <td class="px-4 py-2">{{ $report->title ?? '-' }}</td>
-                                    <td class="px-4 py-2">{{ $report->technician->name }}</td>
-                                    <td class="px-4 py-2">{{ $report->status }}</td>
-                                    <td class="px-4 py-2">{{ number_format($report->total_seconds / 3600, 2) }}h</td>
-                                    <td class="px-4 py-2">{{ $report->created_at->format('d/m/Y H:i') }}</td>
-                                    <td class="px-4 py-2">
-                                        <a href="{{ route('admin.work-reports.show', $report) }}" class="text-blue-500">Ver</a>
-                                    </td>
-                                </tr>
+                            <tr>
+                                <td class="px-4 py-2">{{ $report->title ?? '-' }}</td>
+                                <td class="px-4 py-2">{{ $report->technician->name }}</td>
+                                <td class="px-4 py-2">{{ $report->status }}</td>
+                                <td class="px-4 py-2">{{ number_format($report->total_seconds / 3600, 2) }}h</td>
+                                <td class="px-4 py-2">{{ $report->created_at->format('d/m/Y H:i') }}</td>
+                                <td class="px-4 py-2">
+                                    <a href="{{ route('admin.work-reports.show', $report) }}" class="text-blue-500">Ver</a>
+                                </td>
+                            </tr>
                             @endforeach
                         </tbody>
                     </table>
@@ -178,6 +178,15 @@
                         {{ $workReports->links() }}
                     </div>
                 </div>
+            </div>
+            <div class="mt-6 flex justify-start">
+                <a href="{{ route('admin.clients.index') }}"
+                    class="inline-flex items-center px-4 py-2 bg-white border border-gray-300 rounded-md font-semibold text-xs text-gray-700 uppercase tracking-widest shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 transition ease-in-out duration-150">
+                    <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path>
+                    </svg>
+                    Volver
+                </a>
             </div>
         </div>
     </div>

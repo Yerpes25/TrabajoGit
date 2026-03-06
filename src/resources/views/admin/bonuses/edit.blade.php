@@ -34,6 +34,7 @@
 
                         <div class="mb-4">
                             <label class="flex items-center">
+                                <input type="hidden" name="is_active" value="0">
                                 <input type="checkbox" name="is_active" value="1" {{ $bonus->is_active ? 'checked' : '' }} class="rounded">
                                 <span class="ml-2">Bono activo</span>
                             </label>

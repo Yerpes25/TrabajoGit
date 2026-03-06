@@ -13,14 +13,16 @@ return new class extends Migration
     {
         Schema::create('clients', function (Blueprint $table) {
             $table->id();
-            $table->string('name')->index();
+            $table->unsignedBigInteger('user_id')->nullable()->index();
             $table->string('legal_name')->nullable();
             $table->string('tax_id')->nullable()->index(); // NIF/CIF para empresas
-            $table->string('email')->nullable()->index();
             $table->string('phone')->nullable();
             $table->text('address')->nullable();
             $table->text('notes')->nullable();
             $table->timestamps();
+            $table->foreign('user_id')
+                ->references('id')->on('users')
+                ->onDelete('set null');
         });
     }
 

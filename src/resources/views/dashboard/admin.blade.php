@@ -84,7 +84,7 @@
             </div>
 
             <!-- Enlaces rápidos -->
-            <div class="mt-6 grid grid-cols-1 md:grid-cols-4 gap-4">
+            <div class="mt-6 grid grid-cols-1 md:grid-cols-5 gap-4">
                 <a href="{{ route('admin.users.index') }}" class="bg-white overflow-hidden shadow-sm sm:rounded-lg p-4 hover:bg-gray-50">
                     <h4 class="font-semibold">Usuarios</h4>
                     <p class="text-sm text-gray-500">Gestionar usuarios</p>
@@ -100,6 +100,10 @@
                 <a href="{{ route('admin.audit-logs.index') }}" class="bg-white overflow-hidden shadow-sm sm:rounded-lg p-4 hover:bg-gray-50">
                     <h4 class="font-semibold">Auditoría</h4>
                     <p class="text-sm text-gray-500">Consultar logs</p>
+                </a>
+                <a href="{{ route('admin.bonuses.index') }}" class="bg-white overflow-hidden shadow-sm sm:rounded-lg p-4 hover:bg-gray-50">
+                    <h4 class="font-semibold">Bonos</h4>
+                    <p class="text-sm text-gray-500">Crear bonos</p>
                 </a>
             </div>
         </div>

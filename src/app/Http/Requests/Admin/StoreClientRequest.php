@@ -37,10 +37,8 @@ class StoreClientRequest extends FormRequest
             'is_active' => ['sometimes', 'boolean'],
 
             // Datos del cliente (Client)
-            'client_name' => ['required', 'string', 'max:255'],
             'legal_name' => ['sometimes', 'nullable', 'string', 'max:255'],
             'tax_id' => ['sometimes', 'nullable', 'string', 'max:255'],
-            'client_email' => ['sometimes', 'nullable', 'string', 'email', 'max:255'],
             'phone' => ['sometimes', 'nullable', 'string', 'max:255'],
             'address' => ['sometimes', 'nullable', 'string'],
             'notes' => ['sometimes', 'nullable', 'string'],
@@ -70,10 +68,8 @@ class StoreClientRequest extends FormRequest
     public function getClientData(): array
     {
         return [
-            'name' => $this->input('client_name'),
             'legal_name' => $this->input('legal_name'),
             'tax_id' => $this->input('tax_id'),
-            'email' => $this->input('client_email'),
             'phone' => $this->input('phone'),
             'address' => $this->input('address'),
             'notes' => $this->input('notes'),

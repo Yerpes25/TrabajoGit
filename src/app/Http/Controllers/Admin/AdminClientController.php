@@ -27,6 +27,7 @@ class AdminClientController extends Controller
     private BalanceService $balanceService;
     private UserService $userService;
     private BonusService $bonusService;
+    private AuditService $auditService;
 
     public function __construct(BalanceService $balanceService, AuditService $auditService, UserService $userService, BonusService $bonusService)
     {
@@ -34,6 +35,7 @@ class AdminClientController extends Controller
         $this->balanceService = new BalanceService($auditService);
         $this->userService = $userService;
         $this->bonusService = new BonusService($this->balanceService, $auditService);
+        $this->auditService = $auditService;
     }
 
     /**
@@ -47,6 +49,8 @@ class AdminClientController extends Controller
         // NOTE: La vista accede a $client->profile->balance_seconds, sin eager loading haría 1 query por cliente
         $clients = Client::with(['profile', 'user'])
             ->orderBy('created_at', 'desc')
+            ->join('users', 'users.id', '=', 'clients.user_id')
+            ->select(['clients.*', 'users.email', 'users.name'])
             ->paginate(15);
 
         return view('admin.clients.index', compact('clients'));
@@ -79,6 +83,16 @@ class AdminClientController extends Controller
             $request->getClientData()
         );
 
+        $this->auditService->log(
+            'client_created',
+            auth()->id(),
+            'Client',
+            $client->id,
+            ['name' => $client->name],
+            $request->ip(),
+            $request->userAgent()
+        );
+
         return redirect()->route('admin.clients.show', $client)
             ->with('success', "Cliente {$client->name} creado correctamente.");
     }
@@ -95,6 +109,10 @@ class AdminClientController extends Controller
     {
         // Cargar perfil con saldo agregado
         $client->load('profile');
+
+        //Cargamos el correo y el nombre del cliente
+        $email = $client->user()->first()->email;
+        $name = $client->user()->first()->name;
 
         // Obtener saldo desde el ledger (fuente de verdad)
         $balanceSeconds = $this->balanceService->getBalanceSeconds($client);
@@ -127,6 +145,8 @@ class AdminClientController extends Controller
 
         return view('admin.clients.show', compact(
             'client',
+            'email',
+            'name',
             'balanceSeconds',
             'balanceMovements',
             'workReports',

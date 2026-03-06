@@ -47,12 +47,6 @@
                         <h3 class="text-lg font-semibold mb-4 mt-6">Datos del Cliente</h3>
 
                         <div class="mb-4">
-                            <x-input-label for="client_name" value="Nombre del Cliente" />
-                            <x-text-input id="client_name" name="client_name" type="text" class="mt-1 block w-full" :value="old('client_name')" required />
-                            <x-input-error :messages="$errors->get('client_name')" class="mt-2" />
-                        </div>
-
-                        <div class="mb-4">
                             <x-input-label for="legal_name" value="Razón Social (opcional)" />
                             <x-text-input id="legal_name" name="legal_name" type="text" class="mt-1 block w-full" :value="old('legal_name')" />
                             <x-input-error :messages="$errors->get('legal_name')" class="mt-2" />
@@ -62,12 +56,6 @@
                             <x-input-label for="tax_id" value="NIF/CIF (opcional)" />
                             <x-text-input id="tax_id" name="tax_id" type="text" class="mt-1 block w-full" :value="old('tax_id')" />
                             <x-input-error :messages="$errors->get('tax_id')" class="mt-2" />
-                        </div>
-
-                        <div class="mb-4">
-                            <x-input-label for="client_email" value="Email del Cliente (opcional)" />
-                            <x-text-input id="client_email" name="client_email" type="email" class="mt-1 block w-full" :value="old('client_email')" />
-                            <x-input-error :messages="$errors->get('client_email')" class="mt-2" />
                         </div>
 
                         <div class="mb-4">

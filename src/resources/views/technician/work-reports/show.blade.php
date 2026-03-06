@@ -28,7 +28,7 @@
                             <p><strong>Cliente:</strong> {{ $workReport->client->name }}</p>
                             <p><strong>Título:</strong> {{ $workReport->title ?? '-' }}</p>
                             <p><strong>Descripción:</strong> {{ $workReport->description ?? '-' }}</p>
-                            <p><strong>Estado:</strong> 
+                            <p><strong>Estado:</strong>
                                 <span class="px-2 py-1 rounded text-xs
                                     @if($workReport->status === 'in_progress') bg-green-100 text-green-800
                                     @elseif($workReport->status === 'paused') bg-yellow-100 text-yellow-800
@@ -41,6 +41,11 @@
                             <p><strong>Tiempo total:</strong> {{ gmdate('H:i:s', $workReport->total_seconds) }} ({{ $workReport->total_seconds }} segundos)</p>
                             @if($workReport->finished_at)
                                 <p><strong>Finalizado:</strong> {{ $workReport->finished_at->format('d/m/Y H:i') }}</p>
+                                <br>
+                                <form action="{{ route('technician.work-reports.validate', $workReport) }}" method="POST" class="inline">
+                                    @csrf
+                                    <x-primary-button type="submit">Validar</x-primary-button>
+                                </form>
                             @endif
                         </div>
                         <div>

@@ -22,13 +22,33 @@
                 <div class="p-6">
                     <h3 class="text-lg font-semibold mb-4">Clientes con Bonos</h3>
                     <?php if(isset($clientsWithBonuses) && $clientsWithBonuses->count() > 0): ?>
-                    <div class="flex flex-wrap gap-4">
-                        <?php $__currentLoopData = $clientsWithBonuses; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $client): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
-                        <div class="bg-blue-500 text-white px-4 py-3 rounded shadow-sm min-w-[180px] flex flex-col">
-                            <span class="font-semibold text-base"><?php echo e($client->name); ?></span>
-                            <span class="text-sm text-blue-100 mt-1">Bonos: <span class="font-bold text-white"><?php echo e($client->bonus_issues_count); ?></span></span>
-                        </div>
-                        <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
+                    <div class="overflow-x-auto">
+                        <table class="min-w-full divide-y divide-gray-200">
+                            <thead>
+                                <tr>
+                                    <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 tracking-wider">Cliente</th>
+                                    <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 tracking-wider">Email</th>
+                                    <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 tracking-wider">Teléfono</th>
+                                    <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 tracking-wider">Total Bonos</th>
+                                    <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 tracking-wider">Acciones</th>
+                                </tr>
+                            </thead>
+                            <tbody class="divide-y divide-gray-200">
+                                <?php $__currentLoopData = $clientsWithBonuses; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $client): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                                <tr>
+                                    <td class="px-4 py-2 whitespace-nowrap"><?php echo e($client->name); ?></td>
+                                    <td class="px-4 py-2 whitespace-nowrap"><?php echo e($client->email ?? '-'); ?></td>
+                                    <td class="px-4 py-2 whitespace-nowrap"><?php echo e($client->phone ?? '-'); ?></td>
+                                    <td class="px-4 py-2 whitespace-nowrap font-bold text-blue-600"><?php echo e($client->bonus_issues_count); ?></td>
+                                    <td class="px-4 py-2 whitespace-nowrap">
+                                        <a href="<?php echo e(route('technician.work-reports.create', ['client_id' => $client->id])); ?>" class="bg-blue-100 text-blue-700 px-3 py-1 rounded text-sm font-semibold hover:bg-blue-200 transition-colors">
+                                            Crear Parte
+                                        </a>
+                                    </td>
+                                </tr>
+                                <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
+                            </tbody>
+                        </table>
                     </div>
                     <?php else: ?>
                     <p class="text-gray-500">No hay clientes con bonos.</p>

@@ -49,7 +49,7 @@ class UserService
      * - ClientProfile con balance_seconds inicial 0
      *
      * @param array $userData Datos del usuario (name, email, password, is_active)
-     * @param array $clientData Datos del cliente (name, legal_name, tax_id, email, phone, address, notes)
+     * @param array $clientData Datos del cliente (legal_name, tax_id, phone, address, notes)
      * @return Client Cliente creado (con relaciones cargadas)
      * @throws \Exception Si falla la creación
      */
@@ -67,10 +67,8 @@ class UserService
 
             // Crear Client vinculado al User
             $client = Client::create([
-                'name' => $clientData['name'],
                 'legal_name' => $clientData['legal_name'] ?? null,
                 'tax_id' => $clientData['tax_id'] ?? null,
-                'email' => $clientData['email'] ?? null,
                 'phone' => $clientData['phone'] ?? null,
                 'address' => $clientData['address'] ?? null,
                 'notes' => $clientData['notes'] ?? null,
@@ -155,10 +153,8 @@ class UserService
 
             // Actualizar Client
             $client->update([
-                'name' => $clientData['name'] ?? $client->name,
                 'legal_name' => $clientData['legal_name'] ?? $client->legal_name,
                 'tax_id' => $clientData['tax_id'] ?? $client->tax_id,
-                'email' => $clientData['email'] ?? $client->email,
                 'phone' => $clientData['phone'] ?? $client->phone,
                 'address' => $clientData['address'] ?? $client->address,
                 'notes' => $clientData['notes'] ?? $client->notes,

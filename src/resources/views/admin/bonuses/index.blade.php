@@ -23,7 +23,7 @@
                         <thead>
                             <tr>
                                 <th class="px-4 py-2 text-left">Nombre</th>
-                                <th class="px-4 py-2 text-left">Descripción</th>
+                                <th class="px-4 py-2 text-left">Emisiones</th>
                                 <th class="px-4 py-2 text-left">Tiempo (horas)</th>
                                 <th class="px-4 py-2 text-left">Estado</th>
                                 <th class="px-4 py-2 text-left">Acciones</th>
@@ -33,7 +33,7 @@
                             @foreach($bonuses as $bonus)
                                 <tr>
                                     <td class="px-4 py-2">{{ $bonus->name }}</td>
-                                    <td class="px-4 py-2">{{ $bonus->description ?? '-' }}</td>
+                                    <td class="px-4 py-2">{{ $bonus->count ?? 0 }}</td>
                                     <td class="px-4 py-2">{{ number_format($bonus->seconds_total / 3600, 2) }}h</td>
                                     <td class="px-4 py-2">{{ $bonus->is_active ? 'Activo' : 'Archivado' }}</td>
                                     <td class="px-4 py-2">

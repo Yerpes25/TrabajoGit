@@ -89,4 +89,6 @@ class AdminWorkReportController extends Controller
 
         return view('admin.work-reports.show', compact('workReport'));
     }
+
+
 }

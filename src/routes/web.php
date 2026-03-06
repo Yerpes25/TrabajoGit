@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\AdminDashboardController;
+use App\Http\Controllers\Technician\TechnicianWorkReportController;
 use App\Http\Controllers\TechnicianDashboardController;
 use App\Http\Controllers\ClientDashboardController;
 use Illuminate\Support\Facades\Route;
@@ -99,5 +100,8 @@ Route::middleware('auth')->group(function () {
     Route::get('evidences/{evidence}/download', [\App\Http\Controllers\EvidenceDownloadController::class, 'download'])
         ->name('evidences.download');
 });
+
+Route::post('/technician/work-reports/{workReport}/validate', [TechnicianWorkReportController::class, 'validate'])
+    ->name('technician.work-reports.validate');
 
 require __DIR__.'/auth.php';

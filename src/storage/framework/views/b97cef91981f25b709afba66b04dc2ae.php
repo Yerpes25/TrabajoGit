@@ -45,10 +45,10 @@
                             <select id="event" name="event" class="mt-1 block w-full border-gray-300 rounded-md">
                                 <option value="">Todos</option>
                                 <?php $__currentLoopData = $events; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $event): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
-                                    <option value="<?php echo e($event); ?>" <?php echo e(request('event') == $event ? 'selected' : ''); ?>>
-                                        <?php echo e($event); ?>
+                                <option value="<?php echo e($event); ?>" <?php echo e(request('event') == $event ? 'selected' : ''); ?>>
+                                    <?php echo e($event); ?>
 
-                                    </option>
+                                </option>
                                 <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
                             </select>
                         </div>
@@ -76,10 +76,10 @@
                             <select id="actor_id" name="actor_id" class="mt-1 block w-full border-gray-300 rounded-md">
                                 <option value="">Todos</option>
                                 <?php $__currentLoopData = $actors; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $actor): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
-                                    <option value="<?php echo e($actor->id); ?>" <?php echo e(request('actor_id') == $actor->id ? 'selected' : ''); ?>>
-                                        <?php echo e($actor->name); ?>
+                                <option value="<?php echo e($actor->id); ?>" <?php echo e(request('actor_id') == $actor->id ? 'selected' : ''); ?>>
+                                    <?php echo e($actor->name); ?>
 
-                                    </option>
+                                </option>
                                 <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
                             </select>
                         </div>
@@ -107,10 +107,10 @@
                             <select id="entity_type" name="entity_type" class="mt-1 block w-full border-gray-300 rounded-md">
                                 <option value="">Todos</option>
                                 <?php $__currentLoopData = $entityTypes; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $type): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
-                                    <option value="<?php echo e($type); ?>" <?php echo e(request('entity_type') == $type ? 'selected' : ''); ?>>
-                                        <?php echo e($type); ?>
+                                <option value="<?php echo e($type); ?>" <?php echo e(request('entity_type') == $type ? 'selected' : ''); ?>>
+                                    <?php echo e($type); ?>
 
-                                    </option>
+                                </option>
                                 <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
                             </select>
                         </div>
@@ -239,26 +239,98 @@
                         </thead>
                         <tbody>
                             <?php $__currentLoopData = $auditLogs; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $log): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
-                                <tr>
-                                    <td class="px-4 py-2"><?php echo e($log->created_at->format('d/m/Y H:i:s')); ?></td>
-                                    <td class="px-4 py-2"><?php echo e($log->event); ?></td>
-                                    <td class="px-4 py-2"><?php echo e($log->actor->name ?? '-'); ?></td>
-                                    <td class="px-4 py-2">
-                                        <?php if($log->entity_type && $log->entity_id): ?>
-                                            <?php echo e($log->entity_type); ?> #<?php echo e($log->entity_id); ?>
+                            <tr>
+                                <td class="px-4 py-2"><?php echo e($log->created_at->format('d/m/Y H:i:s')); ?></td>
+                                <td class="px-4 py-2"><?php echo e($log->event); ?></td>
+                                <td class="px-4 py-2"><?php echo e($log->actor->name ?? '-'); ?></td>
+                                <td class="px-4 py-2">
+                                    <?php if($log->entity_type && $log->entity_id): ?>
+                                    <?php echo e($log->entity_type); ?> #<?php echo e($log->entity_id); ?>
 
-                                        <?php else: ?>
-                                            -
-                                        <?php endif; ?>
-                                    </td>
-                                    <td class="px-4 py-2">
-                                        <?php if($log->payload): ?>
-                                            <pre class="text-xs"><?php echo e(json_encode($log->payload, JSON_PRETTY_PRINT)); ?></pre>
-                                        <?php else: ?>
-                                            -
-                                        <?php endif; ?>
-                                    </td>
-                                </tr>
+                                    <?php else: ?>
+                                    -
+                                    <?php endif; ?>
+                                </td>
+                                <td class="px-4 py-2">
+                                    <?php if($log->payload): ?>
+                                    <button x-data="" x-on:click.prevent="$dispatch('open-modal', 'payload-<?php echo e($log->id); ?>')" class="bg-blue-50 text-blue-600 hover:bg-blue-100 px-3 py-1 rounded-md text-sm font-semibold transition-colors">
+                                        Ver 
+                                    </button>
+
+                                    <?php if (isset($component)) { $__componentOriginal9f64f32e90b9102968f2bc548315018c = $component; } ?>
+<?php if (isset($attributes)) { $__attributesOriginal9f64f32e90b9102968f2bc548315018c = $attributes; } ?>
+<?php $component = Illuminate\View\AnonymousComponent::resolve(['view' => 'components.modal','data' => ['name' => 'payload-'.e($log->id).'','focusable' => true]] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? $attributes->all() : [])); ?>
+<?php $component->withName('modal'); ?>
+<?php if ($component->shouldRender()): ?>
+<?php $__env->startComponent($component->resolveView(), $component->data()); ?>
+<?php if (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag): ?>
+<?php $attributes = $attributes->except(\Illuminate\View\AnonymousComponent::ignoredParameterNames()); ?>
+<?php endif; ?>
+<?php $component->withAttributes(['name' => 'payload-'.e($log->id).'','focusable' => true]); ?>
+                                        <div class="p-6">
+                                            <h2 class="text-xl font-bold text-gray-900 mb-4 border-b border-gray-200 pb-3">
+                                                Detalles del Evento
+                                            </h2>
+
+                                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
+                                                <?php $__currentLoopData = $log->payload; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $key => $value): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                                                <div class="bg-gray-50 p-3 rounded-lg border border-gray-100 shadow-sm">
+                                                    <span class="block text-xs font-bold text-gray-500 uppercase tracking-wider mb-1">
+                                                        <?php echo e(str_replace('_', ' ', $key)); ?>
+
+                                                    </span>
+                                                    <span class="block text-sm text-gray-800 break-words">
+                                                        <?php if(is_array($value)): ?>
+                                                        <?php echo e(json_encode($value, JSON_UNESCAPED_UNICODE)); ?>
+
+                                                        <?php else: ?>
+                                                        <?php echo e($value ?: '-'); ?>
+
+                                                        <?php endif; ?>
+                                                    </span>
+                                                </div>
+                                                <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
+                                            </div>
+
+                                            <div class="mt-6 flex justify-end">
+                                                <?php if (isset($component)) { $__componentOriginal3b0e04e43cf890250cc4d85cff4d94af = $component; } ?>
+<?php if (isset($attributes)) { $__attributesOriginal3b0e04e43cf890250cc4d85cff4d94af = $attributes; } ?>
+<?php $component = Illuminate\View\AnonymousComponent::resolve(['view' => 'components.secondary-button','data' => ['xOn:click' => '$dispatch(\'close\')']] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? $attributes->all() : [])); ?>
+<?php $component->withName('secondary-button'); ?>
+<?php if ($component->shouldRender()): ?>
+<?php $__env->startComponent($component->resolveView(), $component->data()); ?>
+<?php if (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag): ?>
+<?php $attributes = $attributes->except(\Illuminate\View\AnonymousComponent::ignoredParameterNames()); ?>
+<?php endif; ?>
+<?php $component->withAttributes(['x-on:click' => '$dispatch(\'close\')']); ?>
+                                                    Cerrar
+                                                 <?php echo $__env->renderComponent(); ?>
+<?php endif; ?>
+<?php if (isset($__attributesOriginal3b0e04e43cf890250cc4d85cff4d94af)): ?>
+<?php $attributes = $__attributesOriginal3b0e04e43cf890250cc4d85cff4d94af; ?>
+<?php unset($__attributesOriginal3b0e04e43cf890250cc4d85cff4d94af); ?>
+<?php endif; ?>
+<?php if (isset($__componentOriginal3b0e04e43cf890250cc4d85cff4d94af)): ?>
+<?php $component = $__componentOriginal3b0e04e43cf890250cc4d85cff4d94af; ?>
+<?php unset($__componentOriginal3b0e04e43cf890250cc4d85cff4d94af); ?>
+<?php endif; ?>
+                                            </div>
+                                        </div>
+                                     <?php echo $__env->renderComponent(); ?>
+<?php endif; ?>
+<?php if (isset($__attributesOriginal9f64f32e90b9102968f2bc548315018c)): ?>
+<?php $attributes = $__attributesOriginal9f64f32e90b9102968f2bc548315018c; ?>
+<?php unset($__attributesOriginal9f64f32e90b9102968f2bc548315018c); ?>
+<?php endif; ?>
+<?php if (isset($__componentOriginal9f64f32e90b9102968f2bc548315018c)): ?>
+<?php $component = $__componentOriginal9f64f32e90b9102968f2bc548315018c; ?>
+<?php unset($__componentOriginal9f64f32e90b9102968f2bc548315018c); ?>
+<?php endif; ?>
+                                    <?php else: ?>
+                                    <span class="text-gray-400 italic text-sm">Sin detalles</span>
+                                    <?php endif; ?>
+                                </td>
+                            </tr>
                             <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
                         </tbody>
                     </table>
@@ -268,6 +340,15 @@
 
                     </div>
                 </div>
+            </div>
+            <div class="mt-6 flex justify-start">
+                <a href="<?php echo e(route('admin.dashboard')); ?>"
+                    class="inline-flex items-center px-4 py-2 bg-white border border-gray-300 rounded-md font-semibold text-xs text-gray-700 uppercase tracking-widest shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 transition ease-in-out duration-150">
+                    <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path>
+                    </svg>
+                    Volver
+                </a>
             </div>
         </div>
     </div>
@@ -280,5 +361,4 @@
 <?php if (isset($__componentOriginal9ac128a9029c0e4701924bd2d73d7f54)): ?>
 <?php $component = $__componentOriginal9ac128a9029c0e4701924bd2d73d7f54; ?>
 <?php unset($__componentOriginal9ac128a9029c0e4701924bd2d73d7f54); ?>
-<?php endif; ?>
-<?php /**PATH /var/www/src/resources/views/admin/audit-logs/index.blade.php ENDPATH**/ ?>
+<?php endif; ?><?php /**PATH /var/www/src/resources/views/admin/audit-logs/index.blade.php ENDPATH**/ ?>

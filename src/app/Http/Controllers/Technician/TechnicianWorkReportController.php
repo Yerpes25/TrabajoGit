@@ -246,4 +246,44 @@ class TechnicianWorkReportController extends Controller
                 ->with('error', $e->getMessage());
         }
     }
+
+    /**
+     * Finaliza el parte (validate).
+     *
+     * Controller fino: solo llama a WorkReportService.
+     * Regla: Solo puede finalizar sus propios partes.
+     *
+     * @param WorkReport $workReport
+     * @return RedirectResponse
+     */
+    public function validate(WorkReport $workReport): RedirectResponse
+    {
+        $this->authorize('validate', $workReport);
+
+        try {
+            // Llamamos al nuevo método validate del servicio, no finish
+            $this->workReportService->validate($workReport, auth()->id());
+
+            // Determinar ruta según rol
+            $user = auth()->user();
+            if ($user->role === 'admin') {
+                $route = route('admin.work-reports.show', $workReport);
+            } else {
+                // Por defecto asumimos que es técnico
+                $route = route('technician.work-reports.show', $workReport);
+            }
+
+            return redirect($route)->with('success', 'Parte validado correctamente.');
+        } catch (\InvalidArgumentException $e) {
+            // Determinar ruta según rol también en caso de error
+            $user = auth()->user();
+            if ($user->role === 'admin') {
+                $route = route('admin.work-reports.show', $workReport);
+            } else {
+                $route = route('technician.work-reports.show', $workReport);
+            }
+
+            return redirect($route)->with('error', $e->getMessage());
+        }
+    }
 }

@@ -36,7 +36,7 @@
                 <div class="p-6">
                     <h3 class="text-lg font-semibold mb-4">Información del Cliente</h3>
                     <p><strong>Nombre:</strong> <?php echo e($client->name); ?></p>
-                    <p><strong>Email:</strong> <?php echo e($client->email ?? '-'); ?></p>
+                    <p><strong>Email:</strong> <?php echo e($email ?? '-'); ?></p>
                     <p><strong>Teléfono:</strong> <?php echo e($client->phone ?? '-'); ?></p>
                     <p><strong>Saldo actual:</strong> <?php echo e(number_format($balanceSeconds / 3600, 2)); ?> horas (<?php echo e($balanceSeconds); ?> segundos)</p>
                 </div>

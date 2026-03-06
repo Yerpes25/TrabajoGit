@@ -15,9 +15,9 @@
                     <p><strong>Título:</strong> {{ $workReport->title ?? '-' }}</p>
                     <p><strong>Descripción:</strong> {{ $workReport->description ?? '-' }}</p>
                     @if($workReport->summary)
-                        <p><strong>Resumen:</strong> {{ $workReport->summary }}</p>
+                    <p><strong>Resumen:</strong> {{ $workReport->summary }}</p>
                     @endif
-                    <p><strong>Estado:</strong> 
+                    <p><strong>Estado:</strong>
                         <span class="px-2 py-1 rounded text-xs
                             @if($workReport->status === 'finished') bg-blue-100 text-blue-800
                             @else bg-gray-100 text-gray-800
@@ -27,10 +27,10 @@
                     </p>
                     <p><strong>Tiempo total:</strong> {{ gmdate('H:i:s', $workReport->total_seconds) }} ({{ $workReport->total_seconds }} segundos)</p>
                     @if($workReport->finished_at)
-                        <p><strong>Finalizado:</strong> {{ $workReport->finished_at->format('d/m/Y H:i') }}</p>
+                    <p><strong>Finalizado:</strong> {{ $workReport->finished_at->format('d/m/Y H:i') }}</p>
                     @endif
                     @if($workReport->validated_at)
-                        <p><strong>Validado por:</strong> {{ $workReport->validator->name ?? '-' }} el {{ $workReport->validated_at->format('d/m/Y H:i') }}</p>
+                    <p><strong>Validado por:</strong> {{ $workReport->validator->name ?? '-' }} el {{ $workReport->validated_at->format('d/m/Y H:i') }}</p>
                     @endif
                 </div>
             </div>
@@ -40,28 +40,28 @@
                 <div class="p-6">
                     <h3 class="text-lg font-semibold mb-4">Eventos del Cronómetro</h3>
                     @if($workReport->events->count() > 0)
-                        <table class="min-w-full divide-y divide-gray-200">
-                            <thead>
-                                <tr>
-                                    <th class="px-4 py-2 text-left">Tipo</th>
-                                    <th class="px-4 py-2 text-left">Fecha/Hora</th>
-                                    <th class="px-4 py-2 text-left">Tiempo Acumulado</th>
-                                    <th class="px-4 py-2 text-left">Creado por</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                @foreach($workReport->events as $event)
-                                    <tr>
-                                        <td class="px-4 py-2">{{ $event->type }}</td>
-                                        <td class="px-4 py-2">{{ $event->occurred_at->format('d/m/Y H:i:s') }}</td>
-                                        <td class="px-4 py-2">{{ gmdate('H:i:s', $event->elapsed_seconds_after) }}</td>
-                                        <td class="px-4 py-2">{{ $event->creator->name ?? '-' }}</td>
-                                    </tr>
-                                @endforeach
-                            </tbody>
-                        </table>
+                    <table class="min-w-full divide-y divide-gray-200">
+                        <thead>
+                            <tr>
+                                <th class="px-4 py-2 text-left">Tipo</th>
+                                <th class="px-4 py-2 text-left">Fecha/Hora</th>
+                                <th class="px-4 py-2 text-left">Tiempo Acumulado</th>
+                                <th class="px-4 py-2 text-left">Creado por</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach($workReport->events as $event)
+                            <tr>
+                                <td class="px-4 py-2">{{ $event->type }}</td>
+                                <td class="px-4 py-2">{{ $event->occurred_at->format('d/m/Y H:i:s') }}</td>
+                                <td class="px-4 py-2">{{ gmdate('H:i:s', $event->elapsed_seconds_after) }}</td>
+                                <td class="px-4 py-2">{{ $event->creator->name ?? '-' }}</td>
+                            </tr>
+                            @endforeach
+                        </tbody>
+                    </table>
                     @else
-                        <p class="text-gray-500">No hay eventos registrados.</p>
+                    <p class="text-gray-500">No hay eventos registrados.</p>
                     @endif
                 </div>
             </div>
@@ -71,34 +71,47 @@
                 <div class="p-6">
                     <h3 class="text-lg font-semibold mb-4">Evidencias</h3>
                     @if($workReport->evidences->count() > 0)
-                        <table class="min-w-full divide-y divide-gray-200">
-                            <thead>
-                                <tr>
-                                    <th class="px-4 py-2 text-left">Nombre</th>
-                                    <th class="px-4 py-2 text-left">Tamaño</th>
-                                    <th class="px-4 py-2 text-left">Subido por</th>
-                                    <th class="px-4 py-2 text-left">Fecha</th>
-                                    <th class="px-4 py-2 text-left">Acciones</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                @foreach($workReport->evidences as $evidence)
-                                    <tr>
-                                        <td class="px-4 py-2">{{ $evidence->original_name }}</td>
-                                        <td class="px-4 py-2">{{ number_format($evidence->size_bytes / 1024, 2) }} KB</td>
-                                        <td class="px-4 py-2">{{ $evidence->uploader->name ?? '-' }}</td>
-                                        <td class="px-4 py-2">{{ $evidence->created_at->format('d/m/Y H:i') }}</td>
-                                        <td class="px-4 py-2">
-                                            <a href="{{ route('evidences.download', $evidence) }}" class="text-indigo-600 hover:text-indigo-900">Descargar</a>
-                                        </td>
-                                    </tr>
-                                @endforeach
-                            </tbody>
-                        </table>
+                    <table class="min-w-full divide-y divide-gray-200">
+                        <thead>
+                            <tr>
+                                <th class="px-4 py-2 text-left">Nombre</th>
+                                <th class="px-4 py-2 text-left">Tamaño</th>
+                                <th class="px-4 py-2 text-left">Subido por</th>
+                                <th class="px-4 py-2 text-left">Fecha</th>
+                                <th class="px-4 py-2 text-left">Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach($workReport->evidences as $evidence)
+                            <tr>
+                                <td class="px-4 py-2">{{ $evidence->original_name }}</td>
+                                <td class="px-4 py-2">{{ number_format($evidence->size_bytes / 1024, 2) }} KB</td>
+                                <td class="px-4 py-2">{{ $evidence->uploader->name ?? '-' }}</td>
+                                <td class="px-4 py-2">{{ $evidence->created_at->format('d/m/Y H:i') }}</td>
+                                <td class="px-4 py-2">
+                                    <a href="{{ route('evidences.download', $evidence) }}" class="text-indigo-600 hover:text-indigo-900">Descargar</a>
+                                </td>
+                            </tr>
+                            @endforeach
+                        </tbody>
+                    </table>
                     @else
-                        <p class="text-gray-500">No hay evidencias asociadas.</p>
+                    <p class="text-gray-500">No hay evidencias asociadas.</p>
                     @endif
                 </div>
+            </div> @php
+            $urlAnterior = url()->previous();
+            // Si no hay ruta anterior o es la misma, lo mandamos a su listado de partes
+            $rutaVolver = ($urlAnterior == url()->current()) ? route('client.work-reports.index') : $urlAnterior;
+            @endphp
+            <div class="mt-6 flex justify-start">
+                <a href="{{ $rutaVolver }}"
+                    class="inline-flex items-center px-4 py-2 bg-white border border-gray-300 rounded-md font-semibold text-xs text-gray-700 uppercase tracking-widest shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 transition ease-in-out duration-150">
+                    <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path>
+                    </svg>
+                    Volver
+                </a>
             </div>
         </div>
     </div>
