@@ -603,6 +603,142 @@ class WorkReportService
     }
 
     /**
+     * Actualiza los detalles de un parte (title, description, summary).
+     *
+     * Reglas de negocio:
+     * - No se permite editar tiempos ni estados (total_seconds, active_started_at, status, etc.)
+     * - validated: BLOQUEADO para todos (por defecto, más seguro)
+     * - in_progress/paused: se permite editar title y description (summary NO hasta finished)
+     * - finished: se permite editar summary (y opcionalmente title/description)
+     * - Cada update crea evento `edit` con metadata diff
+     * - Se registra auditoría (no bloqueante)
+     * - Todo ejecuta en transacción: actualización + evento + auditoría
+     *
+     * @param WorkReport|int $workReport Parte o ID del parte
+     * @param array $data Datos a actualizar (title, description, summary)
+     * @param User|int $actor Usuario que realiza la edición (obligatorio)
+     * @return WorkReport Parte actualizado
+     * @throws InvalidArgumentException Si el parte está validated o los campos no son editables según estado
+     */
+    public function updateDetails(WorkReport|int $workReport, array $data, User|int $actor): WorkReport
+    {
+        // Obtener parte si se pasó un ID
+        if (is_int($workReport)) {
+            $workReport = WorkReport::findOrFail($workReport);
+        }
+
+        // Obtener usuario si se pasó un ID
+        $actorId = null;
+        if ($actor instanceof User) {
+            $actorId = $actor->id;
+        } elseif (is_int($actor)) {
+            $actorId = $actor;
+        } else {
+            throw new InvalidArgumentException('El usuario que edita es obligatorio.');
+        }
+
+        // Regla: validated está BLOQUEADO para todos (por defecto, más seguro)
+        if ($workReport->isValidated()) {
+            throw new InvalidArgumentException(
+                "No se puede editar un parte que está en estado 'validated'. " .
+                "Los partes validados no se pueden modificar."
+            );
+        }
+
+        // Filtrar solo campos editables (title, description, summary)
+        // Regla: NO se permite cambiar tiempos ni estados
+        $allowedFields = ['title', 'description', 'summary'];
+        $dataToUpdate = array_intersect_key($data, array_flip($allowedFields));
+
+        // Validar campos según estado
+        $status = $workReport->status;
+        if (in_array($status, [WorkReport::STATUS_IN_PROGRESS, WorkReport::STATUS_PAUSED])) {
+            // in_progress/paused: solo title y description (summary NO hasta finished)
+            if (isset($dataToUpdate['summary'])) {
+                throw new InvalidArgumentException(
+                    "No se puede editar 'summary' en un parte con estado '{$status}'. " .
+                    "El resumen solo se puede editar cuando el parte está 'finished'."
+                );
+            }
+        }
+        // finished: se permite editar summary, title y description (sin restricciones adicionales)
+
+        // Si no hay cambios, retornar sin hacer nada
+        if (empty($dataToUpdate)) {
+            return $workReport;
+        }
+
+        // Ejecutar en transacción para mantener consistencia
+        // NOTE: La transacción protege: actualización + evento + auditoría
+        return DB::transaction(function () use ($workReport, $dataToUpdate, $actorId) {
+            // Recargar el parte para obtener valores actuales
+            $workReport->refresh();
+            $now = now();
+
+            // Calcular diff de cambios para metadata del evento
+            $diff = [];
+            foreach ($dataToUpdate as $field => $newValue) {
+                $oldValue = $workReport->$field;
+                if ($oldValue !== $newValue) {
+                    $diff[$field] = [
+                        'from' => $oldValue,
+                        'to' => $newValue,
+                    ];
+                }
+            }
+
+            // Si no hay cambios reales, retornar sin hacer nada
+            if (empty($diff)) {
+                return $workReport;
+            }
+
+            // Actualizar work_report
+            $workReport->update($dataToUpdate);
+
+            // Crear evento `edit` con metadata diff
+            $this->createEvent(
+                $workReport,
+                WorkReportEvent::TYPE_EDIT,
+                $now,
+                $workReport->total_seconds, // elapsed_seconds_after = total actual
+                $actorId,
+                ['diff' => $diff] // metadata con diff de cambios
+            );
+
+            Log::info('Parte editado', [
+                'work_report_id' => $workReport->id,
+                'fields_edited' => array_keys($diff),
+                'actor_id' => $actorId,
+            ]);
+
+            // Registrar auditoría (no debe interrumpir el flujo si falla)
+            if ($this->auditService) {
+                try {
+                    $this->auditService->log(
+                        'work_report_edited',
+                        $actorId,
+                        'WorkReport',
+                        $workReport->id,
+                        [
+                            'fields_edited' => array_keys($diff),
+                            'diff' => $diff,
+                            'status' => $workReport->status,
+                        ]
+                    );
+                } catch (\Exception $e) {
+                    // Si falla la auditoría, registrar warning pero no interrumpir
+                    Log::warning('Error al registrar auditoría de edición', [
+                        'error' => $e->getMessage(),
+                        'work_report_id' => $workReport->id,
+                    ]);
+                }
+            }
+
+            return $workReport->fresh();
+        });
+    }
+
+    /**
      * Crea un evento en el historial del parte.
      *
      * Método auxiliar para registrar eventos de forma consistente.

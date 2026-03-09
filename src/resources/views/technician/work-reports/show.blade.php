@@ -25,7 +25,7 @@
                     <div class="flex justify-between items-start mb-4">
                         <div>
                             <h3 class="text-lg font-semibold mb-2">Información del Parte</h3>
-                            <p><strong>Cliente:</strong> {{ $workReport->client->name }}</p>
+                            <p><strong>Cliente:</strong> {{ $workReport->client->user->name }}</p>
                             <p><strong>Título:</strong> {{ $workReport->title ?? '-' }}</p>
                             <p><strong>Descripción:</strong> {{ $workReport->description ?? '-' }}</p>
                             <p><strong>Estado:</strong>
@@ -38,7 +38,7 @@
                                     {{ $workReport->status }}
                                 </span>
                             </p>
-                            <p><strong>Tiempo total:</strong> {{ gmdate('H:i:s', $workReport->total_seconds) }} ({{ $workReport->total_seconds }} segundos)</p>
+                            <p><strong>Tiempo total:</strong> <span id="cronometro">{{ gmdate('H:i:s', $workReport->total_seconds) }} ({{ $workReport->total_seconds }} segundos)</span></p>
                             @if($workReport->finished_at)
                                 <p><strong>Finalizado:</strong> {{ $workReport->finished_at->format('d/m/Y H:i') }}</p>
                                 <br>
@@ -179,6 +179,47 @@
                     @endif
                 </div>
             </div>
+            @php
+            $urlAnterior = url()->previous();
+            // Si venimos de crear o editar, forzamos la vuelta al dashboard
+            $vieneDeFormulario = str_contains($urlAnterior, 'create') || str_contains($urlAnterior, 'edit');
+            // Asegúrate de que tu ruta del dashboard se llame así
+            $rutaVolver = $vieneDeFormulario ? route('technician.dashboard') : $urlAnterior;
+            @endphp
+            <div class="mt-6 flex justify-start">
+                <a href="{{ $rutaVolver }}"
+                    class="inline-flex items-center px-4 py-2 bg-white border border-gray-300 rounded-md font-semibold text-xs text-gray-700 uppercase tracking-widest shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 transition ease-in-out duration-150">
+                    <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path>
+                    </svg>
+                    Volver
+                </a>
+            </div>
         </div>
     </div>
+    <script>
+        let running = "{{ $workReport->status }}" === "{{ \App\Models\WorkReport::STATUS_IN_PROGRESS }}",
+            totalSeconds = {{ $workReport->total_seconds }},
+            crono = document.getElementById('cronometro'),
+            intervalId;
+
+        if(running) {
+            intervalId = setInterval(() => {
+                let segundos = totalSeconds, horas, minutos;
+
+                horas = Math.floor(segundos/3600);
+                segundos %= 3600;
+                minutos = Math.floor(segundos/60);
+                segundos %= 60;
+
+                totalSeconds++;
+                crono.innerText =
+                    horas.toString().padStart(2,'0') + ':'
+                    + minutos.toString().padStart(2,'0') + ':'
+                    + segundos.toString().padStart(2,'0') + ' ('
+                    + totalSeconds.toString() + ' segundos)';
+            }, 1000)
+        }
+
+    </script>
 </x-app-layout>

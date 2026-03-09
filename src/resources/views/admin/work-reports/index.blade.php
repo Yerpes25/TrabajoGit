@@ -17,7 +17,11 @@
                                 <option value="">Todos</option>
                                 @foreach($clients as $client)
                                 <option value="{{ $client->id }}" {{ request('client_id') == $client->id ? 'selected' : '' }}>
+<<<<<<< HEAD
+                                    {{ $client->user->name }}
+=======
                                     {{ $client->name }}
+>>>>>>> feature/020-usabilidad
                                 </option>
                                 @endforeach
                             </select>
@@ -77,7 +81,11 @@
                         <tbody>
                             @foreach($workReports as $report)
                             <tr>
+<<<<<<< HEAD
+                                <td class="px-4 py-2">{{ $report->client->user->name }}</td>
+=======
                                 <td class="px-4 py-2">{{ $report->client->name }}</td>
+>>>>>>> feature/020-usabilidad
                                 <td class="px-4 py-2">{{ $report->technician->name }}</td>
                                 <td class="px-4 py-2">{{ $report->title ?? '-' }}</td>
                                 <td class="px-4 py-2">{{ $report->status }}</td>

@@ -67,7 +67,7 @@
                                 <tbody class="divide-y divide-gray-200">
                                     @foreach($recentWorkReports as $report)
                                         <tr>
-                                            <td class="px-4 py-2">{{ $report->client->name }}</td>
+                                            <td class="px-4 py-2">{{ $report->client->user->name }}</td>
                                             <td class="px-4 py-2">{{ $report->technician->name }}</td>
                                             <td class="px-4 py-2">{{ $report->status }}</td>
                                             <td class="px-4 py-2">{{ number_format($report->total_seconds / 3600, 2) }}h</td>

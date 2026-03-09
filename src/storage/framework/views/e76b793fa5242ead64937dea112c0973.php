@@ -77,7 +77,7 @@
                                 <tbody class="divide-y divide-gray-200">
                                     <?php $__currentLoopData = $recentWorkReports; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $report): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
                                         <tr>
-                                            <td class="px-4 py-2"><?php echo e($report->client->name); ?></td>
+                                            <td class="px-4 py-2"><?php echo e($report->client->user->name); ?></td>
                                             <td class="px-4 py-2"><?php echo e($report->technician->name); ?></td>
                                             <td class="px-4 py-2"><?php echo e($report->status); ?></td>
                                             <td class="px-4 py-2"><?php echo e(number_format($report->total_seconds / 3600, 2)); ?>h</td>

@@ -90,8 +90,10 @@ class WorkReportPolicy
      * Determina si el usuario puede actualizar un parte.
      *
      * Reglas:
-     * - Admin: puede actualizar cualquier parte
-     * - Technician: solo partes donde technician_id = auth()->id()
+     * - Admin: puede actualizar cualquier parte (excepto validated, bloqueado por defecto)
+     * - Technician: solo partes donde technician_id = auth()->id() (excepto validated, bloqueado por defecto)
+     * - Client: no puede actualizar partes
+     * - validated: BLOQUEADO para todos (por defecto, más seguro)
      *
      * @param User $user
      * @param WorkReport $workReport
@@ -99,14 +101,21 @@ class WorkReportPolicy
      */
     public function update(User $user, WorkReport $workReport): bool|Response
     {
-        // Admin: puede actualizar cualquier parte
+        // Regla: validated está BLOQUEADO para todos (por defecto, más seguro)
+        if ($workReport->isValidated()) {
+            return Response::deny('No se puede editar un parte que está validado.');
+        }
+
+        // Admin: puede actualizar cualquier parte (excepto validated)
         if ($user->isAdmin()) {
             return true;
         }
 
-        // Technician: solo sus partes
+        // Technician: solo sus partes (excepto validated)
         if ($user->isTechnician()) {
-            return $workReport->technician_id === $user->id;
+            return $workReport->technician_id === $user->id
+                ? Response::allow()
+                : Response::deny('No tienes permiso para actualizar este parte de trabajo.');
         }
 
         return false;

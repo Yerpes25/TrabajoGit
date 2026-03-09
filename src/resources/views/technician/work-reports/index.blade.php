@@ -35,7 +35,11 @@
                             @foreach($workReports as $report)
                             <tr>
                                 <td class="px-4 py-2">#{{ $report->id }}</td>
+<<<<<<< HEAD
+                                <td class="px-4 py-2">{{ $report->client->user->name }}</td>
+=======
                                 <td class="px-4 py-2">{{ $report->client->name }}</td>
+>>>>>>> feature/020-usabilidad
                                 <td class="px-4 py-2">{{ $report->title ?? '-' }}</td>
                                 <td class="px-4 py-2">
                                     <span class="px-2 py-1 rounded text-xs

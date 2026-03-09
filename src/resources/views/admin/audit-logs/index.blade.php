@@ -88,6 +88,7 @@
                                 </td>
                                 <td class="px-4 py-2">
                                     @if($log->payload)
+<<<<<<< HEAD
                                     <button x-data="" x-on:click.prevent="$dispatch('open-modal', 'payload-{{ $log->id }}')" class="bg-blue-50 text-blue-600 hover:bg-blue-100 px-3 py-1 rounded-md text-sm font-semibold transition-colors">
                                         Ver 
                                     </button>
@@ -124,6 +125,11 @@
                                     </x-modal>
                                     @else
                                     <span class="text-gray-400 italic text-sm">Sin detalles</span>
+=======
+                                    <pre class="text-xs">{{ json_encode($log->payload, JSON_PRETTY_PRINT) }}</pre>
+                                    @else
+                                    -
+>>>>>>> feature/020-usabilidad
                                     @endif
                                 </td>
                             </tr>

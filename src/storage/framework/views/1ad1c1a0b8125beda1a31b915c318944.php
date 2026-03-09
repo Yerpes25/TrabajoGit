@@ -41,6 +41,7 @@
                         </thead>
                         <tbody>
                             <?php $__currentLoopData = $clients; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $client): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+<<<<<<< HEAD
                                 <tr>
                                     <td class="px-4 py-2"><?php echo e($client->name); ?></td>
                                     <td class="px-4 py-2"><?php echo e($client->email); ?></td>
@@ -57,6 +58,24 @@
                                         </form>
                                     </td>
                                 </tr>
+=======
+                            <tr>
+                                <td class="px-4 py-2"><?php echo e($client->name); ?></td>
+                                <td class="px-4 py-2"><?php echo e($client->email ?? '-'); ?></td>
+                                <td class="px-4 py-2">
+                                    <?php echo e(number_format(($client->profile->balance_seconds ?? 0) / 3600, 2)); ?>h
+                                </td>
+                                <td class="px-4 py-2">
+                                    <a href="<?php echo e(route('admin.clients.show', $client)); ?>" class="text-blue-500">Ver</a>
+                                    <a href="<?php echo e(route('admin.clients.edit', $client)); ?>" class="text-blue-500 ml-2">Editar</a>
+                                    <form action="<?php echo e(route('admin.clients.destroy', $client)); ?>" method="POST" class="inline" onsubmit="return confirm('¿Está seguro de eliminar este cliente?');">
+                                        <?php echo csrf_field(); ?>
+                                        <?php echo method_field('DELETE'); ?>
+                                        <button type="submit" class="text-red-500 ml-2">Eliminar</button>
+                                    </form>
+                                </td>
+                            </tr>
+>>>>>>> feature/020-usabilidad
                             <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
                         </tbody>
                     </table>
@@ -87,5 +106,4 @@
 <?php if (isset($__componentOriginal9ac128a9029c0e4701924bd2d73d7f54)): ?>
 <?php $component = $__componentOriginal9ac128a9029c0e4701924bd2d73d7f54; ?>
 <?php unset($__componentOriginal9ac128a9029c0e4701924bd2d73d7f54); ?>
-<?php endif; ?>
-<?php /**PATH /var/www/src/resources/views/admin/clients/index.blade.php ENDPATH**/ ?>
+<?php endif; ?><?php /**PATH /var/www/src/resources/views/admin/clients/index.blade.php ENDPATH**/ ?>

@@ -3,30 +3,15 @@
 namespace App\Http\Requests\Admin;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 
-/**
- * FormRequest para actualizar un cliente existente.
- *
- * Regla: Actualiza User + Client en transacción.
- * Password es opcional en update (solo se actualiza si se proporciona).
- */
 class UpdateClientRequest extends FormRequest
 {
-    /**
-     * Determine if the user is authorized to make this request.
-     *
-     * La autorización real se hace vía middleware role:admin.
-     */
     public function authorize(): bool
     {
         return true;
     }
 
-    /**
-     * Get the validation rules that apply to the request.
-     *
-     * @return array<string, \Illuminate\Contracts\Validation\ValidationRule|array<mixed>|string>
-     */
     public function rules(): array
     {
         $client = $this->route('client');
@@ -35,25 +20,58 @@ class UpdateClientRequest extends FormRequest
         return [
             // Datos del usuario (User)
             'name' => ['sometimes', 'required', 'string', 'max:255'],
-            'email' => ['sometimes', 'required', 'string', 'email', 'max:255', \Illuminate\Validation\Rule::unique('users')->ignore($userId)],
-            'password' => ['sometimes', 'nullable', 'string', 'min:8', 'confirmed'],
+            'email' => ['sometimes', 'required', 'string', 'email', 'max:255', Rule::unique('users','email')->ignore($userId)],
+            'password' => ['sometimes', 'nullable', 'confirmed', 'regex:/^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[\W]).{8,}$/'],
             'is_active' => ['sometimes', 'boolean'],
-
             // Datos del cliente (Client)
-            'client_name' => ['sometimes', 'required', 'string', 'max:255'],
             'legal_name' => ['sometimes', 'nullable', 'string', 'max:255'],
-            'tax_id' => ['sometimes', 'nullable', 'string', 'max:255'],
-            'client_email' => ['sometimes', 'nullable', 'string', 'email', 'max:255'],
-            'phone' => ['sometimes', 'nullable', 'string', 'max:255'],
+            // DNI
+            'tax_id' => ['sometimes', 'nullable', 'regex:/^[0-9]{8}[A-Za-z]$/'],
+            // Teléfono
+            'phone' => ['sometimes', 'nullable', 'regex:/^[0-9]{9}$/'],
             'address' => ['sometimes', 'nullable', 'string'],
             'notes' => ['sometimes', 'nullable', 'string'],
         ];
     }
 
     /**
+     * Mensajes personalizados
+     */
+    public function messages(): array
+    {
+        return [
+            'email.required' => 'El correo es obligatorio.',
+            'email.email' => 'El correo no tiene un formato válido.',
+            'email.unique' => 'Este correo ya está registrado.',
+
+            'password.confirmed' => 'Las contraseñas no coinciden.',
+            'password.regex' => 'La contraseña debe tener mínimo 8 caracteres, mayúscula, minúscula, número y símbolo.',
+
+            'tax_id.regex' => 'El DNI debe tener 8 números y una letra.',
+
+            'phone.regex' => 'El teléfono debe tener 9 números.',
+
+            'name.required' => 'El nombre es obligatorio.',
+        ];
+    }
+
+    /**
+     * Nombres amigables de campos
+     */
+    public function attributes(): array
+    {
+        return [
+            'name' => 'nombre',
+            'email' => 'correo electrónico',
+            'password' => 'contraseña',
+            'tax_id' => 'DNI',
+            'phone' => 'teléfono',
+            'client_email' => 'correo del cliente',
+        ];
+    }
+
+    /**
      * Obtiene los datos del usuario para actualizar el User.
-     *
-     * @return array
      */
     public function getUserData(): array
     {
@@ -67,8 +85,6 @@ class UpdateClientRequest extends FormRequest
 
     /**
      * Obtiene los datos del cliente para actualizar el Client.
-     *
-     * @return array
      */
     public function getClientData(): array
     {

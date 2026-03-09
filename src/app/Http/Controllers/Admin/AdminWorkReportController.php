@@ -3,9 +3,15 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Admin\UpdateWorkReportRequest;
 use App\Models\Client;
 use App\Models\User;
 use App\Models\WorkReport;
+use App\Services\AuditService;
+use App\Services\BalanceService;
+use App\Services\WorkReportService;
+use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
 
@@ -17,6 +23,15 @@ use Illuminate\View\View;
  */
 class AdminWorkReportController extends Controller
 {
+    use AuthorizesRequests;
+
+    private WorkReportService $workReportService;
+
+    public function __construct(WorkReportService $workReportService)
+    {
+        $this->workReportService = $workReportService;
+    }
+
     /**
      * Lista todos los partes con filtros y paginación.
      *
@@ -60,7 +75,10 @@ class AdminWorkReportController extends Controller
             ->withQueryString();
 
         // Cargar datos para filtros
-        $clients = Client::orderBy('name')->get();
+        $clients = Client::join('users', 'users.id', 'clients.user_id')
+            ->orderBy('name')
+            ->select('clients.*', 'users.name as name')
+            ->get();
         $technicians = User::where('role', 'technician')->orderBy('name')->get();
 
         return view('admin.work-reports.index', compact('workReports', 'clients', 'technicians'));
@@ -90,5 +108,53 @@ class AdminWorkReportController extends Controller
         return view('admin.work-reports.show', compact('workReport'));
     }
 
+    /**
+     * Muestra el formulario para editar un parte.
+     *
+     * Controller fino: solo verifica permisos y carga la vista.
+     *
+     * @param WorkReport $workReport
+     * @return View
+     */
+    public function edit(WorkReport $workReport): View
+    {
+        // Verificar permisos mediante Policy
+        $this->authorize('update', $workReport);
 
+        return view('admin.work-reports.edit', compact('workReport'));
+    }
+
+    /**
+     * Actualiza un parte existente.
+     *
+     * Controller fino: solo valida, delega a WorkReportService y redirige.
+     * Regla: NO se permite cambiar tiempos manualmente (solo vía cronómetro).
+     * Regla: La lógica de negocio (validación de estado, diff, evento, auditoría) está en WorkReportService.
+     *
+     * @param UpdateWorkReportRequest $request
+     * @param WorkReport $workReport
+     * @return RedirectResponse
+     */
+    public function update(UpdateWorkReportRequest $request, WorkReport $workReport): RedirectResponse
+    {
+        // Verificar permisos mediante Policy
+        $this->authorize('update', $workReport);
+
+        try {
+            // Delegar a WorkReportService (lógica de negocio)
+            // Regla: updateDetails() valida estado, calcula diff, crea evento y auditoría
+            $this->workReportService->updateDetails(
+                $workReport,
+                $request->only(['title', 'description', 'summary']),
+                auth()->id()
+            );
+
+            return redirect()->route('admin.work-reports.show', $workReport)
+                ->with('success', 'Parte actualizado correctamente.');
+        } catch (\InvalidArgumentException $e) {
+            return redirect()->route('admin.work-reports.edit', $workReport)
+                ->withErrors(['error' => $e->getMessage()])
+                ->withInput();
+        }
+    }
 }

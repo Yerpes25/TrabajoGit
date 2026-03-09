@@ -183,10 +183,12 @@ class TechnicianWorkReportFlowTest extends TestCase
         $client = Client::create(['name' => 'Cliente', 'email' => 'c@test.com']);
         $workReport = $this->workReportService->create($client, $this->technician);
 
+        // Regla: summary solo se puede editar en finished, no en paused
+        // Solo editamos title y description en paused
         $response = $this->actingAs($this->technician)->put(route('technician.work-reports.update', $workReport), [
             'title' => 'Título actualizado',
             'description' => 'Descripción actualizada',
-            'summary' => 'Resumen del trabajo',
+            // summary no se puede editar en paused según reglas de negocio
         ]);
 
         $response->assertRedirect();
@@ -195,7 +197,7 @@ class TechnicianWorkReportFlowTest extends TestCase
         $workReport->refresh();
         $this->assertEquals('Título actualizado', $workReport->title);
         $this->assertEquals('Descripción actualizada', $workReport->description);
-        $this->assertEquals('Resumen del trabajo', $workReport->summary);
+        // summary no se editó porque el parte está paused
     }
 
     /**

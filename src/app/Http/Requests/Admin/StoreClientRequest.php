@@ -32,16 +32,28 @@ class StoreClientRequest extends FormRequest
         return [
             // Datos del usuario (User)
             'name' => ['required', 'string', 'max:255'],
-            'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
-            'password' => ['required', 'string', 'min:8', 'confirmed'],
+            'email' => ['required', 'string', 'email', 'max:255', 'unique:users,email'],
+            'password' => ['required', 'string', 'confirmed', 'regex:/^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[\W]).{8,}$/'],
             'is_active' => ['sometimes', 'boolean'],
 
             // Datos del cliente (Client)
             'legal_name' => ['sometimes', 'nullable', 'string', 'max:255'],
-            'tax_id' => ['sometimes', 'nullable', 'string', 'max:255'],
-            'phone' => ['sometimes', 'nullable', 'string', 'max:255'],
+            // DNI
+            'tax_id' => ['sometimes', 'nullable', 'regex:/^[0-9]{8}[A-Za-z]$/'],
+            // Teléfono (9 números)
+            'phone' => ['sometimes', 'nullable', 'regex:/^[0-9]{9}$/'],
             'address' => ['sometimes', 'nullable', 'string'],
             'notes' => ['sometimes', 'nullable', 'string'],
+        ];
+    }
+
+    public function messages(): array
+    {
+        return [
+            'password.regex' => 'La contraseña debe tener mayúscula, minúscula, número y símbolo.',
+            'tax_id.regex' => 'El DNI debe tener 8 números y una letra.',
+            'phone.regex' => 'El teléfono debe tener 9 números.',
+            'email.unique' => 'Este correo ya está registrado.',
         ];
     }
 

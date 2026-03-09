@@ -58,7 +58,11 @@ class TechnicianWorkReportController extends Controller
      */
     public function create(): View
     {
-        $clients = Client::orderBy('name')->get();
+        $clients = Client::with(['profile', 'user'])
+            ->join('users', 'users.id', '=', 'clients.user_id')
+            ->orderBy('users.name', 'desc')
+            ->select(['clients.*', 'users.name'])
+            ->get();
         return view('technician.work-reports.create', compact('clients'));
     }
 
@@ -132,8 +136,9 @@ class TechnicianWorkReportController extends Controller
     /**
      * Actualiza un parte existente.
      *
-     * Controller fino: solo valida, actualiza campos básicos y redirige.
+     * Controller fino: solo valida, delega a WorkReportService y redirige.
      * Regla: NO se permite cambiar tiempos manualmente (solo vía cronómetro).
+     * Regla: La lógica de negocio (validación de estado, diff, evento, auditoría) está en WorkReportService.
      *
      * @param UpdateWorkReportRequest $request
      * @param WorkReport $workReport
@@ -144,11 +149,22 @@ class TechnicianWorkReportController extends Controller
         // Verificar permisos mediante Policy
         $this->authorize('update', $workReport);
 
-        // Actualizar solo campos básicos (regla: no tiempos)
-        $workReport->update($request->only(['title', 'description', 'summary']));
+        try {
+            // Delegar a WorkReportService (lógica de negocio)
+            // Regla: updateDetails() valida estado, calcula diff, crea evento y auditoría
+            $this->workReportService->updateDetails(
+                $workReport,
+                $request->only(['title', 'description', 'summary']),
+                auth()->id()
+            );
 
-        return redirect()->route('technician.work-reports.show', $workReport)
-            ->with('success', 'Parte actualizado correctamente.');
+            return redirect()->route('technician.work-reports.show', $workReport)
+                ->with('success', 'Parte actualizado correctamente.');
+        } catch (\InvalidArgumentException $e) {
+            return redirect()->route('technician.work-reports.edit', $workReport)
+                ->withErrors(['error' => $e->getMessage()])
+                ->withInput();
+        }
     }
 
     /**

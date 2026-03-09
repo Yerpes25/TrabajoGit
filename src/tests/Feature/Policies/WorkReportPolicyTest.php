@@ -189,4 +189,23 @@ class WorkReportPolicyTest extends TestCase
         $this->assertTrue($admin->can('finish', $workReport));
         $this->assertTrue($admin->can('validate', $workReport));
     }
+
+    /**
+     * Test: No se puede actualizar un parte validated (bloqueado para todos)
+     */
+    public function test_cannot_update_validated_work_report(): void
+    {
+        $client = Client::create(['name' => 'Cliente Test', 'email' => 'client@test.com']);
+        $technician = User::factory()->create(['role' => 'technician']);
+        $admin = User::factory()->create(['role' => 'admin', 'is_active' => true]);
+
+        $workReport = $this->workReportService->create($client, $technician);
+        $workReport->update(['status' => WorkReport::STATUS_VALIDATED]);
+
+        // Technician no puede editar validated
+        $this->assertFalse($technician->can('update', $workReport));
+
+        // Admin tampoco puede editar validated (bloqueado por defecto)
+        $this->assertFalse($admin->can('update', $workReport));
+    }
 }

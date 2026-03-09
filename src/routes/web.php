@@ -37,6 +37,8 @@ Route::middleware(['auth', 'role:admin'])->prefix('admin')->name('admin.')->grou
     // Partes de trabajo
     Route::get('work-reports', [\App\Http\Controllers\Admin\AdminWorkReportController::class, 'index'])->name('work-reports.index');
     Route::get('work-reports/{workReport}', [\App\Http\Controllers\Admin\AdminWorkReportController::class, 'show'])->name('work-reports.show');
+    Route::get('work-reports/{workReport}/edit', [\App\Http\Controllers\Admin\AdminWorkReportController::class, 'edit'])->name('work-reports.edit');
+    Route::put('work-reports/{workReport}', [\App\Http\Controllers\Admin\AdminWorkReportController::class, 'update'])->name('work-reports.update');
 
     // Auditoría
     Route::get('audit-logs', [\App\Http\Controllers\Admin\AdminAuditLogController::class, 'index'])->name('audit-logs.index');

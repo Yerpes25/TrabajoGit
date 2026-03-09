@@ -30,6 +30,7 @@
                         </thead>
                         <tbody>
                             @foreach($clients as $client)
+<<<<<<< HEAD
                                 <tr>
                                     <td class="px-4 py-2">{{ $client->name }}</td>
                                     <td class="px-4 py-2">{{ $client->email }}</td>
@@ -46,6 +47,24 @@
                                         </form>
                                     </td>
                                 </tr>
+=======
+                            <tr>
+                                <td class="px-4 py-2">{{ $client->name }}</td>
+                                <td class="px-4 py-2">{{ $client->email ?? '-' }}</td>
+                                <td class="px-4 py-2">
+                                    {{ number_format(($client->profile->balance_seconds ?? 0) / 3600, 2) }}h
+                                </td>
+                                <td class="px-4 py-2">
+                                    <a href="{{ route('admin.clients.show', $client) }}" class="text-blue-500">Ver</a>
+                                    <a href="{{ route('admin.clients.edit', $client) }}" class="text-blue-500 ml-2">Editar</a>
+                                    <form action="{{ route('admin.clients.destroy', $client) }}" method="POST" class="inline" onsubmit="return confirm('¿Está seguro de eliminar este cliente?');">
+                                        @csrf
+                                        @method('DELETE')
+                                        <button type="submit" class="text-red-500 ml-2">Eliminar</button>
+                                    </form>
+                                </td>
+                            </tr>
+>>>>>>> feature/020-usabilidad
                             @endforeach
                         </tbody>
                     </table>

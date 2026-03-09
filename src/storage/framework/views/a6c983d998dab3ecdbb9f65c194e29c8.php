@@ -46,8 +46,13 @@
                                 <option value="">Todos</option>
                                 <?php $__currentLoopData = $clients; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $client): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
                                 <option value="<?php echo e($client->id); ?>" <?php echo e(request('client_id') == $client->id ? 'selected' : ''); ?>>
+<<<<<<< HEAD
+                                    <?php echo e($client->user->name); ?>
+
+=======
                                     <?php echo e($client->name); ?>
 
+>>>>>>> feature/020-usabilidad
                                 </option>
                                 <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
                             </select>
@@ -240,7 +245,11 @@
                         <tbody>
                             <?php $__currentLoopData = $workReports; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $report): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
                             <tr>
+<<<<<<< HEAD
+                                <td class="px-4 py-2"><?php echo e($report->client->user->name); ?></td>
+=======
                                 <td class="px-4 py-2"><?php echo e($report->client->name); ?></td>
+>>>>>>> feature/020-usabilidad
                                 <td class="px-4 py-2"><?php echo e($report->technician->name); ?></td>
                                 <td class="px-4 py-2"><?php echo e($report->title ?? '-'); ?></td>
                                 <td class="px-4 py-2"><?php echo e($report->status); ?></td>
