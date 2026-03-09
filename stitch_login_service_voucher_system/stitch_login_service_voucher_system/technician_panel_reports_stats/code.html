@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Technician Panel - Reports &amp; Stats</title>
+<!-- Google Fonts -->
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&amp;display=swap" rel="stylesheet"/>
+<!-- Material Symbols -->
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<!-- Tailwind CSS -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#197fe6",
+                        "background-light": "#f6f7f8",
+                        "background-dark": "#111921",
+                    },
+                    fontFamily: {
+                        "display": ["Inter"]
+                    },
+                    borderRadius: {"DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px"},
+                },
+            },
+        }
+    </script>
+</head>
+<body class="bg-background-light dark:bg-background-dark font-display text-slate-900 dark:text-slate-100 antialiased">
+<div class="relative flex h-auto min-h-screen w-full flex-col group/design-root overflow-x-hidden">
+<div class="layout-container flex h-full grow flex-col">
+<!-- Header / Navigation -->
+<header class="flex items-center justify-between whitespace-nowrap border-b border-solid border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 px-10 py-3">
+<div class="flex items-center gap-8">
+<div class="flex items-center gap-4 text-primary">
+<div class="size-8 flex items-center justify-center bg-primary/10 rounded-lg">
+<span class="material-symbols-outlined text-primary">analytics</span>
+</div>
+<h2 class="text-slate-900 dark:text-slate-100 text-lg font-bold leading-tight tracking-[-0.015em]">Technician Panel</h2>
+</div>
+<label class="flex flex-col min-w-40 h-10 max-w-64">
+<div class="flex w-full flex-1 items-stretch rounded-lg h-full overflow-hidden">
+<div class="text-slate-500 bg-slate-100 dark:bg-slate-800 flex items-center justify-center pl-4">
+<span class="material-symbols-outlined text-[20px]">search</span>
+</div>
+<input class="form-input flex w-full min-w-0 flex-1 border-none bg-slate-100 dark:bg-slate-800 focus:ring-0 text-slate-900 dark:text-slate-100 placeholder:text-slate-500 text-base font-normal px-4 pl-2" placeholder="Search reports..." value=""/>
+</div>
+</label>
+</div>
+<div class="flex flex-1 justify-end gap-8">
+<nav class="flex items-center gap-6">
+<a class="text-slate-600 dark:text-slate-400 hover:text-primary dark:hover:text-primary text-sm font-medium transition-colors" href="#">Dashboard</a>
+<a class="text-primary text-sm font-bold border-b-2 border-primary py-1" href="#">Reports</a>
+<a class="text-slate-600 dark:text-slate-400 hover:text-primary dark:hover:text-primary text-sm font-medium transition-colors" href="#">Clients</a>
+<a class="text-slate-600 dark:text-slate-400 hover:text-primary dark:hover:text-primary text-sm font-medium transition-colors" href="#">Schedule</a>
+</nav>
+<div class="flex gap-2">
+<button class="flex items-center justify-center rounded-lg size-10 bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors">
+<span class="material-symbols-outlined">notifications</span>
+</button>
+<button class="flex items-center justify-center rounded-lg size-10 bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors">
+<span class="material-symbols-outlined">settings</span>
+</button>
+</div>
+<div class="bg-slate-200 dark:bg-slate-700 aspect-square bg-cover rounded-full size-10 border-2 border-primary/20" data-alt="Professional portrait of a male technician" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuCqSBn9N1fXFra4cO4sDj3PJFE2IdK4K0pMrlsuXOf5iJhlU-o7Fr_BlBTEp85PWg4qEXpVRY-JiprvO1qEWiGFWkNHHvhmvWLK9CUz-eLNr97znRDRyRREUh6YEv7qoLfNDy-RDkl8EYAB3-jXa98VdQkb0Z7Bxt5bcOdRQY5n1PwM3BPN4SPZzEatjipdWOv1KaX2gGAeKxu-04BUuZ4Z-hvN_SuvDxxQrD_x08so3qicGeqcbeTvxe2XeIE_lh0j2P2SEKFb_7Gj");'></div>
+</div>
+</header>
+<main class="px-10 py-8 max-w-[1280px] mx-auto w-full">
+<!-- Header Section -->
+<div class="flex flex-wrap justify-between items-end gap-4 mb-8">
+<div class="flex flex-col gap-2">
+<h1 class="text-slate-900 dark:text-slate-100 text-4xl font-black leading-tight tracking-tight">Reports &amp; Statistics</h1>
+<p class="text-slate-500 dark:text-slate-400 text-lg">Detailed overview of your technical performance and service allocation.</p>
+</div>
+<div class="flex gap-3">
+<button class="flex items-center gap-2 px-4 py-2 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-lg text-sm font-bold hover:bg-slate-50 transition-colors">
+<span class="material-symbols-outlined text-[18px]">calendar_today</span>
+                        This Month
+                    </button>
+<button class="flex items-center gap-2 px-4 py-2 bg-primary text-white rounded-lg text-sm font-bold shadow-sm hover:bg-primary/90 transition-colors">
+<span class="material-symbols-outlined text-[18px]">download</span>
+                        Export PDF
+                    </button>
+</div>
+</div>
+<!-- Key Metrics Cards -->
+<div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-10">
+<div class="flex flex-col gap-3 rounded-xl p-6 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-sm">
+<div class="flex items-center justify-between">
+<p class="text-slate-500 dark:text-slate-400 text-sm font-medium uppercase tracking-wider">Total Hours This Month</p>
+<span class="material-symbols-outlined text-primary/40">schedule</span>
+</div>
+<div class="flex items-baseline gap-2">
+<p class="text-slate-900 dark:text-slate-100 text-3xl font-bold">142.5 hrs</p>
+<p class="text-emerald-600 dark:text-emerald-400 text-sm font-bold flex items-center">
+<span class="material-symbols-outlined text-[16px]">trending_up</span>
+                            12%
+                        </p>
+</div>
+<div class="w-full bg-slate-100 dark:bg-slate-800 h-1 rounded-full mt-2">
+<div class="bg-primary h-1 rounded-full w-[75%]"></div>
+</div>
+</div>
+<div class="flex flex-col gap-3 rounded-xl p-6 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-sm">
+<div class="flex items-center justify-between">
+<p class="text-slate-500 dark:text-slate-400 text-sm font-medium uppercase tracking-wider">Avg Session Duration</p>
+<span class="material-symbols-outlined text-primary/40">timer</span>
+</div>
+<div class="flex items-baseline gap-2">
+<p class="text-slate-900 dark:text-slate-100 text-3xl font-bold">2.4 hrs</p>
+<p class="text-emerald-600 dark:text-emerald-400 text-sm font-bold flex items-center">
+<span class="material-symbols-outlined text-[16px]">trending_up</span>
+                            5%
+                        </p>
+</div>
+<div class="w-full bg-slate-100 dark:bg-slate-800 h-1 rounded-full mt-2">
+<div class="bg-primary h-1 rounded-full w-[45%]"></div>
+</div>
+</div>
+<div class="flex flex-col gap-3 rounded-xl p-6 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-sm">
+<div class="flex items-center justify-between">
+<p class="text-slate-500 dark:text-slate-400 text-sm font-medium uppercase tracking-wider">Top Client</p>
+<span class="material-symbols-outlined text-primary/40">corporate_fare</span>
+</div>
+<div class="flex items-baseline gap-2">
+<p class="text-slate-900 dark:text-slate-100 text-2xl font-bold">Global Tech Corp</p>
+<p class="text-rose-600 dark:text-rose-400 text-sm font-bold flex items-center">
+<span class="material-symbols-outlined text-[16px]">trending_down</span>
+                            2%
+                        </p>
+</div>
+<div class="w-full bg-slate-100 dark:bg-slate-800 h-1 rounded-full mt-2">
+<div class="bg-primary h-1 rounded-full w-[90%]"></div>
+</div>
+</div>
+</div>
+<!-- Charts Section -->
+<div class="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-10">
+<!-- Bar Chart: Hours Worked per Week -->
+<div class="flex flex-col gap-4 bg-white dark:bg-slate-900 p-8 rounded-xl border border-slate-200 dark:border-slate-800 shadow-sm">
+<div class="flex items-center justify-between">
+<div>
+<h3 class="text-slate-900 dark:text-slate-100 text-xl font-bold">Hours Worked per Week</h3>
+<p class="text-slate-500 dark:text-slate-400 text-sm">Last 7 Days vs Previous Week</p>
+</div>
+<div class="flex flex-col items-end">
+<p class="text-slate-900 dark:text-slate-100 text-2xl font-black">42 hrs</p>
+<span class="text-emerald-600 text-xs font-bold">+4% from last week</span>
+</div>
+</div>
+<div class="grid h-[240px] grid-cols-7 items-end gap-4 px-2 pt-8">
+<!-- Mon -->
+<div class="group relative flex flex-col items-center gap-2 h-full justify-end">
+<div class="bg-primary/20 w-full rounded-t-lg transition-all group-hover:bg-primary" style="height: 65%;"></div>
+<p class="text-slate-500 text-[12px] font-bold">Mon</p>
+</div>
+<!-- Tue -->
+<div class="group relative flex flex-col items-center gap-2 h-full justify-end">
+<div class="bg-primary/20 w-full rounded-t-lg transition-all group-hover:bg-primary" style="height: 40%;"></div>
+<p class="text-slate-500 text-[12px] font-bold">Tue</p>
+</div>
+<!-- Wed -->
+<div class="group relative flex flex-col items-center gap-2 h-full justify-end">
+<div class="bg-primary/20 w-full rounded-t-lg transition-all group-hover:bg-primary" style="height: 85%;"></div>
+<p class="text-slate-500 text-[12px] font-bold">Wed</p>
+</div>
+<!-- Thu -->
+<div class="group relative flex flex-col items-center gap-2 h-full justify-end">
+<div class="bg-primary w-full rounded-t-lg" style="height: 100%;"></div>
+<p class="text-slate-900 dark:text-slate-100 text-[12px] font-bold">Thu</p>
+</div>
+<!-- Fri -->
+<div class="group relative flex flex-col items-center gap-2 h-full justify-end">
+<div class="bg-primary/20 w-full rounded-t-lg transition-all group-hover:bg-primary" style="height: 55%;"></div>
+<p class="text-slate-500 text-[12px] font-bold">Fri</p>
+</div>
+<!-- Sat -->
+<div class="group relative flex flex-col items-center gap-2 h-full justify-end">
+<div class="bg-primary/20 w-full rounded-t-lg transition-all group-hover:bg-primary" style="height: 20%;"></div>
+<p class="text-slate-500 text-[12px] font-bold">Sat</p>
+</div>
+<!-- Sun -->
+<div class="group relative flex flex-col items-center gap-2 h-full justify-end">
+<div class="bg-primary/20 w-full rounded-t-lg transition-all group-hover:bg-primary" style="height: 15%;"></div>
+<p class="text-slate-500 text-[12px] font-bold">Sun</p>
+</div>
+</div>
+</div>
+<!-- Pie Chart Style: Time Distribution -->
+<div class="flex flex-col gap-4 bg-white dark:bg-slate-900 p-8 rounded-xl border border-slate-200 dark:border-slate-800 shadow-sm">
+<div class="flex items-center justify-between mb-2">
+<div>
+<h3 class="text-slate-900 dark:text-slate-100 text-xl font-bold">Time Distribution by Client</h3>
+<p class="text-slate-500 dark:text-slate-400 text-sm">Monthly breakdown by account</p>
+</div>
+</div>
+<div class="flex flex-1 items-center justify-center gap-10">
+<!-- Donut Chart representation with SVG -->
+<div class="relative size-44 flex items-center justify-center">
+<svg class="size-full -rotate-90" viewbox="0 0 36 36">
+<circle class="dark:stroke-slate-800" cx="18" cy="18" fill="none" r="15.915" stroke="#e2e8f0" stroke-width="3"></circle>
+<circle cx="18" cy="18" fill="none" r="15.915" stroke="#197fe6" stroke-dasharray="45 55" stroke-dashoffset="0" stroke-width="3"></circle>
+<circle cx="18" cy="18" fill="none" r="15.915" stroke="#60a5fa" stroke-dasharray="25 75" stroke-dashoffset="-45" stroke-width="3"></circle>
+<circle cx="18" cy="18" fill="none" r="15.915" stroke="#93c5fd" stroke-dasharray="20 80" stroke-dashoffset="-70" stroke-width="3"></circle>
+<circle cx="18" cy="18" fill="none" r="15.915" stroke="#cbd5e1" stroke-dasharray="10 90" stroke-dashoffset="-90" stroke-width="3"></circle>
+</svg>
+<div class="absolute inset-0 flex flex-col items-center justify-center">
+<span class="text-2xl font-bold">100%</span>
+<span class="text-[10px] text-slate-500 uppercase">Total</span>
+</div>
+</div>
+<!-- Legend -->
+<div class="flex flex-col gap-4">
+<div class="flex items-center gap-3">
+<div class="size-3 rounded-full bg-primary"></div>
+<div>
+<p class="text-xs font-bold leading-none">Global Tech</p>
+<p class="text-[10px] text-slate-500">45% (64h)</p>
+</div>
+</div>
+<div class="flex items-center gap-3">
+<div class="size-3 rounded-full bg-blue-400"></div>
+<div>
+<p class="text-xs font-bold leading-none">DataStream Inc</p>
+<p class="text-[10px] text-slate-500">25% (35h)</p>
+</div>
+</div>
+<div class="flex items-center gap-3">
+<div class="size-3 rounded-full bg-blue-300"></div>
+<div>
+<p class="text-xs font-bold leading-none">Innova Soft</p>
+<p class="text-[10px] text-slate-500">20% (28h)</p>
+</div>
+</div>
+<div class="flex items-center gap-3">
+<div class="size-3 rounded-full bg-slate-300"></div>
+<div>
+<p class="text-xs font-bold leading-none">Others</p>
+<p class="text-[10px] text-slate-500">10% (15h)</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Recent Activity / Voucher List -->
+<div class="bg-white dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-800 shadow-sm overflow-hidden">
+<div class="p-6 border-b border-slate-200 dark:border-slate-800 flex justify-between items-center">
+<h3 class="text-lg font-bold">Recent Service Vouchers</h3>
+<button class="text-primary text-sm font-bold hover:underline">View All Records</button>
+</div>
+<table class="w-full text-left">
+<thead class="bg-slate-50 dark:bg-slate-800/50">
+<tr>
+<th class="px-6 py-4 text-xs font-bold text-slate-500 uppercase tracking-wider">Date</th>
+<th class="px-6 py-4 text-xs font-bold text-slate-500 uppercase tracking-wider">Client</th>
+<th class="px-6 py-4 text-xs font-bold text-slate-500 uppercase tracking-wider">Service Description</th>
+<th class="px-6 py-4 text-xs font-bold text-slate-500 uppercase tracking-wider">Hours</th>
+<th class="px-6 py-4 text-xs font-bold text-slate-500 uppercase tracking-wider">Status</th>
+</tr>
+</thead>
+<tbody class="divide-y divide-slate-100 dark:divide-slate-800">
+<tr class="hover:bg-slate-50 dark:hover:bg-slate-800/30 transition-colors">
+<td class="px-6 py-4 text-sm">Oct 24, 2023</td>
+<td class="px-6 py-4 text-sm font-semibold">Global Tech Corp</td>
+<td class="px-6 py-4 text-sm text-slate-500">Cloud Infrastructure Maintenance</td>
+<td class="px-6 py-4 text-sm">4.5h</td>
+<td class="px-6 py-4 text-sm">
+<span class="px-2 py-1 bg-emerald-100 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-400 rounded text-xs font-bold">Approved</span>
+</td>
+</tr>
+<tr class="hover:bg-slate-50 dark:hover:bg-slate-800/30 transition-colors">
+<td class="px-6 py-4 text-sm">Oct 23, 2023</td>
+<td class="px-6 py-4 text-sm font-semibold">DataStream Inc</td>
+<td class="px-6 py-4 text-sm text-slate-500">Security Audit - Q4</td>
+<td class="px-6 py-4 text-sm">8.0h</td>
+<td class="px-6 py-4 text-sm">
+<span class="px-2 py-1 bg-emerald-100 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-400 rounded text-xs font-bold">Approved</span>
+</td>
+</tr>
+<tr class="hover:bg-slate-50 dark:hover:bg-slate-800/30 transition-colors">
+<td class="px-6 py-4 text-sm">Oct 22, 2023</td>
+<td class="px-6 py-4 text-sm font-semibold">Innova Soft</td>
+<td class="px-6 py-4 text-sm text-slate-500">Backend Bug Fixing</td>
+<td class="px-6 py-4 text-sm">2.0h</td>
+<td class="px-6 py-4 text-sm">
+<span class="px-2 py-1 bg-amber-100 text-amber-700 dark:bg-amber-900/30 dark:text-amber-400 rounded text-xs font-bold">Pending</span>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</main>
+<footer class="mt-auto px-10 py-6 border-t border-slate-200 dark:border-slate-800 text-center">
+<p class="text-slate-500 dark:text-slate-400 text-xs">© 2023 Digital Service Voucher Management. All rights reserved.</p>
+</footer>
+</div>
+</div>
+</body></html>

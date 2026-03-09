@@ -1,0 +1,345 @@
+<!DOCTYPE html>
+
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Admin - Global Reports &amp; Analytics</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#197fe6",
+                        "background-light": "#f6f7f8",
+                        "background-dark": "#111921",
+                    },
+                    fontFamily: {
+                        "display": ["Inter"]
+                    },
+                    borderRadius: {"DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px"},
+                },
+            },
+        }
+    </script>
+</head>
+<body class="bg-background-light dark:bg-background-dark font-display text-slate-900 dark:text-slate-100 min-h-screen">
+<div class="flex flex-col min-h-screen">
+<!-- Navigation Bar -->
+<header class="flex items-center justify-between border-b border-primary/10 bg-white dark:bg-slate-900 px-10 py-3 sticky top-0 z-50">
+<div class="flex items-center gap-8">
+<div class="flex items-center gap-4 text-primary">
+<div class="size-8 bg-primary/10 flex items-center justify-center rounded-lg">
+<span class="material-symbols-outlined">analytics</span>
+</div>
+<h2 class="text-slate-900 dark:text-slate-100 text-lg font-bold leading-tight tracking-tight">VoucherAdmin</h2>
+</div>
+<div class="h-6 w-px bg-slate-200 dark:bg-slate-700"></div>
+<nav class="flex items-center gap-6">
+<a class="text-slate-600 dark:text-slate-400 text-sm font-medium hover:text-primary transition-colors" href="#">Dashboard</a>
+<a class="text-slate-600 dark:text-slate-400 text-sm font-medium hover:text-primary transition-colors" href="#">Technicians</a>
+<a class="text-slate-600 dark:text-slate-400 text-sm font-medium hover:text-primary transition-colors" href="#">Clients</a>
+<a class="text-slate-600 dark:text-slate-400 text-sm font-medium hover:text-primary transition-colors" href="#">Vouchers</a>
+<a class="text-primary text-sm font-bold border-b-2 border-primary pb-0.5" href="#">Reports</a>
+</nav>
+</div>
+<div class="flex items-center gap-4">
+<label class="relative flex items-center">
+<span class="material-symbols-outlined absolute left-3 text-slate-400">search</span>
+<input class="form-input w-64 pl-10 pr-4 py-2 rounded-lg border-none bg-slate-100 dark:bg-slate-800 focus:ring-2 focus:ring-primary text-sm" placeholder="Search analytics..." type="text"/>
+</label>
+<button class="p-2 rounded-lg bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400 hover:text-primary transition-colors">
+<span class="material-symbols-outlined">notifications</span>
+</button>
+<div class="size-10 rounded-full bg-primary/20 border-2 border-primary/30 overflow-hidden" data-alt="User profile avatar placeholder">
+<img alt="Avatar" class="w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBfBQjoNpRfdnVZvGsZVjifiML_Po0gy8-6xCByVJ7c9GerVXiu-RE2ap45yCW0QcQAg5nVIbOz275eoFbRRNXRthrudhI4nHa6UqRrWcZAIwtjl6jrA_Fus2TSq3eAjo6yiC7DIY7pwIlu003EVaAHqVpJO_MjwFUNzHRzija1FenLGGGg3QcHuviGR6stITxqGnsub1Y7Lmb38cPYLJ1hEVGQ7e1FjJYugw04kKbni-4rpeenVwClPzb-3ZJ2-6FUAxhWiZjC5auz"/>
+</div>
+</div>
+</header>
+<main class="flex-1 px-10 py-8 max-w-[1600px] mx-auto w-full">
+<!-- Header Section -->
+<div class="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-8">
+<div class="flex flex-col gap-1">
+<h1 class="text-3xl font-black text-slate-900 dark:text-slate-100 tracking-tight">Global Reports &amp; Analytics</h1>
+<p class="text-slate-500 dark:text-slate-400">Track business growth, technical capacity, and client value in real-time.</p>
+</div>
+<div class="flex items-center gap-3">
+<div class="flex bg-white dark:bg-slate-900 rounded-lg border border-slate-200 dark:border-slate-800 p-1">
+<button class="px-4 py-1.5 text-sm font-medium rounded-md bg-primary text-white">Month</button>
+<button class="px-4 py-1.5 text-sm font-medium rounded-md text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800">Quarter</button>
+<button class="px-4 py-1.5 text-sm font-medium rounded-md text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800">Year</button>
+</div>
+<button class="flex items-center gap-2 px-4 py-2 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-lg text-sm font-semibold hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors">
+<span class="material-symbols-outlined text-sm">calendar_month</span>
+                        Oct 1 - Oct 31, 2023
+                    </button>
+<button class="flex items-center gap-2 px-4 py-2 bg-primary text-white rounded-lg text-sm font-bold hover:bg-primary/90 transition-colors">
+<span class="material-symbols-outlined text-sm">download</span>
+                        Export PDF
+                    </button>
+</div>
+</div>
+<!-- Key Metrics Grid -->
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+<div class="bg-white dark:bg-slate-900 p-6 rounded-xl border border-slate-200 dark:border-slate-800 shadow-sm">
+<div class="flex justify-between items-start mb-4">
+<div class="p-2 bg-green-100 dark:bg-green-900/30 text-green-600 rounded-lg">
+<span class="material-symbols-outlined">payments</span>
+</div>
+<span class="text-green-600 text-xs font-bold bg-green-50 dark:bg-green-900/20 px-2 py-1 rounded">+12.5%</span>
+</div>
+<p class="text-slate-500 dark:text-slate-400 text-sm font-medium">Total Revenue</p>
+<p class="text-2xl font-bold text-slate-900 dark:text-slate-100 mt-1">$128,430.00</p>
+</div>
+<div class="bg-white dark:bg-slate-900 p-6 rounded-xl border border-slate-200 dark:border-slate-800 shadow-sm">
+<div class="flex justify-between items-start mb-4">
+<div class="p-2 bg-blue-100 dark:bg-blue-900/30 text-blue-600 rounded-lg">
+<span class="material-symbols-outlined">timer</span>
+</div>
+<span class="text-red-500 text-xs font-bold bg-red-50 dark:bg-red-900/20 px-2 py-1 rounded">-2.1%</span>
+</div>
+<p class="text-slate-500 dark:text-slate-400 text-sm font-medium">Technical Hours</p>
+<p class="text-2xl font-bold text-slate-900 dark:text-slate-100 mt-1">1,240 hrs</p>
+</div>
+<div class="bg-white dark:bg-slate-900 p-6 rounded-xl border border-slate-200 dark:border-slate-800 shadow-sm">
+<div class="flex justify-between items-start mb-4">
+<div class="p-2 bg-purple-100 dark:bg-purple-900/30 text-purple-600 rounded-lg">
+<span class="material-symbols-outlined">group</span>
+</div>
+<span class="text-green-600 text-xs font-bold bg-green-50 dark:bg-green-900/20 px-2 py-1 rounded">+5.4%</span>
+</div>
+<p class="text-slate-500 dark:text-slate-400 text-sm font-medium">Active Clients</p>
+<p class="text-2xl font-bold text-slate-900 dark:text-slate-100 mt-1">86</p>
+</div>
+<div class="bg-white dark:bg-slate-900 p-6 rounded-xl border border-slate-200 dark:border-slate-800 shadow-sm">
+<div class="flex justify-between items-start mb-4">
+<div class="p-2 bg-orange-100 dark:bg-orange-900/30 text-orange-600 rounded-lg">
+<span class="material-symbols-outlined">confirmation_number</span>
+</div>
+<span class="text-green-600 text-xs font-bold bg-green-50 dark:bg-green-900/20 px-2 py-1 rounded">+8.2%</span>
+</div>
+<p class="text-slate-500 dark:text-slate-400 text-sm font-medium">Avg. Voucher Value</p>
+<p class="text-2xl font-bold text-slate-900 dark:text-slate-100 mt-1">$1,493.00</p>
+</div>
+</div>
+<!-- Charts Section -->
+<div class="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-8">
+<!-- Monthly Revenue Area Chart Placeholder -->
+<div class="lg:col-span-2 bg-white dark:bg-slate-900 p-6 rounded-xl border border-slate-200 dark:border-slate-800 shadow-sm">
+<div class="flex items-center justify-between mb-6">
+<h3 class="font-bold text-lg">Monthly Revenue Growth</h3>
+<div class="flex items-center gap-2">
+<span class="flex items-center gap-1 text-xs text-slate-500"><span class="size-2 rounded-full bg-primary"></span> Revenue</span>
+<span class="flex items-center gap-1 text-xs text-slate-500"><span class="size-2 rounded-full bg-slate-300"></span> Previous</span>
+</div>
+</div>
+<div class="h-64 w-full relative">
+<!-- Simulated Chart Grid -->
+<div class="absolute inset-0 flex flex-col justify-between opacity-10">
+<div class="h-px w-full bg-slate-900 dark:bg-slate-100"></div>
+<div class="h-px w-full bg-slate-900 dark:bg-slate-100"></div>
+<div class="h-px w-full bg-slate-900 dark:bg-slate-100"></div>
+<div class="h-px w-full bg-slate-900 dark:bg-slate-100"></div>
+</div>
+<!-- Area Chart SVG Simulation -->
+<div class="absolute bottom-0 left-0 w-full h-full flex items-end">
+<svg class="w-full h-full" preserveaspectratio="none" viewbox="0 0 800 200">
+<defs>
+<lineargradient id="grad1" x1="0%" x2="0%" y1="0%" y2="100%">
+<stop offset="0%" style="stop-color:rgba(25, 127, 230, 0.4);stop-opacity:1"></stop>
+<stop offset="100%" style="stop-color:rgba(25, 127, 230, 0);stop-opacity:1"></stop>
+</lineargradient>
+</defs>
+<path d="M0,180 Q100,160 200,140 T400,100 T600,60 T800,40 L800,200 L0,200 Z" fill="url(#grad1)"></path>
+<path d="M0,180 Q100,160 200,140 T400,100 T600,60 T800,40" fill="none" stroke="#197fe6" stroke-width="3"></path>
+</svg>
+</div>
+<!-- X-Axis Labels -->
+<div class="absolute -bottom-6 w-full flex justify-between text-[10px] text-slate-400 font-medium">
+<span>JAN</span><span>MAR</span><span>MAY</span><span>JUL</span><span>SEP</span><span>NOV</span>
+</div>
+</div>
+</div>
+<!-- Technician Productivity Bar Chart Placeholder -->
+<div class="bg-white dark:bg-slate-900 p-6 rounded-xl border border-slate-200 dark:border-slate-800 shadow-sm">
+<div class="flex items-center justify-between mb-6">
+<h3 class="font-bold text-lg">Technician Performance</h3>
+<button class="text-primary text-xs font-bold">View All</button>
+</div>
+<div class="space-y-6">
+<div class="space-y-2">
+<div class="flex justify-between text-xs font-medium">
+<span class="text-slate-600 dark:text-slate-400">Alex Rivers</span>
+<span class="text-slate-900 dark:text-slate-100">168 hrs (94%)</span>
+</div>
+<div class="w-full bg-slate-100 dark:bg-slate-800 h-2 rounded-full overflow-hidden">
+<div class="bg-primary h-full rounded-full w-[94%]"></div>
+</div>
+</div>
+<div class="space-y-2">
+<div class="flex justify-between text-xs font-medium">
+<span class="text-slate-600 dark:text-slate-400">Jordan Smith</span>
+<span class="text-slate-900 dark:text-slate-100">142 hrs (82%)</span>
+</div>
+<div class="w-full bg-slate-100 dark:bg-slate-800 h-2 rounded-full overflow-hidden">
+<div class="bg-primary h-full rounded-full w-[82%]"></div>
+</div>
+</div>
+<div class="space-y-2">
+<div class="flex justify-between text-xs font-medium">
+<span class="text-slate-600 dark:text-slate-400">Sam Lee</span>
+<span class="text-slate-900 dark:text-slate-100">120 hrs (75%)</span>
+</div>
+<div class="w-full bg-slate-100 dark:bg-slate-800 h-2 rounded-full overflow-hidden">
+<div class="bg-primary h-full rounded-full w-[75%]"></div>
+</div>
+</div>
+<div class="space-y-2">
+<div class="flex justify-between text-xs font-medium">
+<span class="text-slate-600 dark:text-slate-400">Casey Chen</span>
+<span class="text-slate-900 dark:text-slate-100">115 hrs (71%)</span>
+</div>
+<div class="w-full bg-slate-100 dark:bg-slate-800 h-2 rounded-full overflow-hidden">
+<div class="bg-primary h-full rounded-full w-[71%]"></div>
+</div>
+</div>
+<div class="space-y-2">
+<div class="flex justify-between text-xs font-medium">
+<span class="text-slate-600 dark:text-slate-400">Morgan Gray</span>
+<span class="text-slate-900 dark:text-slate-100">98 hrs (60%)</span>
+</div>
+<div class="w-full bg-slate-100 dark:bg-slate-800 h-2 rounded-full overflow-hidden">
+<div class="bg-primary h-full rounded-full w-[60%]"></div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Table Section -->
+<div class="bg-white dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-800 shadow-sm overflow-hidden">
+<div class="px-6 py-4 border-b border-slate-200 dark:border-slate-800 flex items-center justify-between">
+<h3 class="font-bold text-lg">Most Profitable Clients</h3>
+<div class="flex gap-2">
+<button class="px-3 py-1.5 border border-slate-200 dark:border-slate-800 rounded text-xs font-bold hover:bg-slate-50 dark:hover:bg-slate-800">Filter</button>
+<button class="px-3 py-1.5 border border-slate-200 dark:border-slate-800 rounded text-xs font-bold hover:bg-slate-50 dark:hover:bg-slate-800">Export CSV</button>
+</div>
+</div>
+<div class="overflow-x-auto">
+<table class="w-full text-left border-collapse">
+<thead>
+<tr class="bg-slate-50 dark:bg-slate-800/50">
+<th class="px-6 py-4 text-xs font-bold text-slate-500 uppercase tracking-wider">Client Name</th>
+<th class="px-6 py-4 text-xs font-bold text-slate-500 uppercase tracking-wider">Total Vouchers</th>
+<th class="px-6 py-4 text-xs font-bold text-slate-500 uppercase tracking-wider">Allocated Hours</th>
+<th class="px-6 py-4 text-xs font-bold text-slate-500 uppercase tracking-wider">Revenue</th>
+<th class="px-6 py-4 text-xs font-bold text-slate-500 uppercase tracking-wider">Status</th>
+<th class="px-6 py-4 text-xs font-bold text-slate-500 uppercase tracking-wider">Action</th>
+</tr>
+</thead>
+<tbody class="divide-y divide-slate-100 dark:divide-slate-800">
+<tr class="hover:bg-slate-50 dark:hover:bg-slate-800/50 transition-colors">
+<td class="px-6 py-4">
+<div class="flex items-center gap-3">
+<div class="size-8 rounded bg-primary/10 flex items-center justify-center text-primary font-bold text-xs">TC</div>
+<div>
+<p class="text-sm font-bold">TechCorp Solutions</p>
+<p class="text-xs text-slate-500">Tier 1 • Enterprise</p>
+</div>
+</div>
+</td>
+<td class="px-6 py-4 text-sm font-medium">24 Vouchers</td>
+<td class="px-6 py-4 text-sm">480.5 hrs</td>
+<td class="px-6 py-4 text-sm font-bold text-primary">$42,800.00</td>
+<td class="px-6 py-4">
+<span class="px-2 py-1 rounded-full text-[10px] font-bold bg-green-100 text-green-700 uppercase">Active</span>
+</td>
+<td class="px-6 py-4">
+<button class="p-1 hover:text-primary"><span class="material-symbols-outlined text-xl">more_horiz</span></button>
+</td>
+</tr>
+<tr class="hover:bg-slate-50 dark:hover:bg-slate-800/50 transition-colors">
+<td class="px-6 py-4">
+<div class="flex items-center gap-3">
+<div class="size-8 rounded bg-primary/10 flex items-center justify-center text-primary font-bold text-xs">NS</div>
+<div>
+<p class="text-sm font-bold">Nexus Systems</p>
+<p class="text-xs text-slate-500">Tier 2 • Standard</p>
+</div>
+</div>
+</td>
+<td class="px-6 py-4 text-sm font-medium">18 Vouchers</td>
+<td class="px-6 py-4 text-sm">312.0 hrs</td>
+<td class="px-6 py-4 text-sm font-bold text-primary">$28,500.00</td>
+<td class="px-6 py-4">
+<span class="px-2 py-1 rounded-full text-[10px] font-bold bg-green-100 text-green-700 uppercase">Active</span>
+</td>
+<td class="px-6 py-4">
+<button class="p-1 hover:text-primary"><span class="material-symbols-outlined text-xl">more_horiz</span></button>
+</td>
+</tr>
+<tr class="hover:bg-slate-50 dark:hover:bg-slate-800/50 transition-colors">
+<td class="px-6 py-4">
+<div class="flex items-center gap-3">
+<div class="size-8 rounded bg-primary/10 flex items-center justify-center text-primary font-bold text-xs">VL</div>
+<div>
+<p class="text-sm font-bold">Velocity Labs</p>
+<p class="text-xs text-slate-500">Tier 1 • Premium</p>
+</div>
+</div>
+</td>
+<td class="px-6 py-4 text-sm font-medium">12 Vouchers</td>
+<td class="px-6 py-4 text-sm">188.0 hrs</td>
+<td class="px-6 py-4 text-sm font-bold text-primary">$19,250.00</td>
+<td class="px-6 py-4">
+<span class="px-2 py-1 rounded-full text-[10px] font-bold bg-orange-100 text-orange-700 uppercase">Pending</span>
+</td>
+<td class="px-6 py-4">
+<button class="p-1 hover:text-primary"><span class="material-symbols-outlined text-xl">more_horiz</span></button>
+</td>
+</tr>
+<tr class="hover:bg-slate-50 dark:hover:bg-slate-800/50 transition-colors">
+<td class="px-6 py-4">
+<div class="flex items-center gap-3">
+<div class="size-8 rounded bg-primary/10 flex items-center justify-center text-primary font-bold text-xs">GF</div>
+<div>
+<p class="text-sm font-bold">Global Finance Inc.</p>
+<p class="text-xs text-slate-500">Tier 3 • Basic</p>
+</div>
+</div>
+</td>
+<td class="px-6 py-4 text-sm font-medium">9 Vouchers</td>
+<td class="px-6 py-4 text-sm">145.5 hrs</td>
+<td class="px-6 py-4 text-sm font-bold text-primary">$15,400.00</td>
+<td class="px-6 py-4">
+<span class="px-2 py-1 rounded-full text-[10px] font-bold bg-green-100 text-green-700 uppercase">Active</span>
+</td>
+<td class="px-6 py-4">
+<button class="p-1 hover:text-primary"><span class="material-symbols-outlined text-xl">more_horiz</span></button>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="px-6 py-4 border-t border-slate-200 dark:border-slate-800 flex items-center justify-between">
+<p class="text-sm text-slate-500">Showing 4 of 86 clients</p>
+<div class="flex gap-2">
+<button class="p-2 border border-slate-200 dark:border-slate-800 rounded hover:bg-slate-50 dark:hover:bg-slate-800 disabled:opacity-50" disabled="">
+<span class="material-symbols-outlined">chevron_left</span>
+</button>
+<button class="p-2 border border-slate-200 dark:border-slate-800 rounded hover:bg-slate-50 dark:hover:bg-slate-800">
+<span class="material-symbols-outlined">chevron_right</span>
+</button>
+</div>
+</div>
+</div>
+</main>
+<!-- Footer Footer -->
+<footer class="mt-auto py-6 px-10 border-t border-slate-200 dark:border-slate-800 text-center">
+<p class="text-xs text-slate-500 font-medium">© 2023 Digital Service Voucher Management System • All Rights Reserved</p>
+</footer>
+</div>
+</body></html>

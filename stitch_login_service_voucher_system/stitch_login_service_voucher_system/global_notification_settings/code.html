@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Global Notification Settings</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#197fe6",
+                        "background-light": "#f6f7f8",
+                        "background-dark": "#111921",
+                    },
+                    fontFamily: {
+                        "display": ["Inter"]
+                    },
+                    borderRadius: {"DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px"},
+                },
+            },
+        }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+    </style>
+</head>
+<body class="bg-background-light dark:bg-background-dark text-slate-900 dark:text-slate-100 font-display">
+<div class="relative flex h-auto min-h-screen w-full flex-col overflow-x-hidden">
+<div class="layout-container flex h-full grow flex-col">
+<header class="flex items-center justify-between whitespace-nowrap border-b border-solid border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 px-10 py-3">
+<div class="flex items-center gap-8">
+<div class="flex items-center gap-4 text-primary">
+<div class="size-8 flex items-center justify-center bg-primary/10 rounded-lg">
+<span class="material-symbols-outlined text-primary">confirmation_number</span>
+</div>
+<h2 class="text-slate-900 dark:text-slate-100 text-lg font-bold leading-tight tracking-[-0.015em]">TechVoucher Admin</h2>
+</div>
+<nav class="flex items-center gap-9">
+<a class="text-slate-600 dark:text-slate-400 hover:text-primary dark:hover:text-primary text-sm font-medium leading-normal" href="#">Dashboard</a>
+<a class="text-slate-600 dark:text-slate-400 hover:text-primary dark:hover:text-primary text-sm font-medium leading-normal" href="#">Interventions</a>
+<a class="text-slate-600 dark:text-slate-400 hover:text-primary dark:hover:text-primary text-sm font-medium leading-normal" href="#">Clients</a>
+<a class="text-slate-600 dark:text-slate-400 hover:text-primary dark:hover:text-primary text-sm font-medium leading-normal" href="#">Vouchers</a>
+<a class="text-slate-900 dark:text-slate-100 text-sm font-bold leading-normal border-b-2 border-primary pb-1" href="#">Settings</a>
+</nav>
+</div>
+<div class="flex flex-1 justify-end gap-4">
+<label class="flex flex-col min-w-40 h-10 max-w-64">
+<div class="flex w-full flex-1 items-stretch rounded-lg h-full">
+<div class="text-slate-500 flex border-none bg-slate-100 dark:bg-slate-800 items-center justify-center pl-4 rounded-l-lg">
+<span class="material-symbols-outlined text-xl">search</span>
+</div>
+<input class="form-input flex w-full min-w-0 flex-1 border-none bg-slate-100 dark:bg-slate-800 focus:ring-0 h-full placeholder:text-slate-500 px-4 rounded-r-lg text-base font-normal" placeholder="Search" value=""/>
+</div>
+</label>
+<div class="flex gap-2">
+<button class="flex items-center justify-center rounded-lg h-10 w-10 bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300">
+<span class="material-symbols-outlined">notifications</span>
+</button>
+<button class="flex items-center justify-center rounded-lg h-10 w-10 bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300">
+<span class="material-symbols-outlined">account_circle</span>
+</button>
+</div>
+<div class="bg-center bg-no-repeat aspect-square bg-cover rounded-full size-10 border border-slate-200 dark:border-slate-700" data-alt="User profile avatar of the administrator" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuAZ8aCWBpmZpsDTNMlpvHREAa5iRditmgaw8atfvmVCzj8bWaMoYRtkCyMgMefE2iKDY62vZwJ7F2-SvJd7SLvDujMLAryIENpc1HvSBWkvvMrXbZaTrIi8SnrkwSC6AE6uU5mdO77RNVvZGQtY6GCwPPgWVktOvCdC3hQVeelwP9VhejUfi_4CVM73UfEZzsaPHcEWDznOHutNfv8NbRRVqZgVibONWGaVXk7hsFgufNZZj3AfU4jNb3UtPPFoID3TnumShW7OFnG3");'></div>
+</div>
+</header>
+<main class="flex flex-1 px-10 py-8 gap-8">
+<!-- Sidebar -->
+<aside class="w-64 flex flex-col gap-2 shrink-0">
+<div class="mb-4">
+<h1 class="text-slate-900 dark:text-slate-100 text-lg font-bold">Settings</h1>
+<p class="text-slate-500 text-sm">System preferences</p>
+</div>
+<a class="flex items-center gap-3 px-4 py-3 rounded-lg text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors" href="#">
+<span class="material-symbols-outlined">settings</span>
+<span class="text-sm font-semibold">General</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 rounded-lg text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors" href="#">
+<span class="material-symbols-outlined">security</span>
+<span class="text-sm font-semibold">Security</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 rounded-lg bg-primary/10 text-primary transition-colors" href="#">
+<span class="material-symbols-outlined">notifications_active</span>
+<span class="text-sm font-semibold">Notifications</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 rounded-lg text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors" href="#">
+<span class="material-symbols-outlined">integration_instructions</span>
+<span class="text-sm font-semibold">Integrations</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 rounded-lg text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors" href="#">
+<span class="material-symbols-outlined">payments</span>
+<span class="text-sm font-semibold">Billing</span>
+</a>
+</aside>
+<!-- Content Area -->
+<div class="flex-1 max-w-4xl">
+<div class="bg-white dark:bg-slate-900 rounded-xl shadow-sm border border-slate-200 dark:border-slate-800 overflow-hidden">
+<!-- Header & Tabs -->
+<div class="p-8 pb-0 border-b border-slate-200 dark:border-slate-800">
+<div class="mb-6">
+<h2 class="text-3xl font-black text-slate-900 dark:text-slate-100 tracking-tight">Notification Settings</h2>
+<p class="text-slate-500 mt-2 max-w-2xl">
+                                    Control when and how you're notified about technical service interventions, purchase completions, and account voucher balance thresholds.
+                                </p>
+</div>
+<div class="flex gap-8">
+<button class="pb-4 border-b-2 border-primary text-primary text-sm font-bold flex items-center gap-2">
+<span class="material-symbols-outlined text-lg">mail</span> Email Alerts
+                                </button>
+<button class="pb-4 border-b-2 border-transparent text-slate-500 hover:text-slate-700 dark:hover:text-slate-300 text-sm font-bold flex items-center gap-2">
+<span class="material-symbols-outlined text-lg">app_shortcut</span> In-App Notifications
+                                </button>
+</div>
+</div>
+<!-- Settings Groups -->
+<div class="p-8 flex flex-col gap-10">
+<!-- Low Balance Group -->
+<section>
+<div class="flex items-center gap-3 mb-6">
+<div class="size-10 rounded-lg bg-amber-500/10 flex items-center justify-center">
+<span class="material-symbols-outlined text-amber-500">warning</span>
+</div>
+<div>
+<h3 class="text-lg font-bold text-slate-900 dark:text-slate-100 leading-tight">Voucher Balance Alerts</h3>
+<p class="text-sm text-slate-500">Threshold alerts for client hour balances</p>
+</div>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+<!-- Toggle Item 1 -->
+<div class="flex items-center justify-between p-4 rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-800/50">
+<div>
+<p class="font-semibold text-slate-900 dark:text-slate-100">Critical: 10% Balance</p>
+<p class="text-xs text-slate-500">Notify when balance is below 10%</p>
+</div>
+<label class="relative inline-flex items-center cursor-pointer">
+<input checked="" class="sr-only peer" type="checkbox"/>
+<div class="w-11 h-6 bg-slate-300 dark:bg-slate-700 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-primary"></div>
+</label>
+</div>
+<!-- Toggle Item 2 -->
+<div class="flex items-center justify-between p-4 rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-800/50">
+<div>
+<p class="font-semibold text-slate-900 dark:text-slate-100">Warning: 20% Balance</p>
+<p class="text-xs text-slate-500">Notify when balance is below 20%</p>
+</div>
+<label class="relative inline-flex items-center cursor-pointer">
+<input checked="" class="sr-only peer" type="checkbox"/>
+<div class="w-11 h-6 bg-slate-300 dark:bg-slate-700 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-primary"></div>
+</label>
+</div>
+<!-- Toggle Item 3 -->
+<div class="flex items-center justify-between p-4 rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-800/50">
+<div>
+<p class="font-semibold text-slate-900 dark:text-slate-100">Reminder: 50% Balance</p>
+<p class="text-xs text-slate-500">Notify when balance is below 50%</p>
+</div>
+<label class="relative inline-flex items-center cursor-pointer">
+<input class="sr-only peer" type="checkbox"/>
+<div class="w-11 h-6 bg-slate-300 dark:bg-slate-700 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-primary"></div>
+</label>
+</div>
+</div>
+</section>
+<!-- Interventions Group -->
+<section>
+<div class="flex items-center gap-3 mb-6">
+<div class="size-10 rounded-lg bg-primary/10 flex items-center justify-center">
+<span class="material-symbols-outlined text-primary">engineering</span>
+</div>
+<div>
+<h3 class="text-lg font-bold text-slate-900 dark:text-slate-100 leading-tight">Technical Interventions</h3>
+<p class="text-sm text-slate-500">Real-time status updates on service work</p>
+</div>
+</div>
+<div class="space-y-3">
+<div class="flex items-center justify-between p-5 rounded-xl border border-slate-200 dark:border-slate-800">
+<div class="flex gap-4">
+<span class="material-symbols-outlined text-slate-400 mt-1">play_circle</span>
+<div>
+<p class="font-semibold text-slate-900 dark:text-slate-100">Intervention Started</p>
+<p class="text-sm text-slate-500">Immediate alert when a technician clocks into a task</p>
+</div>
+</div>
+<label class="relative inline-flex items-center cursor-pointer">
+<input checked="" class="sr-only peer" type="checkbox"/>
+<div class="w-11 h-6 bg-slate-300 dark:bg-slate-700 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-primary"></div>
+</label>
+</div>
+<div class="flex items-center justify-between p-5 rounded-xl border border-slate-200 dark:border-slate-800">
+<div class="flex gap-4">
+<span class="material-symbols-outlined text-slate-400 mt-1">task_alt</span>
+<div>
+<p class="font-semibold text-slate-900 dark:text-slate-100">Intervention Validated</p>
+<p class="text-sm text-slate-500">Notice when intervention hours are finalized and approved</p>
+</div>
+</div>
+<label class="relative inline-flex items-center cursor-pointer">
+<input checked="" class="sr-only peer" type="checkbox"/>
+<div class="w-11 h-6 bg-slate-300 dark:bg-slate-700 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-primary"></div>
+</label>
+</div>
+</div>
+</section>
+<!-- Transactions Group -->
+<section>
+<div class="flex items-center gap-3 mb-6">
+<div class="size-10 rounded-lg bg-green-500/10 flex items-center justify-center">
+<span class="material-symbols-outlined text-green-500">shopping_cart</span>
+</div>
+<div>
+<h3 class="text-lg font-bold text-slate-900 dark:text-slate-100 leading-tight">Financial Transactions</h3>
+<p class="text-sm text-slate-500">Confirmations and invoice availability</p>
+</div>
+</div>
+<div class="flex items-center justify-between p-5 rounded-xl border border-slate-200 dark:border-slate-800">
+<div class="flex gap-4">
+<span class="material-symbols-outlined text-slate-400 mt-1">receipt_long</span>
+<div>
+<p class="font-semibold text-slate-900 dark:text-slate-100">Purchase Confirmations</p>
+<p class="text-sm text-slate-500">Receive receipt and voucher code details after successful payment</p>
+</div>
+</div>
+<label class="relative inline-flex items-center cursor-pointer">
+<input checked="" class="sr-only peer" type="checkbox"/>
+<div class="w-11 h-6 bg-slate-300 dark:bg-slate-700 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-primary"></div>
+</label>
+</div>
+</section>
+</div>
+<!-- Footer Actions -->
+<div class="bg-slate-50 dark:bg-slate-800/30 px-8 py-6 flex justify-end gap-4 border-t border-slate-200 dark:border-slate-800">
+<button class="px-6 py-2.5 rounded-lg border border-slate-300 dark:border-slate-700 font-semibold text-sm hover:bg-white dark:hover:bg-slate-800 transition-all">
+                                Cancel
+                            </button>
+<button class="px-6 py-2.5 rounded-lg bg-primary text-white font-bold text-sm shadow-md hover:bg-primary/90 transition-all">
+                                Save Changes
+                            </button>
+</div>
+</div>
+<!-- Additional Info Card -->
+<div class="mt-8 grid grid-cols-1 md:grid-cols-3 gap-6">
+<div class="p-6 bg-primary/5 dark:bg-primary/10 rounded-xl border border-primary/20">
+<span class="material-symbols-outlined text-primary mb-3">mark_email_unread</span>
+<h4 class="font-bold text-slate-900 dark:text-slate-100 mb-1">Missed an alert?</h4>
+<p class="text-xs text-slate-500">Email alerts are sent from no-reply@techvoucher.com. Check your whitelist settings.</p>
+</div>
+<div class="p-6 bg-slate-100 dark:bg-slate-800/50 rounded-xl border border-slate-200 dark:border-slate-700">
+<span class="material-symbols-outlined text-slate-400 mb-3">history</span>
+<h4 class="font-bold text-slate-900 dark:text-slate-100 mb-1">Notification Log</h4>
+<p class="text-xs text-slate-500">View a history of all sent communications in the activity dashboard.</p>
+</div>
+<div class="p-6 bg-slate-100 dark:bg-slate-800/50 rounded-xl border border-slate-200 dark:border-slate-700">
+<span class="material-symbols-outlined text-slate-400 mb-3">devices</span>
+<h4 class="font-bold text-slate-900 dark:text-slate-100 mb-1">Mobile Push</h4>
+<p class="text-xs text-slate-500">Configure mobile push alerts by signing in through the mobile app.</p>
+</div>
+</div>
+</div>
+</main>
+</div>
+</div>
+</body></html>
