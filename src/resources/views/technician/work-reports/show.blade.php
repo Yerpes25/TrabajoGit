@@ -70,16 +70,16 @@
                                     @csrf
                                     <x-primary-button type="submit">Reanudar</x-primary-button>
                                 </form>
-                                <form action="{{ route('technician.work-reports.finish', $workReport) }}" method="POST" class="inline">
+                                <form action="{{ route('technician.work-reports.finish', $workReport) }}" method="POST" class="inline pararCrono">
                                     @csrf
                                     <x-primary-button type="submit">Finalizar</x-primary-button>
                                 </form>
                             @elseif($workReport->status === 'in_progress')
-                                <form action="{{ route('technician.work-reports.pause', $workReport) }}" method="POST" class="inline">
+                                <form action="{{ route('technician.work-reports.pause', $workReport) }}" method="POST" class="inline pararCrono">
                                     @csrf
                                     <x-primary-button type="submit">Pausar</x-primary-button>
                                 </form>
-                                <form action="{{ route('technician.work-reports.finish', $workReport) }}" method="POST" class="inline">
+                                <form action="{{ route('technician.work-reports.finish', $workReport) }}" method="POST" class="inline pararCrono">
                                     @csrf
                                     <x-primary-button type="submit">Finalizar</x-primary-button>
                                 </form>
@@ -96,22 +96,22 @@
                     @if($workReport->events->count() > 0)
                         <table class="min-w-full divide-y divide-gray-200">
                             <thead>
-                                <tr>
-                                    <th class="px-4 py-2 text-left">Tipo</th>
-                                    <th class="px-4 py-2 text-left">Fecha/Hora</th>
-                                    <th class="px-4 py-2 text-left">Tiempo Acumulado</th>
-                                    <th class="px-4 py-2 text-left">Creado por</th>
-                                </tr>
+                            <tr>
+                                <th class="px-4 py-2 text-left">Tipo</th>
+                                <th class="px-4 py-2 text-left">Fecha/Hora</th>
+                                <th class="px-4 py-2 text-left">Tiempo Acumulado</th>
+                                <th class="px-4 py-2 text-left">Creado por</th>
+                            </tr>
                             </thead>
                             <tbody>
-                                @foreach($workReport->events as $event)
-                                    <tr>
-                                        <td class="px-4 py-2">{{ $event->type }}</td>
-                                        <td class="px-4 py-2">{{ $event->occurred_at->format('d/m/Y H:i:s') }}</td>
-                                        <td class="px-4 py-2">{{ gmdate('H:i:s', $event->elapsed_seconds_after) }}</td>
-                                        <td class="px-4 py-2">{{ $event->creator->name ?? '-' }}</td>
-                                    </tr>
-                                @endforeach
+                            @foreach($workReport->events as $event)
+                                <tr>
+                                    <td class="px-4 py-2">{{ $event->type }}</td>
+                                    <td class="px-4 py-2">{{ $event->occurred_at->format('d/m/Y H:i:s') }}</td>
+                                    <td class="px-4 py-2">{{ gmdate('H:i:s', $event->elapsed_seconds_after) }}</td>
+                                    <td class="px-4 py-2">{{ $event->creator->name ?? '-' }}</td>
+                                </tr>
+                            @endforeach
                             </tbody>
                         </table>
                     @else
@@ -145,33 +145,33 @@
                     @if($workReport->evidences->count() > 0)
                         <table class="min-w-full divide-y divide-gray-200">
                             <thead>
-                                <tr>
-                                    <th class="px-4 py-2 text-left">Nombre</th>
-                                    <th class="px-4 py-2 text-left">Tamaño</th>
-                                    <th class="px-4 py-2 text-left">Subido por</th>
-                                    <th class="px-4 py-2 text-left">Fecha</th>
-                                    <th class="px-4 py-2 text-left">Acciones</th>
-                                </tr>
+                            <tr>
+                                <th class="px-4 py-2 text-left">Nombre</th>
+                                <th class="px-4 py-2 text-left">Tamaño</th>
+                                <th class="px-4 py-2 text-left">Subido por</th>
+                                <th class="px-4 py-2 text-left">Fecha</th>
+                                <th class="px-4 py-2 text-left">Acciones</th>
+                            </tr>
                             </thead>
                             <tbody>
-                                @foreach($workReport->evidences as $evidence)
-                                    <tr>
-                                        <td class="px-4 py-2">{{ $evidence->original_name }}</td>
-                                        <td class="px-4 py-2">{{ number_format($evidence->size_bytes / 1024, 2) }} KB</td>
-                                        <td class="px-4 py-2">{{ $evidence->uploader->name ?? '-' }}</td>
-                                        <td class="px-4 py-2">{{ $evidence->created_at->format('d/m/Y H:i') }}</td>
-                                        <td class="px-4 py-2">
-                                            <a href="{{ route('evidences.download', $evidence) }}" class="text-blue-500 hover:text-blue-700">Descargar</a>
-                                            @if($workReport->status !== 'validated')
-                                                <form action="{{ route('technician.evidences.delete', $evidence) }}" method="POST" class="inline">
-                                                    @csrf
-                                                    @method('DELETE')
-                                                    <button type="submit" class="text-red-500 ml-2" onclick="return confirm('¿Está seguro de eliminar esta evidencia?')">Eliminar</button>
-                                                </form>
-                                            @endif
-                                        </td>
-                                    </tr>
-                                @endforeach
+                            @foreach($workReport->evidences as $evidence)
+                                <tr>
+                                    <td class="px-4 py-2">{{ $evidence->original_name }}</td>
+                                    <td class="px-4 py-2">{{ number_format($evidence->size_bytes / 1024, 2) }} KB</td>
+                                    <td class="px-4 py-2">{{ $evidence->uploader->name ?? '-' }}</td>
+                                    <td class="px-4 py-2">{{ $evidence->created_at->format('d/m/Y H:i') }}</td>
+                                    <td class="px-4 py-2">
+                                        <a href="{{ route('evidences.download', $evidence) }}" class="text-blue-500 hover:text-blue-700">Descargar</a>
+                                        @if($workReport->status !== 'validated')
+                                            <form action="{{ route('technician.evidences.delete', $evidence) }}" method="POST" class="inline">
+                                                @csrf
+                                                @method('DELETE')
+                                                <button type="submit" class="text-red-500 ml-2" onclick="return confirm('¿Está seguro de eliminar esta evidencia?')">Eliminar</button>
+                                            </form>
+                                        @endif
+                                    </td>
+                                </tr>
+                            @endforeach
                             </tbody>
                         </table>
                     @else
@@ -180,15 +180,15 @@
                 </div>
             </div>
             @php
-            $urlAnterior = url()->previous();
-            // Si venimos de crear o editar, forzamos la vuelta al dashboard
-            $vieneDeFormulario = str_contains($urlAnterior, 'create') || str_contains($urlAnterior, 'edit');
-            // Asegúrate de que tu ruta del dashboard se llame así
-            $rutaVolver = $vieneDeFormulario ? route('technician.dashboard') : $urlAnterior;
+                $urlAnterior = url()->previous();
+                // Si venimos de crear o editar, forzamos la vuelta al dashboard
+                $vieneDeFormulario = str_contains($urlAnterior, 'create') || str_contains($urlAnterior, 'edit');
+                // Asegúrate de que tu ruta del dashboard se llame así
+                $rutaVolver = $vieneDeFormulario ? route('technician.dashboard') : $urlAnterior;
             @endphp
             <div class="mt-6 flex justify-start">
                 <a href="{{ $rutaVolver }}"
-                    class="inline-flex items-center px-4 py-2 bg-white border border-gray-300 rounded-md font-semibold text-xs text-gray-700 uppercase tracking-widest shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 transition ease-in-out duration-150">
+                   class="inline-flex items-center px-4 py-2 bg-white border border-gray-300 rounded-md font-semibold text-xs text-gray-700 uppercase tracking-widest shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 transition ease-in-out duration-150">
                     <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path>
                     </svg>
@@ -199,20 +199,23 @@
     </div>
     <script>
         let running = "{{ $workReport->status }}" === "{{ \App\Models\WorkReport::STATUS_IN_PROGRESS }}",
-            totalSeconds = {{ $workReport->total_seconds }},
             crono = document.getElementById('cronometro'),
             intervalId;
-
         if(running) {
+            let totalSeconds = {{ $workReport->total_seconds }} +
+                Math.floor( //Diferencia de tiempo entre asignacion del estado y carga de la página
+                    (Date.now().valueOf() - new Date('{{ $workReport->active_started_at }}').valueOf())
+                    / 1000
+                );
+
             intervalId = setInterval(() => {
-                let segundos = totalSeconds, horas, minutos;
+                let horas, minutos, segundos = ++totalSeconds;
 
                 horas = Math.floor(segundos/3600);
                 segundos %= 3600;
                 minutos = Math.floor(segundos/60);
                 segundos %= 60;
 
-                totalSeconds++;
                 crono.innerText =
                     horas.toString().padStart(2,'0') + ':'
                     + minutos.toString().padStart(2,'0') + ':'
@@ -221,5 +224,13 @@
             }, 1000)
         }
 
+        //Los botones de pausar y finalizar paran el cronometro en el cliente
+        document.querySelectorAll('.pararCrono')
+            .forEach((form, i) => {
+
+                form.addEventListener('submit', (evt) => {
+                    clearInterval(intervalId);
+                });
+            })
     </script>
 </x-app-layout>

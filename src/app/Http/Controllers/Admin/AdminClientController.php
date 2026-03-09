@@ -15,6 +15,9 @@ use App\Services\UserService;
 use App\Services\BonusService;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\View\View;
+use Illuminate\Support\Facades\URL;
+use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\Auth;
 
 /**
  * Controller para gestionar clientes desde el panel admin.
@@ -85,7 +88,7 @@ class AdminClientController extends Controller
 
         $this->auditService->log(
             'client_created',
-            auth()->id(),
+            Auth::id(),
             'Client',
             $client->id,
             ['name' => $client->name],
@@ -169,7 +172,7 @@ class AdminClientController extends Controller
     public function issueBonus(IssueBonusRequest $request, Client $client): RedirectResponse
     {
         $bonus = Bonus::findOrFail($request->input('bonus_id'));
-        $issuer = auth()->user();
+        $issuer = Auth::user();
 
         try {
             $bonusIssue = $this->bonusService->issue(
@@ -213,8 +216,8 @@ class AdminClientController extends Controller
             $seconds,
             $reason,
             'User', // reference_type
-            auth()->id(), // reference_id (admin que asigna)
-            auth()->id(), // created_by
+            Auth::id(), // reference_id (admin que asigna)
+            Auth::id(), // created_by
             $metadata
         );
 
@@ -302,5 +305,30 @@ class AdminClientController extends Controller
 
         return redirect()->route('admin.clients.index')
             ->with('success', $message);
+    }
+
+    public function sendPasswordEmail(\App\Models\Client $client)
+    {
+        // Asumiendo que el cliente tiene relación con la tabla users (client->user)
+        $user = $client->user;
+
+        if (!$user) {
+            return back()->with('error', 'Este cliente no tiene un usuario de acceso asignado.');
+        }
+
+        // 1. Generamos un enlace válido por 48 horas
+        $url = URL::temporarySignedRoute(
+            'client.password.setup',
+            now()->addHours(48),
+            ['user' => $user->id]
+        );
+
+        // 2. Enviamos el correo (usando una vista inline para no crear más archivos de los necesarios)
+        Mail::send('emails.setup-password', ['url' => $url, 'client' => $client], function ($message) use ($user) {
+            $message->to($user->email)
+                ->subject('Configura tu contraseña de acceso - Cubetic');
+        });
+
+        return back()->with('success', 'Correo enviado correctamente al cliente.');
     }
 }

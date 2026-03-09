@@ -6,6 +6,20 @@ use App\Http\Controllers\Technician\TechnicianWorkReportController;
 use App\Http\Controllers\TechnicianDashboardController;
 use App\Http\Controllers\ClientDashboardController;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\Admin\AdminClientController;
+use App\Http\Controllers\ClientPasswordController;
+
+Route::post('/admin/clients/{client}/send-password', [AdminClientController::class, 'sendPasswordEmail'])
+    ->name('admin.clients.send-password');
+
+// 2. Rutas públicas para que el cliente configure su contraseña (fuera de los middleware de auth)
+Route::get('/configurar-password/{user}', [ClientPasswordController::class, 'create'])
+    ->name('client.password.setup')
+    ->middleware('signed'); // IMPORTANTE: Protege la ruta para que no se pueda falsificar
+
+Route::post('/configurar-password/{user}', [ClientPasswordController::class, 'store'])
+    ->name('client.password.store')
+    ->middleware('signed');
 
 Route::get('/', function () {
     return view('welcome');
@@ -83,7 +97,7 @@ Route::middleware(['auth', 'role:client'])->prefix('client')->name('client.')->g
 
 // Dashboard genérico (redirige según rol, pero mantenemos por compatibilidad)
 Route::get('/dashboard', function () {
-    $user = auth()->user();
+    $user = request()->user();
     return match ($user->role) {
         'admin' => redirect()->route('admin.dashboard'),
         'technician' => redirect()->route('technician.dashboard'),
@@ -106,4 +120,4 @@ Route::middleware('auth')->group(function () {
 Route::post('/technician/work-reports/{workReport}/validate', [TechnicianWorkReportController::class, 'validate'])
     ->name('technician.work-reports.validate');
 
-require __DIR__.'/auth.php';
+require __DIR__ . '/auth.php';

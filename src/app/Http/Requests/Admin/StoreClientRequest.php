@@ -50,10 +50,18 @@ class StoreClientRequest extends FormRequest
     public function messages(): array
     {
         return [
-            'password.regex' => 'La contraseña debe tener mayúscula, minúscula, número y símbolo.',
-            'tax_id.regex' => 'El DNI debe tener 8 números y una letra.',
-            'phone.regex' => 'El teléfono debe tener 9 números.',
+            'email.required' => 'El correo es obligatorio.',
+            'email.email' => 'El correo no tiene un formato válido.',
             'email.unique' => 'Este correo ya está registrado.',
+
+            'password.confirmed' => 'Las contraseñas no coinciden.',
+            'password.regex' => 'La contraseña debe tener mínimo 8 caracteres, mayúscula, minúscula, número y símbolo.',
+
+            'tax_id.regex' => 'El DNI debe tener 8 números y una letra.',
+
+            'phone.regex' => 'El teléfono debe tener 9 números.',
+
+            'name.required' => 'El nombre es obligatorio.',
         ];
     }
 

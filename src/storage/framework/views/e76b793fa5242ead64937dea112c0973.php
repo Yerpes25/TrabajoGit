@@ -95,9 +95,9 @@
 
             <!-- Enlaces rápidos -->
             <div class="mt-6 grid grid-cols-1 md:grid-cols-5 gap-4">
-                <a href="<?php echo e(route('admin.users.index')); ?>" class="bg-white overflow-hidden shadow-sm sm:rounded-lg p-4 hover:bg-gray-50">
-                    <h4 class="font-semibold">Usuarios</h4>
-                    <p class="text-sm text-gray-500">Gestionar usuarios</p>
+                <a href="<?php echo e(route('admin.technicians.index')); ?>" class="bg-white overflow-hidden shadow-sm sm:rounded-lg p-4 hover:bg-gray-50">
+                    <h4 class="font-semibold">Técnicos</h4>
+                    <p class="text-sm text-gray-500">Gestionar técnicos</p>
                 </a>
                 <a href="<?php echo e(route('admin.clients.index')); ?>" class="bg-white overflow-hidden shadow-sm sm:rounded-lg p-4 hover:bg-gray-50">
                     <h4 class="font-semibold">Clientes</h4>

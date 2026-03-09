@@ -22,7 +22,22 @@
             <!-- Información del cliente -->
             <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg mb-6">
                 <div class="p-6">
-                    <h3 class="text-lg font-semibold mb-4">Información del Cliente</h3>
+                    
+                    <div class="flex items-center justify-between mb-4">
+                        <h3 class="text-lg font-semibold">Información del Cliente</h3>
+                        
+                        <form action="{{ route('admin.clients.send-password', $client) }}" method="POST" class="m-0">
+                            @csrf
+                            <button type="submit"
+                                class="inline-flex items-center px-4 py-2 bg-red-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-red-700 focus:bg-red-700 active:bg-red-900 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2 transition ease-in-out duration-150 shadow-sm"
+                                onclick="return confirm('¿Enviar correo para que el cliente configure su contraseña?')">
+                                <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path>
+                                </svg>
+                                Enviar acceso
+                            </button>
+                        </form>
+                    </div>
                     <p><strong>Nombre:</strong> {{ $name }}</p>
                     <p><strong>Email:</strong> {{ $email }}</p>
                     <p><strong>Teléfono:</strong> {{ $client->phone ?? '-' }}</p>
