@@ -379,7 +379,7 @@
             crono = document.getElementById('cronometro'),
             intervalId;
         if(running) {
-            let totalSeconds = <?php echo e($workReport->total_seconds); ?> +
+            let totalSeconds = "<?php echo e($workReport->total_seconds); ?>" +
                 Math.floor( //Diferencia de tiempo entre asignacion del estado y carga de la página
                     (Date.now().valueOf() - new Date('<?php echo e($workReport->active_started_at); ?>').valueOf())
                     / 1000

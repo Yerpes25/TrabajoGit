@@ -254,7 +254,7 @@
                                 <td class="px-4 py-2">
                                     <?php if($log->payload): ?>
                                     <button x-data="" x-on:click.prevent="$dispatch('open-modal', 'payload-<?php echo e($log->id); ?>')" class="bg-blue-50 text-blue-600 hover:bg-blue-100 px-3 py-1 rounded-md text-sm font-semibold transition-colors">
-                                        Ver 
+                                        Ver
                                     </button>
 
                                     <?php if (isset($component)) { $__componentOriginal9f64f32e90b9102968f2bc548315018c = $component; } ?>
@@ -328,6 +328,7 @@
 <?php endif; ?>
                                     <?php else: ?>
                                     <span class="text-gray-400 italic text-sm">Sin detalles</span>
+                                    <pre class="text-xs"><?php echo e(json_encode($log->payload, JSON_PRETTY_PRINT)); ?></pre>
                                     <?php endif; ?>
                                 </td>
                             </tr>
@@ -361,4 +362,5 @@
 <?php if (isset($__componentOriginal9ac128a9029c0e4701924bd2d73d7f54)): ?>
 <?php $component = $__componentOriginal9ac128a9029c0e4701924bd2d73d7f54; ?>
 <?php unset($__componentOriginal9ac128a9029c0e4701924bd2d73d7f54); ?>
-<?php endif; ?><?php /**PATH /var/www/src/resources/views/admin/audit-logs/index.blade.php ENDPATH**/ ?>
+<?php endif; ?>
+<?php /**PATH /var/www/src/resources/views/admin/audit-logs/index.blade.php ENDPATH**/ ?>

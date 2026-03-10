@@ -1,18 +1,6 @@
-/**
- * Configuracion inicial de Axios para peticiones HTTP
- */
-import axios from 'axios';
-window.axios = axios;
-window.axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
-
-/**
- * Configuracion de Laravel Echo y Pusher
- * Se encarga de abrir la conexion WebSocket con nuestro servidor Reverb
- * usando las variables del archivo .env
- */
 import Echo from 'laravel-echo';
-import Pusher from 'pusher-js';
 
+import Pusher from 'pusher-js';
 window.Pusher = Pusher;
 
 window.Echo = new Echo({
