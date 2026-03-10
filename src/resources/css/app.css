@@ -1,3 +1,146 @@
+@import url('https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined');
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+.cards-grid{
+    display:grid;
+    grid-template-columns:repeat(3,1fr);
+    gap:24px;
+}
+
+@media (max-width:1024px){
+    .cards-grid{
+        grid-template-columns:repeat(2,1fr);
+    }
+}
+
+@media (max-width:640px){
+    .cards-grid{
+        grid-template-columns:1fr;
+    }
+}
+
+.card{
+    background:white;
+    border:1px solid #e5e7eb;
+    border-radius:12px;
+    padding:20px;
+    display:flex;
+    flex-direction:column;
+    justify-content:space-between;
+    box-shadow:0 1px 3px rgba(0,0,0,0.1);
+}
+
+.card-header{
+    display:flex;
+    justify-content:space-between;
+    align-items:flex-start;
+    margin-bottom:15px;
+}
+
+.card-title{
+    font-size:18px;
+    font-weight:700;
+}
+
+.card-client{
+    font-size:14px;
+    color:#6b7280;
+}
+
+.card-status{
+    font-size:12px;
+    padding:4px 8px;
+    border-radius:6px;
+}
+
+.status-progress{
+    background:#dcfce7;
+    color:#166534;
+}
+
+.status-paused{
+    background:#fef9c3;
+    color:#854d0e;
+}
+
+.status-finished{
+    background:#dbeafe;
+    color:#1e40af;
+}
+
+.card-time span{
+    font-size:12px;
+    color:#9ca3af;
+}
+
+.card-time strong{
+    display:block;
+    font-size:16px;
+}
+
+.card-date{
+    font-size:12px;
+    color:#9ca3af;
+    margin-top:10px;
+}
+
+.card-actions{
+    display:flex;
+    gap:10px;
+    margin-top:20px;
+}
+
+.btn-primary{
+    flex:1;
+    background:#3b82f6;
+    color:white;
+    text-align:center;
+    padding:8px;
+    border-radius:8px;
+    font-size:14px;
+}
+
+.btn-secondary{
+    flex:1;
+    background:#f3f4f6;
+    color:#374151;
+    text-align:center;
+    padding:8px;
+    border-radius:8px;
+    font-size:14px;
+}
+
+.card-create{
+    border:2px dashed #d1d5db;
+    border-radius:12px;
+    display:flex;
+    flex-direction:column;
+    justify-content:center;
+    align-items:center;
+    padding:40px;
+    text-align:center;
+    cursor:pointer;
+}
+
+.create-icon{
+    width:50px;
+    height:50px;
+    border-radius:50%;
+    background:#f3f4f6;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-size:28px;
+    margin-bottom:10px;
+}
+
+.btn-back{
+    display:inline-block;
+    padding:8px 16px;
+    border:1px solid #d1d5db;
+    border-radius:6px;
+    font-size:12px;
+}
+

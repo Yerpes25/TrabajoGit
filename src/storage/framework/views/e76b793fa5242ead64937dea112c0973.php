@@ -37,6 +37,31 @@
                 </div>
             </div>
 
+            <div class="mt-6 grid grid-cols-1 md:grid-cols-5 gap-4">
+                <a href="<?php echo e(route('admin.technicians.index')); ?>" class="bg-white overflow-hidden shadow-sm sm:rounded-lg p-4 hover:bg-gray-50">
+                    <h4 class="font-semibold">Técnicos</h4>
+                    <p class="text-sm text-gray-500">Gestionar técnicos</p>
+                </a>
+                <a href="<?php echo e(route('admin.clients.index')); ?>" class="bg-white overflow-hidden shadow-sm sm:rounded-lg p-4 hover:bg-gray-50">
+                    <h4 class="font-semibold">Clientes</h4>
+                    <p class="text-sm text-gray-500">Gestionar clientes y saldo</p>
+                </a>
+                <a href="<?php echo e(route('admin.work-reports.index')); ?>" class="bg-white overflow-hidden shadow-sm sm:rounded-lg p-4 hover:bg-gray-50">
+                    <h4 class="font-semibold">Partes</h4>
+                    <p class="text-sm text-gray-500">Ver todos los partes</p>
+                </a>
+                <a href="<?php echo e(route('admin.audit-logs.index')); ?>" class="bg-white overflow-hidden shadow-sm sm:rounded-lg p-4 hover:bg-gray-50">
+                    <h4 class="font-semibold">Auditoría</h4>
+                    <p class="text-sm text-gray-500">Consultar logs</p>
+                </a>
+                <a href="<?php echo e(route('admin.bonuses.index')); ?>" class="bg-white overflow-hidden shadow-sm sm:rounded-lg p-4 hover:bg-gray-50">
+                    <h4 class="font-semibold">Bonos</h4>
+                    <p class="text-sm text-gray-500">Crear bonos</p>
+                </a>
+            </div>
+
+            <br>
+
             <!-- Partes por estado -->
             <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg mb-6">
                 <div class="p-6">
@@ -57,6 +82,7 @@
                     </div>
                 </div>
             </div>
+
 
             <!-- Partes recientes -->
             <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
@@ -94,28 +120,7 @@
             </div>
 
             <!-- Enlaces rápidos -->
-            <div class="mt-6 grid grid-cols-1 md:grid-cols-5 gap-4">
-                <a href="<?php echo e(route('admin.technicians.index')); ?>" class="bg-white overflow-hidden shadow-sm sm:rounded-lg p-4 hover:bg-gray-50">
-                    <h4 class="font-semibold">Técnicos</h4>
-                    <p class="text-sm text-gray-500">Gestionar técnicos</p>
-                </a>
-                <a href="<?php echo e(route('admin.clients.index')); ?>" class="bg-white overflow-hidden shadow-sm sm:rounded-lg p-4 hover:bg-gray-50">
-                    <h4 class="font-semibold">Clientes</h4>
-                    <p class="text-sm text-gray-500">Gestionar clientes y saldo</p>
-                </a>
-                <a href="<?php echo e(route('admin.work-reports.index')); ?>" class="bg-white overflow-hidden shadow-sm sm:rounded-lg p-4 hover:bg-gray-50">
-                    <h4 class="font-semibold">Partes</h4>
-                    <p class="text-sm text-gray-500">Ver todos los partes</p>
-                </a>
-                <a href="<?php echo e(route('admin.audit-logs.index')); ?>" class="bg-white overflow-hidden shadow-sm sm:rounded-lg p-4 hover:bg-gray-50">
-                    <h4 class="font-semibold">Auditoría</h4>
-                    <p class="text-sm text-gray-500">Consultar logs</p>
-                </a>
-                <a href="<?php echo e(route('admin.bonuses.index')); ?>" class="bg-white overflow-hidden shadow-sm sm:rounded-lg p-4 hover:bg-gray-50">
-                    <h4 class="font-semibold">Bonos</h4>
-                    <p class="text-sm text-gray-500">Crear bonos</p>
-                </a>
-            </div>
+
         </div>
     </div>
  <?php echo $__env->renderComponent(); ?>

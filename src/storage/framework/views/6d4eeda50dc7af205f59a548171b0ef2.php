@@ -15,7 +15,6 @@
         </h2>
      <?php $__env->endSlot(); ?>
 
-
     <div class="py-12">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
             <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg mb-6">
@@ -36,8 +35,8 @@
                             <tbody class="divide-y divide-gray-200">
                                 <?php $__currentLoopData = $clientsWithBonuses; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $client): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
                                 <tr>
-                                    <td class="px-4 py-2 whitespace-nowrap"><?php echo e($client->name); ?></td>
-                                    <td class="px-4 py-2 whitespace-nowrap"><?php echo e($client->email ?? '-'); ?></td>
+                                    <td class="px-4 py-2 whitespace-nowrap"><?php echo e($client->user->name); ?></td>
+                                    <td class="px-4 py-2 whitespace-nowrap"><?php echo e($client->user->email ?? '-'); ?></td>
                                     <td class="px-4 py-2 whitespace-nowrap"><?php echo e($client->phone ?? '-'); ?></td>
                                     <td class="px-4 py-2 whitespace-nowrap font-bold text-blue-600"><?php echo e($client->bonus_issues_count); ?></td>
                                     <td class="px-4 py-2 whitespace-nowrap">
@@ -97,7 +96,7 @@
                             <tbody class="divide-y divide-gray-200">
                                 <?php $__currentLoopData = $recentWorkReports; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $report): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
                                 <tr>
-                                    <td class="px-4 py-2"><?php echo e($report->client->name); ?></td>
+                                    <td class="px-4 py-2"><?php echo e($report->client->user->name); ?></td>
                                     <td class="px-4 py-2"><?php echo e($report->title ?? '-'); ?></td>
                                     <td class="px-4 py-2"><?php echo e($report->status); ?></td>
                                     <td class="px-4 py-2"><?php echo e(gmdate('H:i:s', $report->total_seconds)); ?></td>
@@ -140,4 +139,5 @@
 <?php if (isset($__componentOriginal9ac128a9029c0e4701924bd2d73d7f54)): ?>
 <?php $component = $__componentOriginal9ac128a9029c0e4701924bd2d73d7f54; ?>
 <?php unset($__componentOriginal9ac128a9029c0e4701924bd2d73d7f54); ?>
-<?php endif; ?><?php /**PATH /var/www/src/resources/views/dashboard/technician.blade.php ENDPATH**/ ?>
+<?php endif; ?>
+<?php /**PATH /var/www/src/resources/views/dashboard/technician.blade.php ENDPATH**/ ?>

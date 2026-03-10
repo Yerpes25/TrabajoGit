@@ -5,7 +5,6 @@
         </h2>
     </x-slot>
 
-
     <div class="py-12">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
             <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg mb-6">
@@ -26,8 +25,8 @@
                             <tbody class="divide-y divide-gray-200">
                                 @foreach($clientsWithBonuses as $client)
                                 <tr>
-                                    <td class="px-4 py-2 whitespace-nowrap">{{ $client->name }}</td>
-                                    <td class="px-4 py-2 whitespace-nowrap">{{ $client->email ?? '-' }}</td>
+                                    <td class="px-4 py-2 whitespace-nowrap">{{ $client->user->name }}</td>
+                                    <td class="px-4 py-2 whitespace-nowrap">{{ $client->user->email ?? '-' }}</td>
                                     <td class="px-4 py-2 whitespace-nowrap">{{ $client->phone ?? '-' }}</td>
                                     <td class="px-4 py-2 whitespace-nowrap font-bold text-blue-600">{{ $client->bonus_issues_count }}</td>
                                     <td class="px-4 py-2 whitespace-nowrap">
@@ -87,7 +86,7 @@
                             <tbody class="divide-y divide-gray-200">
                                 @foreach($recentWorkReports as $report)
                                 <tr>
-                                    <td class="px-4 py-2">{{ $report->client->name }}</td>
+                                    <td class="px-4 py-2">{{ $report->client->user->name }}</td>
                                     <td class="px-4 py-2">{{ $report->title ?? '-' }}</td>
                                     <td class="px-4 py-2">{{ $report->status }}</td>
                                     <td class="px-4 py-2">{{ gmdate('H:i:s', $report->total_seconds) }}</td>

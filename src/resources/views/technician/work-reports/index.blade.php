@@ -7,77 +7,167 @@
 
     <div class="py-12">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
+
             <div class="mb-4">
-                <a href="{{ route('technician.work-reports.create') }}" class="bg-blue-500 text-white px-4 py-2 rounded">Crear Nuevo Parte</a>
+                <a href="{{ route('technician.work-reports.create') }}" class="btn-primary">
+                    Crear Nuevo Parte
+                </a>
             </div>
 
             @if(session('success'))
-            <div class="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded mb-4">
-                {{ session('success') }}
-            </div>
+                <div class="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded mb-4">
+                    {{ session('success') }}
+                </div>
             @endif
 
-            <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
-                <div class="p-6">
-                    <table class="min-w-full divide-y divide-gray-200">
-                        <thead>
-                            <tr>
-                                <th class="px-4 py-2 text-left">ID</th>
-                                <th class="px-4 py-2 text-left">Cliente</th>
-                                <th class="px-4 py-2 text-left">Título</th>
-                                <th class="px-4 py-2 text-left">Estado</th>
-                                <th class="px-4 py-2 text-left">Tiempo (hh:mm:ss)</th>
-                                <th class="px-4 py-2 text-left">Creado</th>
-                                <th class="px-4 py-2 text-left">Acciones</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            @foreach($workReports as $report)
-                            <tr>
-                                <td class="px-4 py-2">#{{ $report->id }}</td>
-<<<<<<< HEAD
-                                <td class="px-4 py-2">{{ $report->client->user->name }}</td>
-=======
-                                <td class="px-4 py-2">{{ $report->client->name }}</td>
->>>>>>> feature/020-usabilidad
-                                <td class="px-4 py-2">{{ $report->title ?? '-' }}</td>
-                                <td class="px-4 py-2">
-                                    <span class="px-2 py-1 rounded text-xs
-                                            @if($report->status === 'in_progress') bg-green-100 text-green-800
-                                            @elseif($report->status === 'paused') bg-yellow-100 text-yellow-800
-                                            @elseif($report->status === 'finished') bg-blue-100 text-blue-800
-                                            @else bg-gray-100 text-gray-800
-                                            @endif">
-                                        {{ $report->status }}
-                                    </span>
-                                </td>
-                                <td class="px-4 py-2">{{ gmdate('H:i:s', $report->total_seconds) }}</td>
-                                <td class="px-4 py-2">{{ $report->created_at->format('d/m/Y H:i') }}</td>
-                                <td class="px-4 py-2">
-                                    <a href="{{ route('technician.work-reports.show', $report) }}" class="text-blue-500">Ver</a>
-                                    @if($report->status !== 'validated')
-                                    <a href="{{ route('technician.work-reports.edit', $report) }}" class="text-green-500 ml-2">Editar</a>
-                                    @endif
-                                </td>
-                            </tr>
-                            @endforeach
-                        </tbody>
-                    </table>
 
-                    <div class="mt-4">
-                        {{ $workReports->links() }}
+            <div class="cards-grid">
+
+                @foreach($workReports as $report)
+
+                    <div class="card">
+
+                        <div>
+
+                            <div class="card-header">
+
+                                <div>
+                                    <div class="card-title">
+                                        {{ $report->title ?? 'Parte #'.$report->id }}
+                                    </div>
+
+                                    <div class="card-client">
+                                        {{ $report->client->user->name }}
+                                    </div>
+                                </div>
+
+                                <span class="card-status
+@if($report->status === 'in_progress') status-progress
+@elseif($report->status === 'paused') status-paused
+@elseif($report->status === 'finished') status-finished
+@endif">
+
+{{ $report->status }}
+
+</span>
+
+                            </div>
+
+
+                            <div class="card-time">
+                                <span>Tiempo trabajado</span>
+                                <strong id="crono-{{ $report->id }}"
+                                        data-total-seconds="{{ $report->total_seconds }}"
+                                        @if($report->status === 'in_progress')
+                                            data-running="1"
+                                        data-started-at="{{ $report->active_started_at }}"
+                                        @else
+                                            data-running="0"
+                                    @endif
+                                >
+                                    {{ gmdate('H:i:s', $report->total_seconds) }}
+                                </strong>
+                            </div>
+
+
+                            <div class="card-date">
+                                Creado: {{ $report->created_at->format('d/m/Y H:i') }}
+                            </div>
+
+                        </div>
+
+
+                        <div class="card-actions">
+
+                            @if($report->status === 'paused')
+                                <form action="{{ route('technician.work-reports.start', $report) }}" method="POST">
+                                    @csrf
+                                    <button type="submit" class="btn-primary">Iniciar</button>
+                                </form>
+                            @endif
+
+                                @if($report->status === 'in_progress')
+                                    <form action="{{ route('technician.work-reports.pause', $report) }}" method="POST" class="pararCrono">
+                                        @csrf
+                                        <button type="submit" class="btn-primary">En ejecución (Pausar)</button>
+                                    </form>
+                                @endif
+
+                            <a href="{{ route('technician.work-reports.show', $report) }}" class="btn-secondary">
+                                Ver
+                            </a>
+
+
+                            @if($report->status !== 'validated')
+                                <a href="{{ route('technician.work-reports.edit', $report) }}" class="btn-secondary">
+                                    Editar
+                                </a>
+                            @endif
+
+                        </div>
+
                     </div>
-                </div>
+
+                @endforeach
+
+
+                <a href="{{ route('technician.work-reports.create') }}" class="card-create">
+                    <div class="create-icon">+</div>
+                    Crear nuevo parte
+                </a>
+
             </div>
-            <div class="mt-6 flex justify-start">
-                <a href="{{ route('technician.dashboard') }}"
-                    class="inline-flex items-center px-4 py-2 bg-white border border-gray-300 rounded-md font-semibold text-xs text-gray-700 uppercase tracking-widest shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 transition ease-in-out duration-150">
-                    <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path>
-                    </svg>
-                    Volver
+
+
+            <div class="mt-6">
+                {{ $workReports->links() }}
+            </div>
+
+
+            <div class="mt-6">
+                <a href="{{ route('technician.dashboard') }}" class="btn-back">
+                    ← Volver
                 </a>
             </div>
+
         </div>
     </div>
 </x-app-layout>
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+
+        const cronos = document.querySelectorAll('[id^="crono-"]');
+
+        cronos.forEach(cronoEl => {
+
+            if(cronoEl.dataset.running !== "1") return;
+
+            let totalSeconds = parseInt(cronoEl.dataset.totalSeconds);
+
+            // Diferencia entre inicio y ahora
+            const startedAt = new Date(cronoEl.dataset.startedAt);
+            const diffSeconds = Math.floor((Date.now() - startedAt.getTime()) / 1000);
+            totalSeconds += diffSeconds;
+
+            const updateCrono = () => {
+                let segundos = totalSeconds;
+                let horas = Math.floor(segundos/3600);
+                segundos %= 3600;
+                let minutos = Math.floor(segundos/60);
+                segundos %= 60;
+
+                cronoEl.innerText =
+                    horas.toString().padStart(2,'0') + ':' +
+                    minutos.toString().padStart(2,'0') + ':' +
+                    segundos.toString().padStart(2,'0');
+
+                totalSeconds++;
+            };
+
+            updateCrono();
+            setInterval(updateCrono, 1000);
+
+        });
+
+    });
+</script>

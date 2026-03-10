@@ -38,7 +38,7 @@
                                     {{ $workReport->status }}
                                 </span>
                             </p>
-                            <p><strong>Tiempo total:</strong> <span id="cronometro">{{ gmdate('H:i:s', $workReport->total_seconds) }} ({{ $workReport->total_seconds }} segundos)</span></p>
+                            <p><strong>Tiempo total:</strong> {{ gmdate('H\h i\m', $workReport->total_seconds) }}</p>
                             @if($workReport->finished_at)
                                 <p><strong>Finalizado:</strong> {{ $workReport->finished_at->format('d/m/Y H:i') }}</p>
                                 <br>

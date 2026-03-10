@@ -30,8 +30,7 @@
                     <p><strong>Título:</strong> {{ $workReport->title ?? '-' }}</p>
                     <p><strong>Descripción:</strong> {{ $workReport->description ?? '-' }}</p>
                     <p><strong>Estado:</strong> {{ $workReport->status }}</p>
-                    <p><strong>Tiempo total:</strong> {{ number_format($workReport->total_seconds / 3600, 2) }} horas ({{ $workReport->total_seconds }} segundos)</p>
-
+                    <p><strong>Tiempo total:</strong> {{ gmdate('H\h i\m', $workReport->total_seconds) }}</p>
                     @if($workReport->finished_at && !$workReport->validated_at)
                         <p><strong>Finalizado:</strong> {{ $workReport->finished_at->format('d/m/Y H:i') }}</p>
                         <br>
@@ -42,13 +41,9 @@
                     @endif
 
                     @if($workReport->validated_at)
-<<<<<<< HEAD
                         <br>
                         <p><strong>Finalizado:</strong> {{ $workReport->finished_at->format('d/m/Y H:i') }}</p>
                         <p><strong>Validado por:</strong> {{ $workReport->validator->name ?? '-' }} el {{ $workReport->validated_at->format('d/m/Y H:i') }}</p>
-=======
-                    <p><strong>Validado por:</strong> {{ $workReport->validator->name ?? '-' }} el {{ $workReport->validated_at->format('d/m/Y H:i') }}</p>
->>>>>>> feature/020-usabilidad
                     @endif
                 </div>
             </div>
@@ -67,22 +62,14 @@
                         </tr>
                         </thead>
                         <tbody>
-<<<<<<< HEAD
                         @foreach($workReport->events as $event)
-=======
-                            @foreach($workReport->events as $event)
->>>>>>> feature/020-usabilidad
                             <tr>
                                 <td class="px-4 py-2">{{ $event->type }}</td>
                                 <td class="px-4 py-2">{{ $event->occurred_at->format('d/m/Y H:i:s') }}</td>
                                 <td class="px-4 py-2">{{ number_format($event->elapsed_seconds_after / 3600, 2) }}h</td>
                                 <td class="px-4 py-2">{{ $event->creator->name ?? '-' }}</td>
                             </tr>
-<<<<<<< HEAD
-                        @endforeach
-=======
                             @endforeach
->>>>>>> feature/020-usabilidad
                         </tbody>
                     </table>
                 </div>
@@ -93,13 +80,10 @@
                 <div class="p-6">
                     <h3 class="text-lg font-semibold mb-4">Evidencias</h3>
                     @if($workReport->evidences->count() > 0)
-<<<<<<< HEAD
                         <table class="min-w-full divide-y divide-gray-200">
                             <thead>
-=======
                     <table class="min-w-full divide-y divide-gray-200">
                         <thead>
->>>>>>> feature/020-usabilidad
                             <tr>
                                 <th class="px-4 py-2 text-left">Nombre</th>
                                 <th class="px-4 py-2 text-left">Tamaño</th>
@@ -107,7 +91,6 @@
                                 <th class="px-4 py-2 text-left">Fecha</th>
                                 <th class="px-4 py-2 text-left">Acciones</th>
                             </tr>
-<<<<<<< HEAD
                             </thead>
                             <tbody>
                             @foreach($workReport->evidences as $evidence)
@@ -123,7 +106,6 @@
                             @endforeach
                             </tbody>
                         </table>
-=======
                         </thead>
                         <tbody>
                             @foreach($workReport->evidences as $evidence)
@@ -139,7 +121,6 @@
                             @endforeach
                         </tbody>
                     </table>
->>>>>>> feature/020-usabilidad
                     @else
                     <p class="text-gray-500">No hay evidencias asociadas.</p>
                     @endif

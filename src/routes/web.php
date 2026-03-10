@@ -39,6 +39,7 @@ Route::middleware(['auth', 'role:admin'])->prefix('admin')->name('admin.')->grou
 
     // Clientes
     Route::resource('clients', \App\Http\Controllers\Admin\AdminClientController::class);
+    Route::post('/admin/clients/{client}/send-password', [AdminClientController::class, 'sendPasswordEmail'])->name('admin.clients.send-password');
     Route::post('clients/{client}/credit', [\App\Http\Controllers\Admin\AdminClientController::class, 'credit'])->name('clients.credit');
     Route::post('clients/{client}/bonuses/issue', [\App\Http\Controllers\Admin\AdminClientController::class, 'issueBonus'])->name('clients.bonuses.issue');
 
