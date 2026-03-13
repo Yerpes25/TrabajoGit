@@ -7,10 +7,6 @@
 
     <div class="py-12">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
-            <div class="mb-4">
-                <a href="{{ route('admin.bonuses.index') }}" class="text-gray-600">← Volver a Bonos</a>
-            </div>
-
             <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg mb-6">
                 <div class="p-6">
                     <h3 class="text-lg font-semibold mb-4">Información del Bono</h3>
@@ -31,35 +27,40 @@
                 <div class="p-6">
                     <h3 class="text-lg font-semibold mb-4">Emisiones del Bono</h3>
                     @if($bonusIssues->count() > 0)
-                        <table class="min-w-full divide-y divide-gray-200">
-                            <thead>
-                                <tr>
-                                    <th class="px-4 py-2 text-left">Cliente</th>
-                                    <th class="px-4 py-2 text-left">Tiempo (horas)</th>
-                                    <th class="px-4 py-2 text-left">Nota</th>
-                                    <th class="px-4 py-2 text-left">Emitido por</th>
-                                    <th class="px-4 py-2 text-left">Fecha</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                @foreach($bonusIssues as $issue)
-                                    <tr>
-                                        <td class="px-4 py-2">{{ $issue->client->name }}</td>
-                                        <td class="px-4 py-2">{{ number_format($issue->seconds_total / 3600, 2) }}h</td>
-                                        <td class="px-4 py-2">{{ $issue->note ?? '-' }}</td>
-                                        <td class="px-4 py-2">{{ $issue->issuer->name ?? '-' }}</td>
-                                        <td class="px-4 py-2">{{ $issue->created_at->format('d/m/Y H:i') }}</td>
-                                    </tr>
-                                @endforeach
-                            </tbody>
-                        </table>
-                        <div class="mt-4">
-                            {{ $bonusIssues->links() }}
-                        </div>
+                    <table class="min-w-full divide-y divide-gray-200">
+                        <thead>
+                            <tr>
+                                <th class="px-4 py-2 text-left">Cliente</th>
+                                <th class="px-4 py-2 text-left">Tiempo (horas)</th>
+                                <th class="px-4 py-2 text-left">Nota</th>
+                                <th class="px-4 py-2 text-left">Emitido por</th>
+                                <th class="px-4 py-2 text-left">Fecha</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach($bonusIssues as $issue)
+                            <tr>
+                                <td class="px-4 py-2">{{ $issue->client->user->name }}</td>
+                                <td class="px-4 py-2">{{ number_format($issue->seconds_total / 3600, 2) }}h</td>
+                                <td class="px-4 py-2">{{ $issue->note ?? '-' }}</td>
+                                <td class="px-4 py-2">{{ $issue->issuer->name ?? '-' }}</td>
+                                <td class="px-4 py-2">{{ $issue->created_at->format('d/m/Y H:i') }}</td>
+                            </tr>
+                            @endforeach
+                        </tbody>
+                    </table>
+                    <div class="mt-4">
+                        {{ $bonusIssues->links() }}
+                    </div>
                     @else
-                        <p>No hay emisiones de este bono.</p>
+                    <p>No hay emisiones de este bono.</p>
                     @endif
                 </div>
+            </div>
+            <div class="mt-6 flex justify-start">
+                <x-back-button href="{{ url()->previous() }}">
+                    Volver
+                </x-back-button>
             </div>
         </div>
     </div>

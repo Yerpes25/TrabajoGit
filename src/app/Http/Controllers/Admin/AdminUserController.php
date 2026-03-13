@@ -3,9 +3,12 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Http\Controllers\Technician\TechnicianWorkReportController;
 use App\Http\Requests\Admin\StoreUserRequest;
 use App\Http\Requests\Admin\UpdateUserRequest;
 use App\Models\User;
+use App\Models\WorkReport;
+use App\Services\WorkReportService;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\View\View;
 use Illuminate\Support\Facades\Hash;
@@ -18,6 +21,12 @@ use Illuminate\Support\Facades\Hash;
  */
 class AdminUserController extends Controller
 {
+    private WorkReportService $workReportService;
+
+    public function __construct(WorkReportService $workReportService)
+    {
+        $this->workReportService = $workReportService;
+    }
     /**
      * Lista todos los usuarios con paginación.
      *
@@ -114,9 +123,20 @@ class AdminUserController extends Controller
             'is_active' => !$user->is_active,
         ]);
 
+        if($user->hasRole('technician') && !$user->is_active){
+            $activeReport = WorkReport::where([
+                ['technician_id', '=', $user->id],
+                ['status', '=', 'in_progress'],
+            ])->first();
+            if($activeReport){
+                $this->workReportService
+                    ->pause($activeReport, $user->id);
+            }
+        }
+
         $status = $user->is_active ? 'activado' : 'desactivado';
 
-        return redirect()->route('admin.users.index')
+        return redirect()->back()
             ->with('success', "Usuario {$user->name} {$status} correctamente.");
     }
 }

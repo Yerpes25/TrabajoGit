@@ -17,9 +17,9 @@
                             <select id="client_id" name="client_id" class="mt-1 block w-full border-gray-300 rounded-md" required>
                                 <option value="">Seleccione un cliente</option>
                                 @foreach($clients as $client)
-                                <option value="{{ $client->id }}" {{ old('client_id', request('client_id')) == $client->id ? 'selected' : '' }}>
-                                    {{ $client->name }}
-                                </option>
+                                    <option value="{{ $client->id }}">
+                                        {{ $client->name }} - ({{ $client->profile->balance_formatted }})
+                                    </option>
                                 @endforeach
                             </select>
                             <x-input-error :messages="$errors->get('client_id')" class="mt-2" />
@@ -38,8 +38,16 @@
                         </div>
 
                         <div class="flex items-center gap-4">
-                            <x-primary-button>Crear Parte</x-primary-button>
-                            <a href="{{ route('technician.work-reports.index') }}" class="text-gray-600">Cancelar</a>
+
+                            <x-primary-button>
+                                Crear Parte
+                            </x-primary-button>
+
+                            <a href="{{ route('technician.dashboard') }}"
+                               class="inline-flex items-center px-4 py-2 bg-white border border-gray-300 rounded-md font-semibold text-xs text-gray-700 uppercase tracking-widest shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 transition ease-in-out duration-150">
+                                Cancelar
+                            </a>
+
                         </div>
                     </form>
                 </div>

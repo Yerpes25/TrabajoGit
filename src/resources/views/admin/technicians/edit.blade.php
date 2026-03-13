@@ -36,6 +36,8 @@
                             <x-text-input id="password_confirmation" name="password_confirmation" type="password" class="mt-1 block w-full" />
                         </div>
 
+                        <input type="hidden" name="is_active" value="0">
+
                         <div class="mb-4">
                             <label class="flex items-center">
                                 <input type="checkbox" name="is_active" value="1" {{ $technician->is_active ? 'checked' : '' }} class="rounded">

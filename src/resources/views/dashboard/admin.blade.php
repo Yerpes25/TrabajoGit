@@ -28,13 +28,13 @@
             </div>
 
             <div class="mt-6 grid grid-cols-1 md:grid-cols-5 gap-4">
-                <a href="{{ route('admin.technicians.index') }}" class="bg-white overflow-hidden shadow-sm sm:rounded-lg p-4 hover:bg-gray-50">
-                    <h4 class="font-semibold">Técnicos</h4>
-                    <p class="text-sm text-gray-500">Gestionar técnicos</p>
-                </a>
                 <a href="{{ route('admin.clients.index') }}" class="bg-white overflow-hidden shadow-sm sm:rounded-lg p-4 hover:bg-gray-50">
                     <h4 class="font-semibold">Clientes</h4>
                     <p class="text-sm text-gray-500">Gestionar clientes y saldo</p>
+                </a>
+                <a href="{{ route('admin.technicians.index') }}" class="bg-white overflow-hidden shadow-sm sm:rounded-lg p-4 hover:bg-gray-50">
+                    <h4 class="font-semibold">Técnicos</h4>
+                    <p class="text-sm text-gray-500">Gestionar técnicos</p>
                 </a>
                 <a href="{{ route('admin.work-reports.index') }}" class="bg-white overflow-hidden shadow-sm sm:rounded-lg p-4 hover:bg-gray-50">
                     <h4 class="font-semibold">Partes</h4>
@@ -108,9 +108,6 @@
                     @endif
                 </div>
             </div>
-
-            <!-- Enlaces rápidos -->
-
         </div>
     </div>
 </x-app-layout>

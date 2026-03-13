@@ -1,5 +1,5 @@
 <nav x-data="{ open: false }" class="bg-white border-b border-gray-100">
-    <!-- Primary Navigation Menu -->
+    <!-- Menú de Navegación Principal -->
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div class="flex justify-between h-16">
             <div class="flex">
@@ -29,7 +29,7 @@
                     </a>
                 </div>
 
-                <!-- Navigation Links -->
+                <!-- Enlaces de Navegación (Escritorio) -->
                 <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
                     <?php if (isset($component)) { $__componentOriginalc295f12dca9d42f28a259237a5724830 = $component; } ?>
 <?php if (isset($attributes)) { $__attributesOriginalc295f12dca9d42f28a259237a5724830 = $attributes; } ?>
@@ -56,21 +56,78 @@
                 </div>
             </div>
 
-            <!-- Settings Dropdown -->
+            <!-- Opciones del lado derecho (Escritorio) -->
             <div class="hidden sm:flex sm:items-center sm:ms-6">
 
-                <button class="p-2 text-black hover:text-primary hover:bg-gray-100 transition duration-150 ease-in-out focus:outline-none rounded-full">
-                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
-                        <path stroke-linecap="round" stroke-linejoin="round" d="M14.857 17.082a23.848 23.848 0 005.454-1.31A8.967 8.967 0 0118 9.75v-.7V9A6 6 0 006 9v.75a8.967 8.967 0 01-2.312 6.022c1.733.64 3.56 1.085 5.455 1.31m5.714 0a24.255 24.255 0 01-5.714 0m5.714 0a3 3 0 11-5.714 0" />
-                    </svg>
-                </button>
+                <!-- INICIO CAMPANA NOTIFICACIONES (ESCRITORIO) -->
+                <div class="relative mr-4" x-data="{ abierto: false }">
+                    <button @click="
+                        abierto = !abierto; 
+                        
+                        /* 1. Ocultamos la burbuja visualmente */
+                        let burbuja = document.getElementById('burbuja_contador');
+                        if (burbuja && !burbuja.classList.contains('hidden')) {
+                            burbuja.classList.add('hidden');
+                            burbuja.innerText = '0';
+                            
+                            /* 2. Avisamos a Laravel por detras para que actualice la Base de Datos */
+                            fetch('<?php echo e(route('notificaciones.leidas')); ?>', {
+                                method: 'POST',
+                                headers: {
+                                    'Content-Type': 'application/json',
+                                    'X-CSRF-TOKEN': '<?php echo e(csrf_token()); ?>'
+                                }
+                            });
+                        }
+                    "
+                        class="relative p-2 text-gray-400 hover:text-gray-500 focus:outline-none transition duration-150">
 
-                <button class="p-2 text-black hover:text-primary hover:bg-gray-100 transition duration-150 ease-in-out focus:outline-none rounded-full">
-                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
-                        <path stroke-linecap="round" stroke-linejoin="round" d="M10.343 3.94c.09-.542.56-.94 1.11-.94h1.093c.55 0 1.02.398 1.11.94l.149.894c.07.424.384.764.78.93.398.164.855.142 1.205-.108l.737-.527a1.125 1.125 0 011.45.12l.773.774c.39.389.44 1.002.12 1.45l-.527.737c-.25.35-.272.806-.107 1.204.165.397.505.71.93.78l.893.15c.543.09.94.56.94 1.109v1.094c0 .55-.397 1.02-.94 1.11l-.893.149c-.425.07-.765.383-.93.78-.165.398-.143.854.107 1.204l.527.738c.32.447.269 1.06-.12 1.45l-.774.773a1.125 1.125 0 01-1.449.12l-.738-.527c-.35-.25-.806-.272-1.203-.107-.397.165-.71-.505-.781.929l-.149.894c-.09.542-.56.94-1.11.94h-1.094c-.55 0-1.019-.398-1.11-.94l-.148-.894c-.071-.424-.384-.764-.781-.93-.398-.164-.854-.142-1.204.108l-.738.527c-.447.32-1.06.269-1.45-.12l-.773-.774a1.125 1.125 0 01-.12-1.45l.527-.737c.25-.35.273-.806.108-1.204-.165-.397-.505-.71-.93-.78l-.894-.15c-.542-.09-.94-.56-.94-1.109v-1.094c0-.55.398-1.02.94-1.11l.894-.149c.424-.07.765-.383.93-.78.165-.398.143-.854-.107-1.204l-.527-.738a1.125 1.125 0 01.12-1.45l.773-.773a1.125 1.125 0 011.45-.12l.737.527c.35.25.807.272 1.204.107.397-.165.71-.505.78-.929l.15-.894z" />
-                        <path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-                    </svg>
-                </button>
+                        <?php
+                        // Calculamos cuantas notificaciones no leidas hay al cargar la pagina
+                        $cantidadNoLeidas = auth()->user() ? auth()->user()->unreadNotifications->count() : 0;
+                        ?>
+
+                        <!-- LA BURBUJA DEL CONTADOR (Oculta si hay 0) -->
+                        <span id="burbuja_contador"
+                            class="absolute top-0 right-0 inline-flex items-center justify-center px-2 py-1 text-xs font-bold leading-none text-white bg-red-600 rounded-full transform translate-x-1/4 -translate-y-1/4 <?php echo e($cantidadNoLeidas > 0 ? '' : 'hidden'); ?>">
+                            <?php echo e($cantidadNoLeidas); ?>
+
+                        </span>
+
+                        <!-- ICONO SVG DE LA CAMPANA -->
+                        <svg class="h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M14.857 17.082a23.848 23.848 0 0 0 5.454-1.31A8.967 8.967 0 0 1 18 9.75V9A6 6 0 0 0 6 9v.75a8.967 8.967 0 0 1-2.312 6.022c1.733.64 3.56 1.085 5.455 1.31m5.714 0a24.255 24.255 0 0 1-5.714 0m5.714 0a3 3 0 1 1-5.714 0" />
+                        </svg>
+                    </button>
+
+                    <!-- CAJA DESPLEGABLE DE MENSAJES (ESCRITORIO) -->
+                    <div x-show="abierto" @click.away="abierto = false" class="absolute right-0 mt-2 w-72 bg-white border rounded shadow-lg z-50 overflow-hidden" style="display: none;">
+                        <div class="p-2 text-xs font-bold text-gray-400 uppercase border-b bg-gray-50 flex justify-between">
+                            <span>Notificaciones</span>
+                        </div>
+
+                        <div id="lista_mensajes_web" class="max-h-64 overflow-y-auto">
+                            <?php
+                            $todasLasNotificaciones = auth()->user() ? auth()->user()->notifications : collect();
+                            ?>
+
+                            <?php $__empty_1 = true; $__currentLoopData = $todasLasNotificaciones; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $notificacion): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); $__empty_1 = false; ?>
+                            <div class="p-3 text-sm text-gray-700 border-b hover:bg-gray-50 transition <?php echo e(is_null($notificacion->read_at) ? 'bg-blue-50' : ''); ?>">
+                                <?php echo e($notificacion->data['mensaje']); ?>
+
+                            </div>
+                            <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); if ($__empty_1): ?>
+                            <p class="p-3 text-sm text-gray-500 italic" id="mensaje_vacio">No hay avisos nuevos</p>
+                            <?php endif; ?>
+                        </div>
+                    </div>
+                </div>
+                <!-- FIN CAMPANA NOTIFICACIONES (ESCRITORIO) -->
+
+                <!-- Contenedor para las notificaciones Push visuales -->
+                <div id="contenedorPush" style="position: fixed; bottom: 20px; right: 20px; z-index: 9999;"></div>
+
+                <!-- Dropdown de Usuario -->
                 <?php if (isset($component)) { $__componentOriginaldf8083d4a852c446488d8d384bbc7cbe = $component; } ?>
 <?php if (isset($attributes)) { $__attributesOriginaldf8083d4a852c446488d8d384bbc7cbe = $attributes; } ?>
 <?php $component = Illuminate\View\AnonymousComponent::resolve(['view' => 'components.dropdown','data' => ['align' => 'right','width' => '60']] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? $attributes->all() : [])); ?>
@@ -89,8 +146,6 @@
                             </div>
                         </button>
                      <?php $__env->endSlot(); ?>
-
-                    
 
                      <?php $__env->slot('content', null, []); ?> 
                         <?php if (isset($component)) { $__componentOriginal68cb1971a2b92c9735f83359058f7108 = $component; } ?>
@@ -116,22 +171,19 @@
 <?php unset($__componentOriginal68cb1971a2b92c9735f83359058f7108); ?>
 <?php endif; ?>
 
-                        <!-- Authentication -->
+                        <!-- Autenticación -->
                         <form method="POST" action="<?php echo e(route('logout')); ?>">
                             <?php echo csrf_field(); ?>
-
                             <?php if (isset($component)) { $__componentOriginal68cb1971a2b92c9735f83359058f7108 = $component; } ?>
 <?php if (isset($attributes)) { $__attributesOriginal68cb1971a2b92c9735f83359058f7108 = $attributes; } ?>
-<?php $component = Illuminate\View\AnonymousComponent::resolve(['view' => 'components.dropdown-link','data' => ['href' => route('logout'),'onclick' => 'event.preventDefault();
-                                                this.closest(\'form\').submit();']] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? $attributes->all() : [])); ?>
+<?php $component = Illuminate\View\AnonymousComponent::resolve(['view' => 'components.dropdown-link','data' => ['href' => route('logout'),'onclick' => 'event.preventDefault(); this.closest(\'form\').submit();','class' => 'whitespace-nowrap px-4 py-1 text-sm']] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? $attributes->all() : [])); ?>
 <?php $component->withName('dropdown-link'); ?>
 <?php if ($component->shouldRender()): ?>
 <?php $__env->startComponent($component->resolveView(), $component->data()); ?>
 <?php if (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag): ?>
 <?php $attributes = $attributes->except(\Illuminate\View\AnonymousComponent::ignoredParameterNames()); ?>
 <?php endif; ?>
-<?php $component->withAttributes(['href' => \Illuminate\View\Compilers\BladeCompiler::sanitizeComponentAttribute(route('logout')),'onclick' => 'event.preventDefault();
-                                                this.closest(\'form\').submit();']); ?>
+<?php $component->withAttributes(['href' => \Illuminate\View\Compilers\BladeCompiler::sanitizeComponentAttribute(route('logout')),'onclick' => 'event.preventDefault(); this.closest(\'form\').submit();','class' => 'whitespace-nowrap px-4 py-1 text-sm']); ?>
                                 <?php echo e(__('Cerrar sesión')); ?>
 
                              <?php echo $__env->renderComponent(); ?>
@@ -158,8 +210,72 @@
 <?php endif; ?>
             </div>
 
-            <!-- Hamburger -->
+            <!-- Hamburger e Iconos Móviles -->
             <div class="-me-2 flex items-center sm:hidden">
+
+                <!-- INICIO CAMPANA NOTIFICACIONES (MÓVIL) -->
+                <div class="relative mr-2" x-data="{ abierto: false }">
+                    <button @click="
+                        abierto = !abierto; 
+                        
+                        let burbujaMovil = document.getElementById('burbuja_contador_movil');
+                        if (burbujaMovil && !burbujaMovil.classList.contains('hidden')) {
+                            burbujaMovil.classList.add('hidden');
+                            burbujaMovil.innerText = '0';
+                            
+                            fetch('<?php echo e(route('notificaciones.leidas')); ?>', {
+                                method: 'POST',
+                                headers: {
+                                    'Content-Type': 'application/json',
+                                    'X-CSRF-TOKEN': '<?php echo e(csrf_token()); ?>'
+                                }
+                            });
+                        }
+                    "
+                        class="relative p-2 text-gray-400 hover:text-gray-500 focus:outline-none transition duration-150">
+
+                        <?php
+                        $cantidadNoLeidas = auth()->user() ? auth()->user()->unreadNotifications->count() : 0;
+                        ?>
+
+                        <!-- BURBUJA CONTADOR MÓVIL -->
+                        <span id="burbuja_contador_movil"
+                            class="absolute top-0 right-0 inline-flex items-center justify-center px-2 py-1 text-xs font-bold leading-none text-white bg-red-600 rounded-full transform translate-x-1/4 -translate-y-1/4 <?php echo e($cantidadNoLeidas > 0 ? '' : 'hidden'); ?>">
+                            <?php echo e($cantidadNoLeidas); ?>
+
+                        </span>
+
+                        <!-- ICONO SVG CAMPANA -->
+                        <svg class="h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M14.857 17.082a23.848 23.848 0 0 0 5.454-1.31A8.967 8.967 0 0 1 18 9.75V9A6 6 0 0 0 6 9v.75a8.967 8.967 0 0 1-2.312 6.022c1.733.64 3.56 1.085 5.455 1.31m5.714 0a24.255 24.255 0 0 1-5.714 0m5.714 0a3 3 0 1 1-5.714 0" />
+                        </svg>
+                    </button>
+
+                    <!-- CAJA DESPLEGABLE MÓVIL (Ajustada para pantalla pequeña) -->
+                    <div x-show="abierto" @click.away="abierto = false" class="absolute right-0 mt-2 w-64 bg-white border rounded shadow-lg z-50 overflow-hidden" style="display: none;">
+                        <div class="p-2 text-xs font-bold text-gray-400 uppercase border-b bg-gray-50 flex justify-between">
+                            <span>Notificaciones</span>
+                        </div>
+
+                        <div id="lista_mensajes_web_movil" class="max-h-64 overflow-y-auto">
+                            <?php
+                            $todasLasNotificaciones = auth()->user() ? auth()->user()->notifications : collect();
+                            ?>
+
+                            <?php $__empty_1 = true; $__currentLoopData = $todasLasNotificaciones; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $notificacion): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); $__empty_1 = false; ?>
+                            <div class="p-3 text-sm text-gray-700 border-b hover:bg-gray-50 transition <?php echo e(is_null($notificacion->read_at) ? 'bg-blue-50' : ''); ?>">
+                                <?php echo e($notificacion->data['mensaje']); ?>
+
+                            </div>
+                            <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); if ($__empty_1): ?>
+                            <p class="p-3 text-sm text-gray-500 italic" id="mensaje_vacio_movil">No hay avisos nuevos</p>
+                            <?php endif; ?>
+                        </div>
+                    </div>
+                </div>
+                <!-- FIN CAMPANA NOTIFICACIONES (MÓVIL) -->
+
+                <!-- Botón Hamburger -->
                 <button @click="open = ! open" class="inline-flex items-center justify-center p-2 rounded-md text-gray-400 hover:text-gray-500 hover:bg-gray-100 focus:outline-none focus:bg-gray-100 focus:text-gray-500 transition duration-150 ease-in-out">
                     <svg class="h-6 w-6" stroke="currentColor" fill="none" viewBox="0 0 24 24">
                         <path :class="{'hidden': open, 'inline-flex': ! open }" class="inline-flex" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
@@ -170,7 +286,7 @@
         </div>
     </div>
 
-    <!-- Responsive Navigation Menu -->
+    <!-- Menú de Navegación Responsivo (El que se abre con las tres rayas) -->
     <div :class="{'block': open, 'hidden': ! open}" class="hidden sm:hidden">
         <div class="pt-2 pb-3 space-y-1">
             <?php if (isset($component)) { $__componentOriginald69b52d99510f1e7cd3d80070b28ca18 = $component; } ?>
@@ -197,7 +313,7 @@
 <?php endif; ?>
         </div>
 
-        <!-- Responsive Settings Options -->
+        <!-- Opciones de Ajustes Responsivas -->
         <div class="pt-4 pb-1 border-t border-gray-200">
             <div class="px-4">
                 <div class="font-medium text-base text-gray-800"><?php echo e(Auth::user()->name); ?></div>
@@ -228,28 +344,7 @@
 <?php unset($__componentOriginald69b52d99510f1e7cd3d80070b28ca18); ?>
 <?php endif; ?>
 
-                <?php if (isset($component)) { $__componentOriginald69b52d99510f1e7cd3d80070b28ca18 = $component; } ?>
-<?php if (isset($attributes)) { $__attributesOriginald69b52d99510f1e7cd3d80070b28ca18 = $attributes; } ?>
-<?php $component = Illuminate\View\AnonymousComponent::resolve(['view' => 'components.responsive-nav-link','data' => ['href' => '#']] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? $attributes->all() : [])); ?>
-<?php $component->withName('responsive-nav-link'); ?>
-<?php if ($component->shouldRender()): ?>
-<?php $__env->startComponent($component->resolveView(), $component->data()); ?>
-<?php if (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag): ?>
-<?php $attributes = $attributes->except(\Illuminate\View\AnonymousComponent::ignoredParameterNames()); ?>
-<?php endif; ?>
-<?php $component->withAttributes(['href' => '#']); ?>
-                    <?php echo e(__('Notificaciones')); ?>
-
-                 <?php echo $__env->renderComponent(); ?>
-<?php endif; ?>
-<?php if (isset($__attributesOriginald69b52d99510f1e7cd3d80070b28ca18)): ?>
-<?php $attributes = $__attributesOriginald69b52d99510f1e7cd3d80070b28ca18; ?>
-<?php unset($__attributesOriginald69b52d99510f1e7cd3d80070b28ca18); ?>
-<?php endif; ?>
-<?php if (isset($__componentOriginald69b52d99510f1e7cd3d80070b28ca18)): ?>
-<?php $component = $__componentOriginald69b52d99510f1e7cd3d80070b28ca18; ?>
-<?php unset($__componentOriginald69b52d99510f1e7cd3d80070b28ca18); ?>
-<?php endif; ?>
+                <!-- El enlace de Notificaciones se ha eliminado de aqui porque ya esta en la campana -->
 
                 <?php if (isset($component)) { $__componentOriginald69b52d99510f1e7cd3d80070b28ca18 = $component; } ?>
 <?php if (isset($attributes)) { $__attributesOriginald69b52d99510f1e7cd3d80070b28ca18 = $attributes; } ?>
@@ -274,7 +369,7 @@
 <?php unset($__componentOriginald69b52d99510f1e7cd3d80070b28ca18); ?>
 <?php endif; ?>
 
-                <!-- Authentication -->
+                <!-- Autenticación -->
                 <form method="POST" action="<?php echo e(route('logout')); ?>">
                     <?php echo csrf_field(); ?>
 

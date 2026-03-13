@@ -38,12 +38,17 @@
                             <x-text-input id="password_confirmation" name="password_confirmation" type="password" class="mt-1 block w-full" />
                         </div>
 
-                        <div class="mb-4">
-                            <label class="flex items-center">
-                                <input type="checkbox" name="is_active" value="1" {{ ($client->user->is_active ?? true) ? 'checked' : '' }} class="rounded">
-                                <span class="ml-2">Usuario activo</span>
-                            </label>
-                        </div>
+                        <input type="hidden" name="is_active" value="0">
+
+                        <label class="flex items-center">
+                            <input type="checkbox"
+                                   name="is_active"
+                                   value="1"
+                                   {{ ($client->user->is_active ?? true) ? 'checked' : '' }}
+                                   class="rounded">
+
+                            <span class="ml-2">Usuario activo</span>
+                        </label>
 
                         <h3 class="text-lg font-semibold mb-4 mt-6">Datos del Cliente</h3>
 

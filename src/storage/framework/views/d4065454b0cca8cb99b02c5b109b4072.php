@@ -36,48 +36,58 @@
 
         </main>
     </div>
-    <?php if(Auth::check() && Auth::user()->role === 'client'): ?>
-    <?php
-    /**
-    * Buscamos el modelo Client asociado al usuario actual
-    * para poder usar su ID en el canal privado de WebSockets.
-    */
-    $clienteLogueado = \App\Models\Client::where('user_id', Auth::id())->first();
-    ?>
-
-    <?php if($clienteLogueado): ?>
+    <footer class="bg-white shadow mt-6">
+        <div class="max-w-7xl mx-auto py-4 px-4 sm:px-6 lg:px-8 text-center text-gray-500 text-sm">
+            &copy; <?php echo e(date('Y')); ?> <?php echo e(config('app.name', 'Cubetic bonos')); ?>. Todos los derechos reservados.
+        </div>
+    </footer>
     <script type="module">
-        document.addEventListener('DOMContentLoaded', function() {
-            console.log("Esperando notificaciones del técnico...");
+        document.addEventListener('DOMContentLoaded', () => {
+            const miIdDeUsuario = "<?php echo e(auth()->id()); ?>";
 
-            if ("Notification" in window && Notification.permission !== "granted" && Notification.permission !== "denied") {
-                Notification.requestPermission();
-            }
+            if (window.Echo && miIdDeUsuario) {
+                const canalNotificaciones = `App.Models.User.${miIdDeUsuario}`;
 
-            window.Echo.private('canal-cliente.<?php echo e($clienteLogueado->id); ?>')
-                .listen('.alerta.nueva.intervencion', (evento) => {
+                window.Echo.private(canalNotificaciones)
+                    .notification((datos) => {
 
-                    console.log("¡Señal recibida del WebSocket!", evento);
-
-                    if (Notification.permission === "granted") {
-                        const opcionesNotificacion = {
-                            body: `El técnico ha actualizado el parte: ${evento.titulo}\nEstado: ${evento.estado}`,
-                            icon: '/favicon.svg',
-                            requireInteraction: true
+                        // 1. ACTUALIZAR BURBUJAS (Escritorio y Móvil)
+                        const actualizarBurbuja = (id) => {
+                            const burbuja = document.getElementById(id);
+                            if (burbuja) {
+                                let numeroActual = parseInt(burbuja.innerText) || 0;
+                                burbuja.innerText = numeroActual + 1;
+                                burbuja.classList.remove('hidden');
+                            }
                         };
 
-                        new Notification("Novedades en tu panel", opcionesNotificacion);
-                    } else {
-                        console.warn("La señal llegó, pero no tienes permisos de Windows para mostrarla.");
-                    }
-                })
-                .error((error) => {
-                    console.error("Error al conectar al canal privado:", error);
-                });
+                        actualizarBurbuja('burbuja_contador'); // Escritorio
+                        actualizarBurbuja('burbuja_contador_movil'); // Móvil
+
+                        // 2. AÑADIR EL MENSAJE A LAS LISTAS (Escritorio y Móvil)
+                        const anadirMensaje = (idCaja, idMensajeVacio) => {
+                            const cajaMensajes = document.getElementById(idCaja);
+                            const mensajeVacio = document.getElementById(idMensajeVacio);
+
+                            if (cajaMensajes) {
+                                if (mensajeVacio) {
+                                    mensajeVacio.remove();
+                                }
+
+                                const nuevoDiv = document.createElement('div');
+                                nuevoDiv.className = 'p-3 text-sm text-gray-700 border-b hover:bg-gray-50 transition bg-blue-50';
+                                nuevoDiv.innerText = datos.mensaje;
+
+                                cajaMensajes.prepend(nuevoDiv);
+                            }
+                        };
+
+                        anadirMensaje('lista_mensajes_web', 'mensaje_vacio'); // Escritorio
+                        anadirMensaje('lista_mensajes_web_movil', 'mensaje_vacio_movil'); // Móvil
+                    });
+            }
         });
     </script>
-    <?php endif; ?>
-    <?php endif; ?>
 </body>
 
 </html><?php /**PATH /var/www/src/resources/views/layouts/app.blade.php ENDPATH**/ ?>

@@ -7,6 +7,7 @@ use App\Models\WorkReport;
 use App\Services\BalanceService;
 use App\Services\AuditService;
 use Illuminate\View\View;
+use App\Models\Bonus;
 
 /**
  * Controller para el dashboard de clientes.
@@ -29,10 +30,17 @@ class ClientDashboardController extends Controller
     public function index(): View
     {
         $user = auth()->user();
-        
+
         // Obtener el cliente asociado al usuario por FK (user_id)
         // Regla: Esta relación es robusta y no se rompe si cambia el email
         $client = $user->client;
+
+        $activeBonuses = Bonus::where('is_active', true)
+            ->withCount('bonusIssues') // <--- Cambiado para que coincida con tu modelo Bonus.php
+            ->orderBy('bonus_issues_count', 'desc')
+            ->get();
+
+        $maxHoursId = $activeBonuses->sortByDesc('seconds_total')->first()->id ?? null;
 
         if (!$client) {
             // Si no hay cliente asociado, mostrar vista vacía
@@ -42,6 +50,8 @@ class ClientDashboardController extends Controller
                 'validated' => 0,
                 'recentWorkReports' => collect(),
                 'balanceSeconds' => 0,
+                'activeBonuses' => $activeBonuses,
+                'maxHoursId' => $maxHoursId,
             ]);
         }
 
@@ -75,7 +85,9 @@ class ClientDashboardController extends Controller
             'finished',
             'validated',
             'recentWorkReports',
-            'balanceSeconds'
+            'balanceSeconds',
+            'activeBonuses',
+            'maxHoursId'
         ));
     }
 }

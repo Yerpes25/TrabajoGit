@@ -21,10 +21,10 @@ class UserSeeder extends Seeder
     {
         // Admin
         User::firstOrCreate(
-            ['email' => 'admin@local.test'],
+            ['email' => 'nico.araoz@cubetic.com'],
             [
-                'name' => 'Administrador',
-                'password' => Hash::make('password'),
+                'name' => 'Nicolás',
+                'password' => Hash::make('Albamaria##2016'),
                 'role' => 'admin',
                 'is_active' => true,
                 'email_verified_at' => now(),

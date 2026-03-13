@@ -7,11 +7,13 @@ use App\Http\Requests\Technician\StoreWorkReportRequest;
 use App\Http\Requests\Technician\UpdateWorkReportRequest;
 use App\Models\Client;
 use App\Models\WorkReport;
+use App\Events\EventoNuevaIntervencion;
+use Illuminate\Support\Facades\Auth;
 use App\Services\WorkReportService;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\View\View;
-use Illuminate\Support\Facades\Auth;
+use App\Notifications\NotificacionParte;
 
 /**
  * Controller para gestionar partes de trabajo desde el panel técnico.
@@ -42,7 +44,7 @@ class TechnicianWorkReportController extends Controller
         // Optimización performance: eager loading de client para evitar N+1
         // NOTE: La vista accede a $report->client->name en el loop
         // Sin eager loading, haría 1 query por cada parte para obtener el cliente
-        $workReports = WorkReport::where('technician_id', Auth::user())
+        $workReports = WorkReport::where('technician_id', auth()->id())
             ->with(['client'])
             ->orderBy('created_at', 'desc')
             ->paginate(15);
@@ -58,10 +60,14 @@ class TechnicianWorkReportController extends Controller
     public function create(): View
     {
         $clients = Client::with(['profile', 'user'])
+            ->whereHas('profile', function ($q) {
+                $q->where('balance_seconds', '>', 0);
+            })
             ->join('users', 'users.id', '=', 'clients.user_id')
             ->orderBy('users.name', 'desc')
             ->select(['clients.*', 'users.name'])
             ->get();
+
         return view('technician.work-reports.create', compact('clients'));
     }
 
@@ -77,7 +83,7 @@ class TechnicianWorkReportController extends Controller
     public function store(StoreWorkReportRequest $request): RedirectResponse
     {
         $client = Client::findOrFail($request->input('client_id'));
-        $technician = Auth::id();
+        $technician = auth()->user();
 
         $workReport = $this->workReportService->create(
             $client,
@@ -86,8 +92,13 @@ class TechnicianWorkReportController extends Controller
             $request->input('description')
         );
 
-        // Disparar la notificación push por WebSocket al cliente tras la creación del parte
-        event(new \App\Events\EventoNuevaIntervencion($workReport->title, $workReport->status, $workReport->client_id));
+        // 2. Preparamos el mensaje
+        $mensaje = "El técnico " . $technician->name . " ha creado un nuevo parte.";
+
+        // 3. Disparamos el evento pasandole el mensaje y el ID de USUARIO del cliente
+        event(new \App\Events\EventoNuevaIntervencion($mensaje, $client->user_id));
+
+        #dd('Llegamos DESPUES de disparar el evento. Revisa tu consola del servidor de Reverb.');
 
         return redirect()->route('technician.work-reports.show', $workReport)
             ->with('success', 'Parte creado correctamente.');
@@ -151,17 +162,20 @@ class TechnicianWorkReportController extends Controller
         // Verificar permisos mediante Policy
         $this->authorize('update', $workReport);
 
+        if(!$workReport->technician->is_active){
+            return redirect()
+                ->back()
+                ->with('error', 'No estas autorizado para editar partes en este momento.');
+        }
+
         try {
             // Delegar a WorkReportService (lógica de negocio)
             // Regla: updateDetails() valida estado, calcula diff, crea evento y auditoría
             $this->workReportService->updateDetails(
                 $workReport,
                 $request->only(['title', 'description', 'summary']),
-                Auth::id()
+                auth()->id()
             );
-
-            // Disparar la notificación push por WebSocket al cliente tras la actualización
-            event(new \App\Events\EventoNuevaIntervencion($workReport->title, $workReport->status, $workReport->client_id));
 
             return redirect()->route('technician.work-reports.show', $workReport)
                 ->with('success', 'Parte actualizado correctamente.');
@@ -186,12 +200,20 @@ class TechnicianWorkReportController extends Controller
         // Verificar permisos mediante Policy
         $this->authorize('start', $workReport);
 
+        if(!$workReport->technician->is_active) {
+            return redirect()
+                ->back()
+                ->with('error', 'No estas autorizado para iniciar partes en este momento.');
+        }
+
         try {
-            $this->workReportService->start($workReport, Auth::id());
-            return redirect()->route('technician.work-reports.show', $workReport)
+            $this->workReportService->start($workReport, auth()->id());
+            // Notificar al cliente vía WebSockets
+            $this->notificarAlCliente($workReport, 'iniciado');
+            return redirect()->back()
                 ->with('success', 'Parte iniciado correctamente.');
         } catch (\RuntimeException | \InvalidArgumentException $e) {
-            return redirect()->route('technician.work-reports.show', $workReport)
+            return redirect()->back()
                 ->with('error', $e->getMessage());
         }
     }
@@ -211,11 +233,11 @@ class TechnicianWorkReportController extends Controller
         $this->authorize('pause', $workReport);
 
         try {
-            $this->workReportService->pause($workReport, Auth::id());
-            return redirect()->route('technician.work-reports.show', $workReport)
+            $this->workReportService->pause($workReport, auth()->id());
+            return redirect()->back()
                 ->with('success', 'Parte pausado correctamente.');
         } catch (\InvalidArgumentException $e) {
-            return redirect()->route('technician.work-reports.show', $workReport)
+            return redirect()->back()
                 ->with('error', $e->getMessage());
         }
     }
@@ -234,9 +256,15 @@ class TechnicianWorkReportController extends Controller
         // Verificar permisos mediante Policy
         $this->authorize('resume', $workReport);
 
+        if(!$workReport->technician->is_active) {
+            return redirect()
+                ->back()
+                ->with('error', 'No estas autorizado para iniciar partes en este momento.');
+        }
+
         try {
-            $this->workReportService->resume($workReport, Auth::id());
-            return redirect()->route('technician.work-reports.show', $workReport)
+            $this->workReportService->resume($workReport, auth()->id());
+            return redirect()->back()
                 ->with('success', 'Parte reanudado correctamente.');
         } catch (\RuntimeException | \InvalidArgumentException $e) {
             return redirect()->route('technician.work-reports.show', $workReport)
@@ -258,8 +286,16 @@ class TechnicianWorkReportController extends Controller
         // Verificar permisos mediante Policy
         $this->authorize('finish', $workReport);
 
+        if(!$workReport->technician->is_active) {
+            return redirect()
+                ->back()
+                ->with('error', 'No estas autorizado para finalizar partes en este momento.');
+        }
+
         try {
-            $this->workReportService->finish($workReport, null, Auth::id());
+            $this->workReportService->finish($workReport, null, auth()->id());
+            // Notificar al cliente vía WebSockets
+            $this->notificarAlCliente($workReport, 'finalizado');
             return redirect()->route('technician.work-reports.show', $workReport)
                 ->with('success', 'Parte finalizado correctamente.');
         } catch (\InvalidArgumentException $e) {
@@ -281,23 +317,31 @@ class TechnicianWorkReportController extends Controller
     {
         $this->authorize('validate', $workReport);
 
+        if(!$workReport->technician->is_active) {
+            return redirect()
+                ->back()
+                ->with('error', 'No estas autorizado para validar partes en este momento.');
+        }
+
         try {
             // Llamamos al nuevo método validate del servicio, no finish
-            $this->workReportService->validate($workReport, Auth::id());
+            $this->workReportService->validate($workReport, auth()->id());
 
             // Determinar ruta según rol
-            $user = Auth::user();
+            $user = auth()->user();
             if ($user->role === 'admin') {
                 $route = route('admin.work-reports.show', $workReport);
             } else {
                 // Por defecto asumimos que es técnico
                 $route = route('technician.work-reports.show', $workReport);
             }
+            // Notificar al cliente vía WebSockets
+            $this->notificarAlCliente($workReport, 'validado');
 
             return redirect($route)->with('success', 'Parte validado correctamente.');
         } catch (\InvalidArgumentException $e) {
             // Determinar ruta según rol también en caso de error
-            $user = Auth::user();
+            $user = auth()->user();
             if ($user->role === 'admin') {
                 $route = route('admin.work-reports.show', $workReport);
             } else {
@@ -305,6 +349,49 @@ class TechnicianWorkReportController extends Controller
             }
 
             return redirect($route)->with('error', $e->getMessage());
+        }
+    }
+    public function storeAndStart(StoreWorkReportRequest $request): RedirectResponse
+    {
+        try{
+            $client = Client::findOrFail($request->input('client_id'));
+            $technician = auth()->user();
+
+            $workReport = $this->workReportService->create(
+                $client,
+                $technician,
+                $request->input('title'),
+                $request->input('description')
+            );
+
+            // 3️⃣ Iniciar el parte
+            $this->workReportService->start($workReport);
+            // 4️⃣ Redirigir a donde quieras (dashboard, por ejemplo)
+            return redirect()->route('technician.dashboard')
+                ->with('success', 'Trabajo iniciado correctamente.');
+        }catch (\RuntimeException $e){
+            return redirect()->back()
+                ->with('error', $e->getMessage());
+        }
+
+    }
+
+    /**
+     * Envia una notificacion permanente al cliente de un parte especifico.
+     * @param WorkReport $parte El parte de trabajo sobre el que se actua.
+     * @param string $accion La accion realizada (ej: 'iniciado', 'pausado').
+     */
+    private function notificarAlCliente($parte, $accion)
+    {
+        $tecnico = auth()->user()->name;
+        $mensaje = "El técnico {$tecnico} ha {$accion} el parte #{$parte->id}.";
+
+        // Buscamos al usuario del cliente asociado al parte
+        $usuarioCliente = $parte->client->user;
+
+        // Si el usuario existe, le mandamos la notificacion
+        if ($usuarioCliente) {
+            $usuarioCliente->notify(new NotificacionParte($mensaje, $parte->id));
         }
     }
 }

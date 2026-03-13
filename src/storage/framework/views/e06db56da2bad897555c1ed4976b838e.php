@@ -9,406 +9,283 @@
 <?php endif; ?>
 <?php $component->withAttributes([]); ?>
      <?php $__env->slot('header', null, []); ?> 
-        <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-            <?php echo e(__('Detalle Parte: ') . ($workReport->title ?? 'Sin título')); ?>
+        <h2 class="text-xl font-bold">
+            Detalle Parte: <?php echo e($workReport->title ?? 'Sin título'); ?>
 
         </h2>
      <?php $__env->endSlot(); ?>
 
-    <div class="py-12">
-        <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
-            <?php if(session('success')): ?>
-                <div class="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded mb-4">
-                    <?php echo e(session('success')); ?>
+    <div class="page-container">
 
-                </div>
-            <?php endif; ?>
+        
+        <?php if(session('success')): ?>
+            <div class="card" style="background:#ecfdf5;border-color:#bbf7d0">
+                <?php echo e(session('success')); ?>
 
-            <?php if(session('error')): ?>
-                <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4">
-                    <?php echo e(session('error')); ?>
+            </div>
+        <?php endif; ?>
+        <?php if(session('error')): ?>
+            <div class="card" style="background:#fef2f2;border-color:#fecaca">
+                <?php echo e(session('error')); ?>
 
-                </div>
-            <?php endif; ?>
+            </div>
+        <?php endif; ?>
 
-            <!-- Información del parte -->
-            <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg mb-6">
-                <div class="p-6">
-                    <div class="flex justify-between items-start mb-4">
-                        <div>
-                            <h3 class="text-lg font-semibold mb-2">Información del Parte</h3>
-                            <p><strong>Cliente:</strong> <?php echo e($workReport->client->user->name); ?></p>
-                            <p><strong>Título:</strong> <?php echo e($workReport->title ?? '-'); ?></p>
-                            <p><strong>Descripción:</strong> <?php echo e($workReport->description ?? '-'); ?></p>
-                            <p><strong>Estado:</strong>
-                                <span class="px-2 py-1 rounded text-xs
-                                    <?php if($workReport->status === 'in_progress'): ?> bg-green-100 text-green-800
-                                    <?php elseif($workReport->status === 'paused'): ?> bg-yellow-100 text-yellow-800
-                                    <?php elseif($workReport->status === 'finished'): ?> bg-blue-100 text-blue-800
-                                    <?php else: ?> bg-gray-100 text-gray-800
-                                    <?php endif; ?>">
-                                    <?php echo e($workReport->status); ?>
+        <br>
 
-                                </span>
-                            </p>
-                            <p><strong>Tiempo total:</strong> <?php echo e(gmdate('H\h i\m', $workReport->total_seconds)); ?></p>
-                            <?php if($workReport->finished_at): ?>
-                                <p><strong>Finalizado:</strong> <?php echo e($workReport->finished_at->format('d/m/Y H:i')); ?></p>
-                                <br>
-                                <form action="<?php echo e(route('technician.work-reports.validate', $workReport)); ?>" method="POST" class="inline">
-                                    <?php echo csrf_field(); ?>
-                                    <?php if (isset($component)) { $__componentOriginald411d1792bd6cc877d687758b753742c = $component; } ?>
-<?php if (isset($attributes)) { $__attributesOriginald411d1792bd6cc877d687758b753742c = $attributes; } ?>
-<?php $component = Illuminate\View\AnonymousComponent::resolve(['view' => 'components.primary-button','data' => ['type' => 'submit']] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? $attributes->all() : [])); ?>
-<?php $component->withName('primary-button'); ?>
-<?php if ($component->shouldRender()): ?>
-<?php $__env->startComponent($component->resolveView(), $component->data()); ?>
-<?php if (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag): ?>
-<?php $attributes = $attributes->except(\Illuminate\View\AnonymousComponent::ignoredParameterNames()); ?>
-<?php endif; ?>
-<?php $component->withAttributes(['type' => 'submit']); ?>Validar <?php echo $__env->renderComponent(); ?>
-<?php endif; ?>
-<?php if (isset($__attributesOriginald411d1792bd6cc877d687758b753742c)): ?>
-<?php $attributes = $__attributesOriginald411d1792bd6cc877d687758b753742c; ?>
-<?php unset($__attributesOriginald411d1792bd6cc877d687758b753742c); ?>
-<?php endif; ?>
-<?php if (isset($__componentOriginald411d1792bd6cc877d687758b753742c)): ?>
-<?php $component = $__componentOriginald411d1792bd6cc877d687758b753742c; ?>
-<?php unset($__componentOriginald411d1792bd6cc877d687758b753742c); ?>
-<?php endif; ?>
-                                </form>
-                            <?php endif; ?>
-                        </div>
-                        <div>
-                            <a href="<?php echo e(route('technician.work-reports.edit', $workReport)); ?>" class="text-blue-500">Editar</a>
-                        </div>
-                    </div>
+        
+        <div class="stats-grid">
+            <div class="card">
+                <div class="stat-title">Cliente</div>
+                <div class="stat-value"><?php echo e($workReport->client?->user?->name ?? '-'); ?></div>
+            </div>
+            <div class="card">
+                <div class="stat-title">Estado</div>
+
+                <?php
+                    $status = $workReport->status ?? 'desconocido';
+                    $labels = [
+                        'in_progress' => 'En progreso',
+                        'paused' => 'Pausado',
+                        'finished' => 'Finalizado',
+                        'validated' => 'Validado'
+                    ];
+                    $colors = [
+                        'in_progress' => 'background-color: #3b82f6; color: white;',
+                        'paused' => 'background-color: #f59e0b; color: white;',
+                        'finished' => 'background-color: #10b981; color: white;',
+                        'validated' => 'background-color: #6b7280; color: white;'
+                    ];
+                    $label = $labels[$status] ?? ucfirst($status);
+                    $style = $colors[$status] ?? 'background-color: #d1d5db; color: black;';
+                ?>
+
+                <div style="<?php echo e($style); ?> width: 100%; text-align: center; font-weight: 600; padding: 10px 0; border-radius: 8px; font-size: 1rem;">
+                    <?php echo e($label); ?>
+
                 </div>
             </div>
+            <div class="card">
+                <div class="stat-title">Tiempo total</div>
+                <div id="cronometro" class="stat-value">
+                    <?php echo e(gmdate('H:i:s', $workReport->total_seconds)); ?>
 
-            <!-- Acciones del cronómetro -->
-            <?php if($workReport->status !== 'validated' && $workReport->status !== 'finished'): ?>
-                <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg mb-6">
-                    <div class="p-6">
-                        <h3 class="text-lg font-semibold mb-4">Acciones del Cronómetro</h3>
-                        <div class="flex gap-4">
-                            <?php if($workReport->status === 'paused'): ?>
-                                <form action="<?php echo e(route('technician.work-reports.start', $workReport)); ?>" method="POST" class="inline">
-                                    <?php echo csrf_field(); ?>
-                                    <?php if (isset($component)) { $__componentOriginald411d1792bd6cc877d687758b753742c = $component; } ?>
-<?php if (isset($attributes)) { $__attributesOriginald411d1792bd6cc877d687758b753742c = $attributes; } ?>
-<?php $component = Illuminate\View\AnonymousComponent::resolve(['view' => 'components.primary-button','data' => ['type' => 'submit']] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? $attributes->all() : [])); ?>
-<?php $component->withName('primary-button'); ?>
-<?php if ($component->shouldRender()): ?>
-<?php $__env->startComponent($component->resolveView(), $component->data()); ?>
-<?php if (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag): ?>
-<?php $attributes = $attributes->except(\Illuminate\View\AnonymousComponent::ignoredParameterNames()); ?>
-<?php endif; ?>
-<?php $component->withAttributes(['type' => 'submit']); ?>Iniciar <?php echo $__env->renderComponent(); ?>
-<?php endif; ?>
-<?php if (isset($__attributesOriginald411d1792bd6cc877d687758b753742c)): ?>
-<?php $attributes = $__attributesOriginald411d1792bd6cc877d687758b753742c; ?>
-<?php unset($__attributesOriginald411d1792bd6cc877d687758b753742c); ?>
-<?php endif; ?>
-<?php if (isset($__componentOriginald411d1792bd6cc877d687758b753742c)): ?>
-<?php $component = $__componentOriginald411d1792bd6cc877d687758b753742c; ?>
-<?php unset($__componentOriginald411d1792bd6cc877d687758b753742c); ?>
-<?php endif; ?>
-                                </form>
-                                <form action="<?php echo e(route('technician.work-reports.resume', $workReport)); ?>" method="POST" class="inline">
-                                    <?php echo csrf_field(); ?>
-                                    <?php if (isset($component)) { $__componentOriginald411d1792bd6cc877d687758b753742c = $component; } ?>
-<?php if (isset($attributes)) { $__attributesOriginald411d1792bd6cc877d687758b753742c = $attributes; } ?>
-<?php $component = Illuminate\View\AnonymousComponent::resolve(['view' => 'components.primary-button','data' => ['type' => 'submit']] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? $attributes->all() : [])); ?>
-<?php $component->withName('primary-button'); ?>
-<?php if ($component->shouldRender()): ?>
-<?php $__env->startComponent($component->resolveView(), $component->data()); ?>
-<?php if (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag): ?>
-<?php $attributes = $attributes->except(\Illuminate\View\AnonymousComponent::ignoredParameterNames()); ?>
-<?php endif; ?>
-<?php $component->withAttributes(['type' => 'submit']); ?>Reanudar <?php echo $__env->renderComponent(); ?>
-<?php endif; ?>
-<?php if (isset($__attributesOriginald411d1792bd6cc877d687758b753742c)): ?>
-<?php $attributes = $__attributesOriginald411d1792bd6cc877d687758b753742c; ?>
-<?php unset($__attributesOriginald411d1792bd6cc877d687758b753742c); ?>
-<?php endif; ?>
-<?php if (isset($__componentOriginald411d1792bd6cc877d687758b753742c)): ?>
-<?php $component = $__componentOriginald411d1792bd6cc877d687758b753742c; ?>
-<?php unset($__componentOriginald411d1792bd6cc877d687758b753742c); ?>
-<?php endif; ?>
-                                </form>
-                                <form action="<?php echo e(route('technician.work-reports.finish', $workReport)); ?>" method="POST" class="inline pararCrono">
-                                    <?php echo csrf_field(); ?>
-                                    <?php if (isset($component)) { $__componentOriginald411d1792bd6cc877d687758b753742c = $component; } ?>
-<?php if (isset($attributes)) { $__attributesOriginald411d1792bd6cc877d687758b753742c = $attributes; } ?>
-<?php $component = Illuminate\View\AnonymousComponent::resolve(['view' => 'components.primary-button','data' => ['type' => 'submit']] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? $attributes->all() : [])); ?>
-<?php $component->withName('primary-button'); ?>
-<?php if ($component->shouldRender()): ?>
-<?php $__env->startComponent($component->resolveView(), $component->data()); ?>
-<?php if (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag): ?>
-<?php $attributes = $attributes->except(\Illuminate\View\AnonymousComponent::ignoredParameterNames()); ?>
-<?php endif; ?>
-<?php $component->withAttributes(['type' => 'submit']); ?>Finalizar <?php echo $__env->renderComponent(); ?>
-<?php endif; ?>
-<?php if (isset($__attributesOriginald411d1792bd6cc877d687758b753742c)): ?>
-<?php $attributes = $__attributesOriginald411d1792bd6cc877d687758b753742c; ?>
-<?php unset($__attributesOriginald411d1792bd6cc877d687758b753742c); ?>
-<?php endif; ?>
-<?php if (isset($__componentOriginald411d1792bd6cc877d687758b753742c)): ?>
-<?php $component = $__componentOriginald411d1792bd6cc877d687758b753742c; ?>
-<?php unset($__componentOriginald411d1792bd6cc877d687758b753742c); ?>
-<?php endif; ?>
-                                </form>
-                            <?php elseif($workReport->status === 'in_progress'): ?>
-                                <form action="<?php echo e(route('technician.work-reports.pause', $workReport)); ?>" method="POST" class="inline pararCrono">
-                                    <?php echo csrf_field(); ?>
-                                    <?php if (isset($component)) { $__componentOriginald411d1792bd6cc877d687758b753742c = $component; } ?>
-<?php if (isset($attributes)) { $__attributesOriginald411d1792bd6cc877d687758b753742c = $attributes; } ?>
-<?php $component = Illuminate\View\AnonymousComponent::resolve(['view' => 'components.primary-button','data' => ['type' => 'submit']] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? $attributes->all() : [])); ?>
-<?php $component->withName('primary-button'); ?>
-<?php if ($component->shouldRender()): ?>
-<?php $__env->startComponent($component->resolveView(), $component->data()); ?>
-<?php if (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag): ?>
-<?php $attributes = $attributes->except(\Illuminate\View\AnonymousComponent::ignoredParameterNames()); ?>
-<?php endif; ?>
-<?php $component->withAttributes(['type' => 'submit']); ?>Pausar <?php echo $__env->renderComponent(); ?>
-<?php endif; ?>
-<?php if (isset($__attributesOriginald411d1792bd6cc877d687758b753742c)): ?>
-<?php $attributes = $__attributesOriginald411d1792bd6cc877d687758b753742c; ?>
-<?php unset($__attributesOriginald411d1792bd6cc877d687758b753742c); ?>
-<?php endif; ?>
-<?php if (isset($__componentOriginald411d1792bd6cc877d687758b753742c)): ?>
-<?php $component = $__componentOriginald411d1792bd6cc877d687758b753742c; ?>
-<?php unset($__componentOriginald411d1792bd6cc877d687758b753742c); ?>
-<?php endif; ?>
-                                </form>
-                                <form action="<?php echo e(route('technician.work-reports.finish', $workReport)); ?>" method="POST" class="inline pararCrono">
-                                    <?php echo csrf_field(); ?>
-                                    <?php if (isset($component)) { $__componentOriginald411d1792bd6cc877d687758b753742c = $component; } ?>
-<?php if (isset($attributes)) { $__attributesOriginald411d1792bd6cc877d687758b753742c = $attributes; } ?>
-<?php $component = Illuminate\View\AnonymousComponent::resolve(['view' => 'components.primary-button','data' => ['type' => 'submit']] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? $attributes->all() : [])); ?>
-<?php $component->withName('primary-button'); ?>
-<?php if ($component->shouldRender()): ?>
-<?php $__env->startComponent($component->resolveView(), $component->data()); ?>
-<?php if (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag): ?>
-<?php $attributes = $attributes->except(\Illuminate\View\AnonymousComponent::ignoredParameterNames()); ?>
-<?php endif; ?>
-<?php $component->withAttributes(['type' => 'submit']); ?>Finalizar <?php echo $__env->renderComponent(); ?>
-<?php endif; ?>
-<?php if (isset($__attributesOriginald411d1792bd6cc877d687758b753742c)): ?>
-<?php $attributes = $__attributesOriginald411d1792bd6cc877d687758b753742c; ?>
-<?php unset($__attributesOriginald411d1792bd6cc877d687758b753742c); ?>
-<?php endif; ?>
-<?php if (isset($__componentOriginald411d1792bd6cc877d687758b753742c)): ?>
-<?php $component = $__componentOriginald411d1792bd6cc877d687758b753742c; ?>
-<?php unset($__componentOriginald411d1792bd6cc877d687758b753742c); ?>
-<?php endif; ?>
-                                </form>
-                            <?php endif; ?>
-                        </div>
-                    </div>
                 </div>
-            <?php endif; ?>
-
-            <!-- Eventos del cronómetro -->
-            <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg mb-6">
-                <div class="p-6">
-                    <h3 class="text-lg font-semibold mb-4">Eventos del Cronómetro</h3>
-                    <?php if($workReport->events->count() > 0): ?>
-                        <table class="min-w-full divide-y divide-gray-200">
-                            <thead>
-                            <tr>
-                                <th class="px-4 py-2 text-left">Tipo</th>
-                                <th class="px-4 py-2 text-left">Fecha/Hora</th>
-                                <th class="px-4 py-2 text-left">Tiempo Acumulado</th>
-                                <th class="px-4 py-2 text-left">Creado por</th>
-                            </tr>
-                            </thead>
-                            <tbody>
-                            <?php $__currentLoopData = $workReport->events; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $event): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
-                                <tr>
-                                    <td class="px-4 py-2"><?php echo e($event->type); ?></td>
-                                    <td class="px-4 py-2"><?php echo e($event->occurred_at->format('d/m/Y H:i:s')); ?></td>
-                                    <td class="px-4 py-2"><?php echo e(gmdate('H:i:s', $event->elapsed_seconds_after)); ?></td>
-                                    <td class="px-4 py-2"><?php echo e($event->creator->name ?? '-'); ?></td>
-                                </tr>
-                            <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
-                            </tbody>
-                        </table>
-                    <?php else: ?>
-                        <p class="text-gray-500">No hay eventos registrados.</p>
-                    <?php endif; ?>
-                </div>
-            </div>
-
-            <!-- Subir evidencia -->
-            <?php if($workReport->status !== 'validated'): ?>
-                <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg mb-6">
-                    <div class="p-6">
-                        <h3 class="text-lg font-semibold mb-4">Subir Evidencia</h3>
-                        <form action="<?php echo e(route('technician.work-reports.evidences.upload', $workReport)); ?>" method="POST" enctype="multipart/form-data">
-                            <?php echo csrf_field(); ?>
-                            <div class="mb-4">
-                                <?php if (isset($component)) { $__componentOriginale3da9d84bb64e4bc2eeebaafabfb2581 = $component; } ?>
-<?php if (isset($attributes)) { $__attributesOriginale3da9d84bb64e4bc2eeebaafabfb2581 = $attributes; } ?>
-<?php $component = Illuminate\View\AnonymousComponent::resolve(['view' => 'components.input-label','data' => ['for' => 'file','value' => 'Archivo']] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? $attributes->all() : [])); ?>
-<?php $component->withName('input-label'); ?>
-<?php if ($component->shouldRender()): ?>
-<?php $__env->startComponent($component->resolveView(), $component->data()); ?>
-<?php if (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag): ?>
-<?php $attributes = $attributes->except(\Illuminate\View\AnonymousComponent::ignoredParameterNames()); ?>
-<?php endif; ?>
-<?php $component->withAttributes(['for' => 'file','value' => 'Archivo']); ?>
-<?php echo $__env->renderComponent(); ?>
-<?php endif; ?>
-<?php if (isset($__attributesOriginale3da9d84bb64e4bc2eeebaafabfb2581)): ?>
-<?php $attributes = $__attributesOriginale3da9d84bb64e4bc2eeebaafabfb2581; ?>
-<?php unset($__attributesOriginale3da9d84bb64e4bc2eeebaafabfb2581); ?>
-<?php endif; ?>
-<?php if (isset($__componentOriginale3da9d84bb64e4bc2eeebaafabfb2581)): ?>
-<?php $component = $__componentOriginale3da9d84bb64e4bc2eeebaafabfb2581; ?>
-<?php unset($__componentOriginale3da9d84bb64e4bc2eeebaafabfb2581); ?>
-<?php endif; ?>
-                                <input id="file" name="file" type="file" class="mt-1 block w-full" required />
-                                <?php if (isset($component)) { $__componentOriginalf94ed9c5393ef72725d159fe01139746 = $component; } ?>
-<?php if (isset($attributes)) { $__attributesOriginalf94ed9c5393ef72725d159fe01139746 = $attributes; } ?>
-<?php $component = Illuminate\View\AnonymousComponent::resolve(['view' => 'components.input-error','data' => ['messages' => $errors->get('file'),'class' => 'mt-2']] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? $attributes->all() : [])); ?>
-<?php $component->withName('input-error'); ?>
-<?php if ($component->shouldRender()): ?>
-<?php $__env->startComponent($component->resolveView(), $component->data()); ?>
-<?php if (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag): ?>
-<?php $attributes = $attributes->except(\Illuminate\View\AnonymousComponent::ignoredParameterNames()); ?>
-<?php endif; ?>
-<?php $component->withAttributes(['messages' => \Illuminate\View\Compilers\BladeCompiler::sanitizeComponentAttribute($errors->get('file')),'class' => 'mt-2']); ?>
-<?php echo $__env->renderComponent(); ?>
-<?php endif; ?>
-<?php if (isset($__attributesOriginalf94ed9c5393ef72725d159fe01139746)): ?>
-<?php $attributes = $__attributesOriginalf94ed9c5393ef72725d159fe01139746; ?>
-<?php unset($__attributesOriginalf94ed9c5393ef72725d159fe01139746); ?>
-<?php endif; ?>
-<?php if (isset($__componentOriginalf94ed9c5393ef72725d159fe01139746)): ?>
-<?php $component = $__componentOriginalf94ed9c5393ef72725d159fe01139746; ?>
-<?php unset($__componentOriginalf94ed9c5393ef72725d159fe01139746); ?>
-<?php endif; ?>
-                            </div>
-                            <?php if (isset($component)) { $__componentOriginald411d1792bd6cc877d687758b753742c = $component; } ?>
-<?php if (isset($attributes)) { $__attributesOriginald411d1792bd6cc877d687758b753742c = $attributes; } ?>
-<?php $component = Illuminate\View\AnonymousComponent::resolve(['view' => 'components.primary-button','data' => []] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? $attributes->all() : [])); ?>
-<?php $component->withName('primary-button'); ?>
-<?php if ($component->shouldRender()): ?>
-<?php $__env->startComponent($component->resolveView(), $component->data()); ?>
-<?php if (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag): ?>
-<?php $attributes = $attributes->except(\Illuminate\View\AnonymousComponent::ignoredParameterNames()); ?>
-<?php endif; ?>
-<?php $component->withAttributes([]); ?>Subir Evidencia <?php echo $__env->renderComponent(); ?>
-<?php endif; ?>
-<?php if (isset($__attributesOriginald411d1792bd6cc877d687758b753742c)): ?>
-<?php $attributes = $__attributesOriginald411d1792bd6cc877d687758b753742c; ?>
-<?php unset($__attributesOriginald411d1792bd6cc877d687758b753742c); ?>
-<?php endif; ?>
-<?php if (isset($__componentOriginald411d1792bd6cc877d687758b753742c)): ?>
-<?php $component = $__componentOriginald411d1792bd6cc877d687758b753742c; ?>
-<?php unset($__componentOriginald411d1792bd6cc877d687758b753742c); ?>
-<?php endif; ?>
-                        </form>
-                    </div>
-                </div>
-            <?php endif; ?>
-
-            <!-- Evidencias -->
-            <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
-                <div class="p-6">
-                    <h3 class="text-lg font-semibold mb-4">Evidencias</h3>
-                    <?php if($workReport->evidences->count() > 0): ?>
-                        <table class="min-w-full divide-y divide-gray-200">
-                            <thead>
-                            <tr>
-                                <th class="px-4 py-2 text-left">Nombre</th>
-                                <th class="px-4 py-2 text-left">Tamaño</th>
-                                <th class="px-4 py-2 text-left">Subido por</th>
-                                <th class="px-4 py-2 text-left">Fecha</th>
-                                <th class="px-4 py-2 text-left">Acciones</th>
-                            </tr>
-                            </thead>
-                            <tbody>
-                            <?php $__currentLoopData = $workReport->evidences; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $evidence): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
-                                <tr>
-                                    <td class="px-4 py-2"><?php echo e($evidence->original_name); ?></td>
-                                    <td class="px-4 py-2"><?php echo e(number_format($evidence->size_bytes / 1024, 2)); ?> KB</td>
-                                    <td class="px-4 py-2"><?php echo e($evidence->uploader->name ?? '-'); ?></td>
-                                    <td class="px-4 py-2"><?php echo e($evidence->created_at->format('d/m/Y H:i')); ?></td>
-                                    <td class="px-4 py-2">
-                                        <a href="<?php echo e(route('evidences.download', $evidence)); ?>" class="text-blue-500 hover:text-blue-700">Descargar</a>
-                                        <?php if($workReport->status !== 'validated'): ?>
-                                            <form action="<?php echo e(route('technician.evidences.delete', $evidence)); ?>" method="POST" class="inline">
-                                                <?php echo csrf_field(); ?>
-                                                <?php echo method_field('DELETE'); ?>
-                                                <button type="submit" class="text-red-500 ml-2" onclick="return confirm('¿Está seguro de eliminar esta evidencia?')">Eliminar</button>
-                                            </form>
-                                        <?php endif; ?>
-                                    </td>
-                                </tr>
-                            <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
-                            </tbody>
-                        </table>
-                    <?php else: ?>
-                        <p class="text-gray-500">No hay evidencias asociadas.</p>
-                    <?php endif; ?>
-                </div>
-            </div>
-            <?php
-                $urlAnterior = url()->previous();
-                // Si venimos de crear o editar, forzamos la vuelta al dashboard
-                $vieneDeFormulario = str_contains($urlAnterior, 'create') || str_contains($urlAnterior, 'edit');
-                // Asegúrate de que tu ruta del dashboard se llame así
-                $rutaVolver = $vieneDeFormulario ? route('technician.dashboard') : $urlAnterior;
-            ?>
-            <div class="mt-6 flex justify-start">
-                <a href="<?php echo e($rutaVolver); ?>"
-                   class="inline-flex items-center px-4 py-2 bg-white border border-gray-300 rounded-md font-semibold text-xs text-gray-700 uppercase tracking-widest shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 transition ease-in-out duration-150">
-                    <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path>
-                    </svg>
-                    Volver
-                </a>
             </div>
         </div>
+
+        
+        <div class="card section">
+            <div style="display:flex;justify-content:space-between;align-items:start">
+                <div>
+                    <div class="section-title">Información del Parte</div>
+                    <p><strong>Título:</strong> <?php echo e($workReport->title ?? '-'); ?></p>
+                    <p><strong>Descripción:</strong> <?php echo e($workReport->description ?? '-'); ?></p>
+                    <?php if($workReport->finished_at): ?>
+                        <p><strong>Finalizado:</strong> <?php echo e($workReport->finished_at->format('d/m/Y H:i')); ?></p>
+                    <?php endif; ?>
+                </div>
+                <?php if($workReport->status !== 'validated'): ?>
+                    <a href="<?php echo e(route('technician.work-reports.edit', $workReport)); ?>" style="color:#197fe6;font-weight:600">
+                        Editar
+                    </a>
+                <?php endif; ?>
+            </div>
+
+            
+            <div style="display:flex; gap:10px; margin-top:20px;">
+                <?php if($workReport->status !== 'finished'): ?>
+                    <?php if($workReport->status === 'paused'): ?>
+                        <form action="<?php echo e(route('technician.work-reports.start', $workReport)); ?>" method="POST">
+                            <?php echo csrf_field(); ?>
+                            <button class="btn btn-blue">Iniciar</button>
+                        </form>
+                    <?php endif; ?>
+
+                    <?php if($workReport->status === 'in_progress'): ?>
+                        <form action="<?php echo e(route('technician.work-reports.pause', $workReport)); ?>" method="POST">
+                            <?php echo csrf_field(); ?>
+                            <button class="btn btn-blue">Pausar</button>
+                        </form>
+                    <?php endif; ?>
+
+                    
+                    <?php if($workReport->status !== 'validated'): ?>
+                        <form id="finishForm" action="<?php echo e(route('technician.work-reports.finish', $workReport)); ?>" method="POST">
+                            <?php echo csrf_field(); ?>
+                            <button id="finishButton" class="btn btn-blue" disabled style="opacity:0.5; cursor:not-allowed;">Finalizar</button>
+                        </form>
+                    <?php endif; ?>
+                <?php else: ?>
+                    <form action="<?php echo e(route('technician.work-reports.validate', $workReport)); ?>" method="POST">
+                        <?php echo csrf_field(); ?>
+                        <button class="btn btn-blue">Validar</button>
+                    </form>
+                <?php endif; ?>
+            </div>
+        </div>
+
+        
+        <?php if($workReport->status !== 'validated'): ?>
+            <div class="card section">
+                <form action="<?php echo e(route('technician.work-reports.evidences.upload', $workReport)); ?>" method="POST" enctype="multipart/form-data">
+                    <?php echo csrf_field(); ?>
+
+                    <div class="section-title">Subir Evidencia</div>
+                    <input type="file" name="file" id="fileInput" class="hidden-input" accept="image/*,.pdf">
+
+                    <div class="upload-zone" id="uploadZone" style="cursor:pointer; border: 2px dashed #cbd5e1; padding: 20px; text-align: center;">
+                        <span class="material-symbols-outlined upload-icon"> cloud_upload </span>
+                        <div class="upload-title"> Arrastra archivos aquí </div>
+                        <div class="upload-sub"> o haz click para seleccionar imágenes o PDFs </div>
+                        <div id="fileName" style="margin-top:10px;font-size:14px;color:#475569"></div>
+                    </div>
+                    <br>
+                    <button class="btn btn-blue" id="uploadButton" disabled style="opacity:0.5; cursor:not-allowed;">Subir evidencia</button>
+                </form>
+            </div>
+        <?php endif; ?>
+
+        
+        <div class="section">
+            <div class="section-title">Evidencias</div>
+            <?php if($workReport->evidences->count() > 0): ?>
+                <table class="table">
+                    <thead>
+                    <tr>
+                        <th>Nombre</th>
+                        <th>Tamaño</th>
+                        <th>Subido por</th>
+                        <th>Fecha</th>
+                        <th>Acciones</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <?php $__currentLoopData = $workReport->evidences; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $evidence): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                        <tr>
+                            <td><?php echo e($evidence->original_name); ?></td>
+                            <td><?php echo e(number_format($evidence->size_bytes/1024,2)); ?> KB</td>
+                            <td><?php echo e($evidence->uploader?->name ?? '-'); ?></td>
+                            <td><?php echo e($evidence->created_at->format('d/m/Y H:i')); ?></td>
+                            <td>
+                                <a href="<?php echo e(route('evidences.download',$evidence)); ?>" style="color:#197fe6;font-weight:600">
+                                    Descargar
+                                </a>
+                                <?php if($workReport->status !== 'validated'): ?>
+                                    <form action="<?php echo e(route('technician.evidences.delete',$evidence)); ?>" method="POST" style="display:inline">
+                                        <?php echo csrf_field(); ?>
+                                        <?php echo method_field('DELETE'); ?>
+                                        <button style="color:red;margin-left:10px" onclick="return confirm('¿Eliminar evidencia?')"> Eliminar </button>
+                                    </form>
+                                <?php endif; ?>
+                            </td>
+                        </tr>
+                    <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
+                    </tbody>
+                </table>
+            <?php else: ?>
+                <p>No hay evidencias asociadas.</p>
+            <?php endif; ?>
+        </div>
+
+        
+        <div class="mt-6 flex justify-start">
+            <a href="<?php echo e(route('technician.dashboard')); ?>"
+               class="inline-flex items-center px-4 py-2 bg-white border border-gray-300 rounded-md font-semibold text-xs text-gray-700 uppercase tracking-widest shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 transition ease-in-out duration-150">
+                <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path>
+                </svg>
+                Volver
+            </a>
+        </div>
     </div>
+
+    
     <script>
-        let running = "<?php echo e($workReport->status); ?>" === "<?php echo e(\App\Models\WorkReport::STATUS_IN_PROGRESS); ?>",
-            crono = document.getElementById('cronometro'),
-            intervalId;
-        if(running) {
-            let totalSeconds = "<?php echo e($workReport->total_seconds); ?>" +
-                Math.floor( //Diferencia de tiempo entre asignacion del estado y carga de la página
-                    (Date.now().valueOf() - new Date('<?php echo e($workReport->active_started_at); ?>').valueOf())
-                    / 1000
-                );
+        const crono = document.getElementById('cronometro');
 
-            intervalId = setInterval(() => {
-                let horas, minutos, segundos = ++totalSeconds;
+        let running = "<?php echo e($workReport->status); ?>" === "<?php echo e(\App\Models\WorkReport::STATUS_IN_PROGRESS); ?>";
 
-                horas = Math.floor(segundos/3600);
-                segundos %= 3600;
-                minutos = Math.floor(segundos/60);
-                segundos %= 60;
+        const finishButton = document.getElementById('finishButton');
+        let totalSeconds = <?php echo e($workReport->total_seconds ?? 0); ?>;
+        const status = "<?php echo e($workReport->status); ?>";
+        const activeStart = "<?php echo e($workReport->active_started_at); ?>";
 
-                crono.innerText =
-                    horas.toString().padStart(2,'0') + ':'
-                    + minutos.toString().padStart(2,'0') + ':'
-                    + segundos.toString().padStart(2,'0') + ' ('
-                    + totalSeconds.toString() + ' segundos)';
-            }, 1000)
+        function updateFinishButton(){
+            if(finishButton){
+                if(totalSeconds > 0){
+                    finishButton.disabled = false;
+                    finishButton.style.opacity = 1;
+                    finishButton.style.cursor = 'pointer';
+                } else {
+                    finishButton.disabled = true;
+                    finishButton.style.opacity = 0.5;
+                    finishButton.style.cursor = 'not-allowed';
+                }
+            }
         }
 
-        //Los botones de pausar y finalizar paran el cronometro en el cliente
-        document.querySelectorAll('.pararCrono')
-            .forEach((form, i) => {
+        updateFinishButton(); // Estado inicial
 
-                form.addEventListener('submit', (evt) => {
-                    clearInterval(intervalId);
-                });
-            })
+        // Si está en progreso, iniciar cronómetro dinámico
+        if(status === "<?php echo e(\App\Models\WorkReport::STATUS_IN_PROGRESS); ?>" && activeStart){
+            let totalSecondsDynamic = totalSeconds + Math.floor((Date.now() - new Date(activeStart)) / 1000);
+
+            setInterval(()=>{
+                totalSecondsDynamic++;
+                if(crono){
+                    let h = Math.floor(totalSecondsDynamic / 3600);
+                    let m = Math.floor((totalSecondsDynamic % 3600) / 60);
+                    let s = totalSecondsDynamic % 60;
+                    crono.innerText = `${h.toString().padStart(2,'0')}:${m.toString().padStart(2,'0')}:${s.toString().padStart(2,'0')}`;
+                }
+                totalSeconds = totalSecondsDynamic;
+                updateFinishButton();
+            },1000);
+        }
+    </script>
+
+    
+    <script>
+        const fileInput = document.getElementById('fileInput');
+        const uploadButton = document.getElementById('uploadButton');
+        const fileNameDiv = document.getElementById('fileName');
+        const uploadZone = document.getElementById('uploadZone');
+
+        if(fileInput && uploadButton && uploadZone){
+            // Click en zona
+            uploadZone.addEventListener('click', ()=> fileInput.click());
+
+            // Drag & Drop
+            uploadZone.addEventListener('dragover', (e)=> { e.preventDefault(); uploadZone.classList.add('dragover'); });
+            uploadZone.addEventListener('dragleave', ()=> { uploadZone.classList.remove('dragover'); });
+            uploadZone.addEventListener('drop', (e)=> {
+                e.preventDefault();
+                uploadZone.classList.remove('dragover');
+                if(e.dataTransfer.files.length){
+                    fileInput.files = e.dataTransfer.files;
+                    fileNameDiv.innerText = e.dataTransfer.files[0].name;
+                    uploadButton.disabled = false;
+                    uploadButton.style.opacity = 1;
+                    uploadButton.style.cursor = 'pointer';
+                }
+            });
+
+            // Cambio manual input
+            fileInput.addEventListener('change', ()=>{
+                if(fileInput.files.length > 0){
+                    fileNameDiv.innerText = fileInput.files[0].name;
+                    uploadButton.disabled = false;
+                    uploadButton.style.opacity = 1;
+                    uploadButton.style.cursor = 'pointer';
+                } else {
+                    fileNameDiv.innerText = '';
+                    uploadButton.disabled = true;
+                    uploadButton.style.opacity = 0.5;
+                    uploadButton.style.cursor = 'not-allowed';
+                }
+            });
+        }
     </script>
  <?php echo $__env->renderComponent(); ?>
 <?php endif; ?>
@@ -419,5 +296,4 @@
 <?php if (isset($__componentOriginal9ac128a9029c0e4701924bd2d73d7f54)): ?>
 <?php $component = $__componentOriginal9ac128a9029c0e4701924bd2d73d7f54; ?>
 <?php unset($__componentOriginal9ac128a9029c0e4701924bd2d73d7f54); ?>
-<?php endif; ?>
-<?php /**PATH /var/www/src/resources/views/technician/work-reports/show.blade.php ENDPATH**/ ?>
+<?php endif; ?><?php /**PATH /var/www/src/resources/views/technician/work-reports/show.blade.php ENDPATH**/ ?>

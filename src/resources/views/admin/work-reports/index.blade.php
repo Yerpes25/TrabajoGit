@@ -52,7 +52,9 @@
                             <x-text-input id="date_to" name="date_to" type="date" class="mt-1 block w-full" :value="request('date_to')" />
                         </div>
                         <div class="md:col-span-5">
-                            <x-primary-button>Filtrar</x-primary-button>
+                            <x-primary-button style="background-color:#62bd19; color:white;" onmouseover="this.style.backgroundColor='#498d13';" onmouseout="this.style.backgroundColor='#62bd19';">
+                                Filtrar
+                            </x-primary-button>
                             <a href="{{ route('admin.work-reports.index') }}" class="text-gray-600 ml-2">Limpiar</a>
                         </div>
                     </form>
@@ -84,7 +86,9 @@
                                 <td class="px-4 py-2">{{ number_format($report->total_seconds / 3600, 2) }}h</td>
                                 <td class="px-4 py-2">{{ $report->created_at->format('d/m/Y H:i') }}</td>
                                 <td class="px-4 py-2">
-                                    <a href="{{ route('admin.work-reports.show', $report) }}" class="text-blue-500">Ver Detalle</a>
+                                    <a href="{{ route('admin.work-reports.show', $report) }}" class="transition-colors" style="color:#62bd19;" onmouseover="this.style.color='#498d13';" onmouseout="this.style.color='#62bd19';">
+                                        Ver Detalle
+                                    </a>
                                 </td>
                             </tr>
                             @endforeach
@@ -97,13 +101,9 @@
                 </div>
             </div>
             <div class="mt-6 flex justify-start">
-                <a href="{{ route('admin.dashboard') }}"
-                    class="inline-flex items-center px-4 py-2 bg-white border border-gray-300 rounded-md font-semibold text-xs text-gray-700 uppercase tracking-widest shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 transition ease-in-out duration-150">
-                    <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path>
-                    </svg>
+                <x-back-button href="{{ route('admin.dashboard') }}">
                     Volver
-                </a>
+                </x-back-button>
             </div>
         </div>
     </div>

@@ -45,9 +45,39 @@ class TechnicianDashboardController extends Controller
             ->limit(5)
             ->get();
 
+        // NUEVO: partes para mostrar como tarjetas
+        $workReports = WorkReport::where('technician_id', $technicianId)
+            ->with('client.user')
+            ->latest()
+            ->limit(6)
+            ->get();
+
         // BONUS: Si quieres mostrar clientes con bonos
         $clientsWithBonuses = Client::whereHas('bonusIssues')
+            ->with(['user', 'profile'])
             ->withCount('bonusIssues')
+            ->get();
+
+        // Buscamos clientes que tengan saldo en segundos > 0
+        // Además cargamos sus partes activos por si quieres usarlos en el mismo componente
+        $availableClients = Client::whereHas('profile', function ($query) {
+            $query->where('balance_seconds', '>', 0);
+        })
+            ->whereHas('user', function ($query) {
+                $query->where('is_active', 1);
+            })
+            ->with([
+                'user',
+                'profile',
+                'workReports' => function ($query) use ($technicianId) {
+                    $query->where('technician_id', $technicianId)
+                        ->whereIn('status', [
+                            WorkReport::STATUS_IN_PROGRESS,
+                            WorkReport::STATUS_PAUSED
+                        ]);
+                }
+            ])
+            ->limit(4)
             ->get();
 
         return view('dashboard.technician', compact(
@@ -56,7 +86,9 @@ class TechnicianDashboardController extends Controller
             'finished',
             'validated',
             'recentWorkReports',
-            'clientsWithBonuses'
+            'clientsWithBonuses',
+            'workReports',
+            'availableClients' // <--- Nueva variable añadida
         ));
     }
 }

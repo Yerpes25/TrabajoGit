@@ -8,9 +8,14 @@ use App\Http\Controllers\ClientDashboardController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Admin\AdminClientController;
 use App\Http\Controllers\ClientPasswordController;
+use Illuminate\Support\Facades\Auth;
+use App\Http\Controllers\NotificacionController;
 
 Route::post('/admin/clients/{client}/send-password', [AdminClientController::class, 'sendPasswordEmail'])
     ->name('admin.clients.send-password');
+
+Route::post('/solicitar-acceso', [\App\Http\Controllers\ClientPasswordController::class, 'requestAccess'])
+    ->name('client.access.request');
 
 // 2. Rutas públicas para que el cliente configure su contraseña (fuera de los middleware de auth)
 Route::get('/configurar-password/{user}', [ClientPasswordController::class, 'create'])
@@ -22,7 +27,19 @@ Route::post('/configurar-password/{user}', [ClientPasswordController::class, 'st
     ->middleware('signed');
 
 Route::get('/', function () {
-    return view('welcome');
+    return redirect()->route('login');
+});
+
+Route::get('/obtener-notificaciones', function () {
+    $clienteActual = Auth::user();
+    $notificacionesSinLeer = $clienteActual->unreadNotifications;
+    return response()->json($notificacionesSinLeer);
+});
+
+Route::post('/marcar-notificaciones-leidas', function () {
+    $clienteActual = Auth::user();
+    $clienteActual->unreadNotifications->markAsRead();
+    return response()->json(['estado' => 'exito']);
 });
 
 // Rutas de dashboards por rol (protegidas con auth + role middleware)
@@ -77,6 +94,10 @@ Route::middleware(['auth', 'role:technician'])->prefix('technician')->name('tech
         ->name('work-reports.resume');
     Route::post('work-reports/{workReport}/finish', [\App\Http\Controllers\Technician\TechnicianWorkReportController::class, 'finish'])
         ->name('work-reports.finish');
+    Route::post('work-reports/{workReport}/validate', [TechnicianWorkReportController::class, 'validate'])
+        ->name('work-reports.validate');
+    Route::post('work-reports/store-and-start', [TechnicianWorkReportController::class, 'storeAndStart'])
+        ->name('work-reports.store-and-start');
 
     // Evidencias
     Route::post('work-reports/{workReport}/evidences', [\App\Http\Controllers\Technician\TechnicianEvidenceController::class, 'upload'])
@@ -112,13 +133,12 @@ Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+    Route::post('/notificaciones/marcar-leidas', [NotificacionController::class, 'marcarLeidas'])->name('notificaciones.leidas');
 
     // Descarga segura de evidencias (protegida por auth + Policy)
     Route::get('evidences/{evidence}/download', [\App\Http\Controllers\EvidenceDownloadController::class, 'download'])
         ->name('evidences.download');
 });
 
-Route::post('/technician/work-reports/{workReport}/validate', [TechnicianWorkReportController::class, 'validate'])
-    ->name('technician.work-reports.validate');
 
 require __DIR__ . '/auth.php';

@@ -34,4 +34,16 @@ class ClientProfile extends Model
     {
         return $this->belongsTo(Client::class);
     }
+
+    /**
+     * Accessor para mostrar el balance de segundos formateado
+     * en horas y minutos (ej: 1h 05m)
+     */
+    public function getBalanceFormattedAttribute(): string
+    {
+        $hours = floor($this->balance_seconds / 3600);
+        $minutes = floor(($this->balance_seconds % 3600) / 60);
+
+        return sprintf('%dh %02dm', $hours, $minutes);
+    }
 }

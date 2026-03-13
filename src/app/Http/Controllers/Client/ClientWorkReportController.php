@@ -42,10 +42,10 @@ class ClientWorkReportController extends Controller
     }
 
     /**
-     * Lista los partes del cliente autenticado (solo finished y validated).
+     * Lista los partes del cliente autenticado.
      *
      * Regla: Solo muestra partes donde client_id = cliente asociado al usuario.
-     * Regla: Solo muestra estados finished y validated.
+     * Regla: El cliente solo puede ver partes en estado validated.
      *
      * @return View
      */
@@ -53,19 +53,17 @@ class ClientWorkReportController extends Controller
     {
         $client = $this->getClientForUser();
 
+        // Si el usuario no tiene cliente asociado, devolvemos paginación vacía
         if (!$client) {
-            // Si no hay cliente asociado, mostrar lista vacía
-            $workReports = WorkReport::where('id', 0)->paginate(15);
+            $workReports = collect()->paginate(15);
             return view('client.work-reports.index', compact('workReports'));
         }
 
-        // Optimización performance: eager loading de relaciones para evitar N+1
-        // NOTE: La vista accede a $report->technician->name en el loop
-        // Sin eager loading, haría 1 query por cada parte para obtener el técnico
-        $workReports = WorkReport::where('client_id', $client->id)
-            ->whereIn('status', [WorkReport::STATUS_FINISHED, WorkReport::STATUS_VALIDATED])
-            ->with(['technician', 'validator'])
-            ->orderBy('created_at', 'desc')
+        $workReports = WorkReport::query()
+            ->where('client_id', $client->id)
+            ->where('status', WorkReport::STATUS_VALIDATED) // el cliente solo ve validados
+            ->with(['technician', 'validator']) // evita N+1 queries
+            ->latest() // equivalente a orderBy('created_at','desc')
             ->paginate(15);
 
         return view('client.work-reports.index', compact('workReports'));

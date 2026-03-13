@@ -10,15 +10,15 @@
 
             <!-- Mensajes de sesión -->
             @if(session('success'))
-                <div class="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded mb-4">
-                    {{ session('success') }}
-                </div>
+            <div class="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded mb-4">
+                {{ session('success') }}
+            </div>
             @endif
 
             @if(session('error'))
-                <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4">
-                    {{ session('error') }}
-                </div>
+            <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4">
+                {{ session('error') }}
+            </div>
             @endif
 
             <!-- Información del parte -->
@@ -32,18 +32,16 @@
                     <p><strong>Estado:</strong> {{ $workReport->status }}</p>
                     <p><strong>Tiempo total:</strong> {{ gmdate('H\h i\m', $workReport->total_seconds) }}</p>
                     @if($workReport->finished_at && !$workReport->validated_at)
-                        <p><strong>Finalizado:</strong> {{ $workReport->finished_at->format('d/m/Y H:i') }}</p>
-                        <br>
-                        <form action="{{ route('technician.work-reports.validate', $workReport) }}" method="POST" class="inline">
-                            @csrf
-                            <x-primary-button type="submit">Validar</x-primary-button>
-                        </form>
+                    <p><strong>Finalizado:</strong> {{ $workReport->finished_at->format('d/m/Y H:i') }}</p>
+                    <br>
+                    <form action="{{ route('technician.work-reports.validate', $workReport) }}" method="POST" class="inline">
+                        @csrf
+                        <x-primary-button type="submit">Validar</x-primary-button>
+                    </form>
                     @endif
 
                     @if($workReport->validated_at)
-                        <br>
-                        <p><strong>Finalizado:</strong> {{ $workReport->finished_at->format('d/m/Y H:i') }}</p>
-                        <p><strong>Validado por:</strong> {{ $workReport->validator->name ?? '-' }} el {{ $workReport->validated_at->format('d/m/Y H:i') }}</p>
+                    <p><strong>Validado por:</strong> {{ $workReport->validator->name ?? '-' }} el {{ $workReport->validated_at->format('d/m/Y H:i') }}</p>
                     @endif
                 </div>
             </div>
@@ -54,15 +52,15 @@
                     <h3 class="text-lg font-semibold mb-4">Eventos del Cronómetro</h3>
                     <table class="min-w-full divide-y divide-gray-200">
                         <thead>
-                        <tr>
-                            <th class="px-4 py-2 text-left">Tipo</th>
-                            <th class="px-4 py-2 text-left">Fecha/Hora</th>
-                            <th class="px-4 py-2 text-left">Tiempo Acumulado (horas)</th>
-                            <th class="px-4 py-2 text-left">Creado por</th>
-                        </tr>
+                            <tr>
+                                <th class="px-4 py-2 text-left">Tipo</th>
+                                <th class="px-4 py-2 text-left">Fecha/Hora</th>
+                                <th class="px-4 py-2 text-left">Tiempo Acumulado (horas)</th>
+                                <th class="px-4 py-2 text-left">Creado por</th>
+                            </tr>
                         </thead>
                         <tbody>
-                        @foreach($workReport->events as $event)
+                            @foreach($workReport->events as $event)
                             <tr>
                                 <td class="px-4 py-2">{{ $event->type }}</td>
                                 <td class="px-4 py-2">{{ $event->occurred_at->format('d/m/Y H:i:s') }}</td>
@@ -80,8 +78,6 @@
                 <div class="p-6">
                     <h3 class="text-lg font-semibold mb-4">Evidencias</h3>
                     @if($workReport->evidences->count() > 0)
-                        <table class="min-w-full divide-y divide-gray-200">
-                            <thead>
                     <table class="min-w-full divide-y divide-gray-200">
                         <thead>
                             <tr>
@@ -91,21 +87,6 @@
                                 <th class="px-4 py-2 text-left">Fecha</th>
                                 <th class="px-4 py-2 text-left">Acciones</th>
                             </tr>
-                            </thead>
-                            <tbody>
-                            @foreach($workReport->evidences as $evidence)
-                                <tr>
-                                    <td class="px-4 py-2">{{ $evidence->original_name }}</td>
-                                    <td class="px-4 py-2">{{ number_format($evidence->size_bytes / 1024, 2) }} KB</td>
-                                    <td class="px-4 py-2">{{ $evidence->uploader->name ?? '-' }}</td>
-                                    <td class="px-4 py-2">{{ $evidence->created_at->format('d/m/Y H:i') }}</td>
-                                    <td class="px-4 py-2">
-                                        <a href="{{ route('evidences.download', $evidence) }}" class="text-blue-500 hover:text-blue-700">Descargar</a>
-                                    </td>
-                                </tr>
-                            @endforeach
-                            </tbody>
-                        </table>
                         </thead>
                         <tbody>
                             @foreach($workReport->evidences as $evidence)
@@ -131,13 +112,9 @@
             $rutaVolver = ($urlAnterior == url()->current()) ? route('admin.work-reports.index') : $urlAnterior;
             @endphp
             <div class="mt-6 flex justify-start">
-                <a href="{{ $rutaVolver }}"
-                    class="inline-flex items-center px-4 py-2 bg-white border border-gray-300 rounded-md font-semibold text-xs text-gray-700 uppercase tracking-widest shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 transition ease-in-out duration-150">
-                    <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path>
-                    </svg>
+                <x-back-button href="{{ url()->previous() }}">
                     Volver
-                </a>
+                </x-back-button>
             </div>
         </div>
     </div>

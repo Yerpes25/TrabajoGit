@@ -491,7 +491,7 @@ class WorkReportService
                 if ($e->getCode() === '23000' || str_contains($e->getMessage(), 'balance_movements_reference_unique')) {
                     // Recargar el parte desde BD para obtener estado actualizado
                     $workReport->refresh();
-                    
+
                     // Verificar que el movimiento existe ahora
                     $existingMovement = $this->findExistingBalanceMovement($workReport);
                     if ($existingMovement) {

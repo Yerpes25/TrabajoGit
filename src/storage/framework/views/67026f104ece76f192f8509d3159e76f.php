@@ -25,47 +25,60 @@
             <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 2rem; margin-bottom: 3rem;">
 
                 
-                <div style="grid-column: span 2; background: white; border-radius: 1rem; padding: 2rem; border: 1px solid #e2e8f0; box-shadow: 0 1px 3px rgba(0,0,0,0.1);">
-                    <div style="display: flex; justify-content: space-between; margin-bottom: 2rem;">
-                        <h3 style="font-size: 1.125rem; font-weight: 700; color: #0f172a; margin: 0;">Saldo Actual</h3>
-                        <span style="background: #eaffdb; color: #489211; font-size: 0.75rem; font-weight: 700; padding: 0.25rem 0.75rem; border-radius: 9999px;">ACTIVO</span>
-                    </div>
+                <div class="col-span-1 md:col-span-2 bg-white rounded-3xl border border-slate-200 shadow-sm p-6 relative overflow-hidden group hover:shadow-md transition-all duration-300">
+                    <div class="absolute -right-12 -top-12 w-48 h-48 bg-[#62bd19]/10 rounded-full blur-3xl group-hover:bg-[#62bd19]/20 transition-colors duration-500"></div>
 
-                    <div style="display: flex; flex-wrap: wrap; align-items: center; gap: 3rem;">
-                        
-                        <div style="position: relative; width: 180px; height: 180px;">
-                            <svg width="180" height="180" viewBox="0 0 180 180" style="transform: rotate(-90deg);">
-                                <circle cx="90" cy="90" r="80" fill="transparent" stroke="#f1f5f9" stroke-width="12"></circle>
-                                <circle cx="90" cy="90" r="80" fill="transparent" stroke="#62bd19" stroke-width="12"
-                                    stroke-dasharray="502.6"
-                                    stroke-dashoffset="<?php echo e(502.6 * (1 - min(($balanceSeconds / 3600) / 40, 1))); ?>"
-                                    stroke-linecap="round"></circle>
-                            </svg>
-                            <div style="position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center;">
-                                <span style="font-size: 1.5rem; font-weight: 900; color: #0f172a;"><?php echo e(number_format($balanceSeconds / 3600, 1)); ?>h</span>
-                                <span style="font-size: 0.65rem; font-weight: 700; color: #94a3b8; text-transform: uppercase;">Disponibles</span>
-                            </div>
-                        </div>
+                    <div class="relative z-10 flex flex-col md:flex-row items-center justify-between gap-8 h-full">
 
-                        <div style="flex: 1; display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; min-width: 250px;">
-                            <div style="background: #f4faed; padding: 1rem; border-radius: 0.75rem; border: 1px solid #e1f2cf;">
-                                <p style="font-size: 0.75rem; font-weight: 700; color: #64748b; text-transform: uppercase; margin: 0;">Validados</p>
-                                <span style="font-size: 1.5rem; font-weight: 800; color: #489211;"><?php echo e($validated); ?></span>
-                            </div>
-                            <div style="background: #f8fafc; padding: 1rem; border-radius: 0.75rem; border: 1px solid #f1f5f9;">
-                                <p style="font-size: 0.75rem; font-weight: 700; color: #64748b; text-transform: uppercase; margin: 0;">Finalizados</p>
-                                <span style="font-size: 1.5rem; font-weight: 800; color: #0f172a;"><?php echo e($finished); ?></span>
-                            </div>
-                            <div style="grid-column: span 2; background: #f8fafc; padding: 1rem; border-radius: 0.75rem; border: 1px solid #f1f5f9;">
-                                <div style="display: flex; justify-content: space-between; font-size: 0.875rem; margin-bottom: 0.5rem;">
-                                    <span style="color: #64748b;">Tiempo Real:</span>
-                                    <span style="font-weight: 700; color: #0f172a;"><?php echo e(gmdate('H:i:s', $balanceSeconds)); ?></span>
-                                </div>
-                                <div style="width: 100%; background: #e2e8f0; height: 8px; border-radius: 999px; overflow: hidden;">
-                                    <div style="background: #62bd19; height: 100%; width: <?php echo e(min(($balanceSeconds / 3600) / 40 * 100, 100)); ?>%;"></div>
+                        <div class="flex-1 w-full flex flex-col items-center justify-center md:border-r border-slate-100 md:pr-8">
+
+                            <div class="mb-6 bg-slate-50 border border-slate-200 shadow-sm rounded-2xl px-8 py-3 flex flex-col items-center justify-center">
+                                <h3 class="text-slate-900 font-bold text-lg leading-tight">Saldo Actual</h3>
+                                <div class="flex items-center gap-1.5 mt-1.5">
+                                    <span class="w-2 h-2 rounded-full bg-[#62bd19] animate-pulse"></span>
+                                    <span class="text-[10px] font-bold text-slate-500 uppercase tracking-widest">
+                                        Bono Activo
+                                    </span>
                                 </div>
                             </div>
+
+                            <?php
+                            $horas = floor($balanceSeconds / 3600);
+                            $minutos = floor(($balanceSeconds % 3600) / 60);
+                            ?>
+
+                            <div class="flex flex-col items-center gap-1.5">
+                                <div class="flex items-baseline gap-1">
+                                    <span class="text-6xl font-black text-slate-900 tracking-tighter leading-none"><?php echo e($horas); ?></span>
+                                    <span class="text-2xl text-slate-400 font-bold mr-2">h</span>
+
+                                    <span class="text-6xl font-black text-slate-900 tracking-tighter leading-none"><?php echo e($minutos); ?></span>
+                                    <span class="text-2xl text-slate-400 font-bold mb-4">m</span>
+                                </div>
+
+                                <span class="bg-slate-50 text-slate-600 text-[11px] font-bold px-3 py-1.5 rounded-xl border border-slate-200 inline-flex items-center gap-1.5 shadow-sm">
+                                    <span class="material-symbols-outlined text-[14px] text-slate-400 ">timer</span>
+                                    Formato exacto: <?php echo e(gmdate('H:i:s', $balanceSeconds)); ?>
+
+                                </span>
+                            </div>
+
                         </div>
+
+                        <div class="flex-1 w-full flex flex-col justify-center items-center h-full md:pl-4">
+
+                            <div class="w-full max-w-sm bg-gradient-to-br from-[#62bd19]/5 to-transparent border border-[#62bd19]/20 p-6 rounded-2xl flex items-center gap-6 transition-colors hover:border-[#62bd19]/40">
+                                <div class="w-14 h-14 bg-white rounded-2xl shadow-sm flex items-center justify-center text-[#62bd19] shrink-0">
+                                    <span class="material-symbols-outlined text-2xl">verified</span>
+                                </div>
+                                <div>
+                                    <p class="text-[11px] font-bold text-slate-500 uppercase tracking-wider mb-1">Partes Validados</p>
+                                    <span class="text-4xl font-black text-[#62bd19] block leading-none"><?php echo e($validated); ?></span>
+                                </div>
+                            </div>
+
+                        </div>
+
                     </div>
                 </div>
 
@@ -107,18 +120,78 @@
             </div>
 
             
-            <h2 style="font-size: 1.5rem; font-weight: 800; color: #0f172a; margin-bottom: 2rem;">Comprar Nuevos Bonos</h2>
-            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1.5rem;">
-                <?php $__currentLoopData = [['5 Horas', 'bolt', 'ESENCIAL'], ['12 Horas', 'rocket_launch', 'POPULAR'], ['20 Horas', 'diamond', 'ENTERPRISE']]; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $plan): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
-                <div style="background: white; border: 1px solid #e2e8f0; border-radius: 1rem; padding: 1.5rem; text-align: center; transition: transform 0.2s;">
-                    <div style="background: #f8fafc; color: #64748b; padding: 0.75rem; border-radius: 0.75rem; width: fit-content; margin: 0 auto 1rem;">
-                        <span class="material-symbols-outlined"><?php echo e($plan[1]); ?></span>
+            <div x-data="{ showAll: false }" class="mt-16">
+                <h2 style="font-size: 1.5rem; font-weight: 800; color: #0f172a; margin-bottom: 2rem;">Comprar Nuevos Bonos</h2>
+
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                    <?php $__currentLoopData = $activeBonuses; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $index => $bonus): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                    <?php
+                        $horas = floor($bonus->seconds_total / 3600);
+                        $isPopular = ($index === 0);
+                        $isMaxHours = ($bonus->id === $maxHoursId);
+                        $name = strtolower($bonus->name);
+
+                        // 1. Prioridad: Popularidad y Tamaño
+                        if ($isPopular) {
+                            $icon = 'crown';
+                        } elseif ($isMaxHours) {
+                            $icon = 'diamond';
+                        }
+                        // 2. Búsqueda por temática en el nombre
+                        elseif (str_contains($name, 'web')) { $icon = 'language'; }
+                        elseif (str_contains($name, 'tienda') || str_contains($name, 'online')) { $icon = 'shopping_cart'; }
+                        elseif (str_contains($name, 'mantenimiento')) { $icon = 'settings'; }
+                        elseif (str_contains($name, 'desarrollo')) { $icon = 'terminal'; }
+                        elseif (str_contains($name, 'optimización')) { $icon = 'speed'; }
+                        elseif (str_contains($name, 'básico') || $horas < 10) { $icon='bolt' ; }
+                        // 3. Fallback: Rotación de iconos variados para que no se repita el "cubo"
+                        else {
+                            $variedIcons=['rocket_launch', 'auto_awesome' , 'verified' , 'auto_graph' , 'extension' ];
+                            $icon=$variedIcons[$index % count($variedIcons)];
+                        }
+                    ?>
+
+                    <div
+                        x-show="showAll || <?php echo e($index); ?> < 3"
+                        x-transition:enter="transition ease-out duration-300"
+                        x-transition:enter-start="opacity-0 transform scale-95"
+                        
+                        class="bg-white rounded-[2rem] border <?php echo e($isPopular ? 'border-[#62bd19]' : 'border-slate-100'); ?> p-10 flex flex-col items-center text-center relative group hover:shadow-xl transition-shadow duration-200"
+                    >
+                        <?php if($isPopular): ?>
+                        <div class="absolute -top-3 left-1/2 -translate-x-1/2 bg-[#62bd19] text-white text-[10px] font-black px-4 py-1.5 rounded-full uppercase tracking-widest shadow-lg">
+                            Más Popular
+                        </div>
+                        <?php endif; ?>
+
+                        
+                        <div class="w-20 h-20 <?php echo e($isPopular ? 'bg-[#f4faed] text-[#62bd19]' : 'bg-slate-50 text-slate-400'); ?> rounded-3xl flex items-center justify-center mb-6">
+                            <span class="material-symbols-outlined text-4xl"><?php echo e($icon); ?></span>
+                        </div>
+
+                        <span class="text-[11px] font-bold text-slate-400 uppercase tracking-[0.2em] mb-2"><?php echo e($bonus->name); ?></span>
+                        <h4 class="text-3xl font-black text-slate-900 mb-8"><?php echo e($horas); ?> <span class="text-lg text-slate-400 font-medium">Horas</span></h4>
+
+                        <button class="w-full py-4 px-6 rounded-2xl font-black transition-colors duration-200 <?php echo e($isPopular ? 'bg-[#62bd19] text-white hover:bg-[#52a115] shadow-lg shadow-green-100' : 'bg-white text-slate-900 border-2 border-slate-900 hover:bg-slate-900 hover:text-white'); ?>">
+                            Seleccionar
+                        </button>
                     </div>
-                    <span style="font-size: 0.65rem; font-weight: 700; color: #94a3b8; letter-spacing: 0.05em;"><?php echo e($plan[2]); ?></span>
-                    <h4 style="font-size: 1.5rem; font-weight: 900; color: #0f172a; margin: 0.5rem 0 1.5rem;"><?php echo e($plan[0]); ?></h4>
-                    <button style="width: 100%; background: transparent; border: 2px solid #62bd19; color: #62bd19; padding: 0.6rem; border-radius: 0.75rem; font-weight: 700; cursor: pointer;">Seleccionar</button>
+                    <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
                 </div>
-                <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
+
+                
+                <?php if($activeBonuses->count() > 3): ?>
+                <div class="flex justify-center mt-12">
+                    <button
+                        @click="showAll = !showAll"
+                        class="flex items-center gap-2 text-[11px] font-black text-[#62bd19] hover:text-[#4d9413] transition-colors tracking-[0.2em] outline-none border-none bg-transparent no-underline">
+                        <span x-text="showAll ? 'MOSTRAR MENOS' : 'VER TODOS LOS BONOS'"></span>
+                        <span class="material-symbols-outlined transition-transform duration-300" :class="showAll ? 'rotate-180' : ''">
+                            expand_more
+                        </span>
+                    </button>
+                </div>
+                <?php endif; ?>
             </div>
             <?php endif; ?>
         </div>
@@ -132,5 +205,4 @@
 <?php if (isset($__componentOriginal9ac128a9029c0e4701924bd2d73d7f54)): ?>
 <?php $component = $__componentOriginal9ac128a9029c0e4701924bd2d73d7f54; ?>
 <?php unset($__componentOriginal9ac128a9029c0e4701924bd2d73d7f54); ?>
-<?php endif; ?>
-<?php /**PATH /var/www/src/resources/views/dashboard/client.blade.php ENDPATH**/ ?>
+<?php endif; ?><?php /**PATH /var/www/src/resources/views/dashboard/client.blade.php ENDPATH**/ ?>
